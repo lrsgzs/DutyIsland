@@ -1,0 +1,138 @@
+<ci:SettingsPageBase x:Class="DutyIsland.Views.SettingPages.DutySettingsPage"
+                     xmlns="https://github.com/avaloniaui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:ci="http://classisland.tech/schemas/xaml/core"
+                     xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+                     xmlns:local="clr-namespace:DutyIsland.Views.SettingPages"
+                     mc:Ignorable="d">
+    <Grid RowDefinitions="48, *" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DutySettingsPage}}">
+        <Border Grid.Row="0" Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch" />
+        
+        <TabControl Grid.Row="0" Grid.RowSpan="2">
+            <TabItem Header="DutyIsland" IsEnabled="False">
+                <ci:Empty Text="你真厉害，居然来到这里了。"
+                          Icon="{ci:FluentIconSource &#xE059;, FontSize=48}"/>
+            </TabItem>
+            
+            <TabItem IsSelected="True">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <ci:FluentIcon Glyph="&#xE324;" FontSize="24" Height="24" VerticalAlignment="Center" />
+                            <TextBlock FontSize="24">值日表</TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250" MinWidth="250" MaxWidth="400"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Grid Grid.Column="0" RowDefinitions="Auto, *">
+                        <fa:CommandBar Grid.Row="0"
+                                       DefaultLabelPosition="Right">
+                            <fa:CommandBar.PrimaryCommands>
+                                <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE00D;}"
+                                                     Label="添加" ToolTip.Tip="新建一个值日表。"/>
+                                <fa:CommandBarSeparator />
+                                <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE58D;}" 
+                                                     Label="复制" ToolTip.Tip="复制一个当前选中的值日表的副本。"/>
+                            </fa:CommandBar.PrimaryCommands>
+                        </fa:CommandBar>
+                        
+                        <ListBox Grid.Row="1">
+                            
+                        </ListBox>
+                    </Grid>
+                    
+                    <GridSplitter Grid.Column="1" Margin="2 0" />
+                    
+                    <ci:Emptiable Grid.Column="2" IsDirectContentMode="True">
+                        <Grid>
+                            
+                        </Grid>
+                    </ci:Emptiable>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <ci:FluentIcon Glyph="&#xE31C;" FontSize="24" Height="24" VerticalAlignment="Center" />
+                            <TextBlock FontSize="24">值日表模板</TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250" MinWidth="250" MaxWidth="400"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Grid Grid.Column="0" RowDefinitions="Auto, *">
+                        <fa:CommandBar Grid.Row="0"
+                                       DefaultLabelPosition="Right">
+                            <fa:CommandBar.PrimaryCommands>
+                                <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE00D;}"
+                                                     Label="添加" ToolTip.Tip="新建一个值日表模板。"/>
+                                <fa:CommandBarSeparator />
+                                <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE58D;}" 
+                                                     Label="复制" ToolTip.Tip="复制一个当前选中的值日表模板的副本。"/>
+                            </fa:CommandBar.PrimaryCommands>
+                        </fa:CommandBar>
+                        
+                        <ListBox Grid.Row="1">
+                            
+                        </ListBox>
+                    </Grid>
+                    
+                    <GridSplitter Grid.Column="1" Margin="2 0" />
+                    
+                    <ci:Emptiable Grid.Column="2" IsDirectContentMode="True">
+                        <Grid>
+                            
+                        </Grid>
+                    </ci:Emptiable>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <ci:FluentIcon Glyph="&#xEF27;" FontSize="24" Height="24" VerticalAlignment="Center" />
+                            <TextBlock FontSize="24">设置</TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                
+                <ScrollViewer>
+                    <StackPanel Classes="settings-container animated-intro">
+                        <TextBlock>666</TextBlock>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+        
+        <fa:CommandBar Grid.Row="0" HorizontalAlignment="Right" DefaultLabelPosition="Right">
+            <fa:CommandBar.PrimaryCommands>
+                <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEEB5;}"
+                                     Label="保存"
+                                     ToolTip.Tip="保存当前档案文件。"/>
+                <!-- <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEE2F;}" -->
+                <!--                      Label="帮助" -->
+                <!--                      Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}" -->
+                <!--                      CommandParameter="https://docs.classisland.tech/app/profile/" -->
+                <!--                      ToolTip.Tip="查看值日表编辑器帮助"/> -->
+            </fa:CommandBar.PrimaryCommands>
+        </fa:CommandBar>
+    </Grid>
+</ci:SettingsPageBase>

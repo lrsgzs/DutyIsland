@@ -27,6 +27,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Views\" />
+	  <Folder Include="ViewModels\SettingPages\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="Views\SettingPages\DutySettingsPage.axaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Views\SettingPages\DutySettingsPage.axaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
 	</ItemGroup>
 </Project>
