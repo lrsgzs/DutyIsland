@@ -9,4 +9,9 @@ public partial class DutyPlanTemplate : ObservableObject
     [ObservableProperty] private string _templateName = string.Empty;
     
     [ObservableProperty] private ObservableDictionary<Guid, DutyPlanTemplateItem> _workerTemplateDictionary = new();
+
+    public DutyPlanTemplate()
+    {
+        Guid = Guid.NewGuid();
+    }
 }
