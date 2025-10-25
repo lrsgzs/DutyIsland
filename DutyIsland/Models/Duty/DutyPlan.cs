@@ -6,7 +6,7 @@ namespace DutyIsland.Models.Duty;
 
 public partial class DutyPlan : ObservableObject
 {
-    [ObservableProperty] private string _name = string.Empty;
+    [ObservableProperty] private string _name = "新值日表";
     [ObservableProperty] private Guid _templateGuid = Guid.Empty;
     [ObservableProperty] private ObservableDictionary<Guid, ObservableCollection<string>> _workerDictionary = new();
 }
