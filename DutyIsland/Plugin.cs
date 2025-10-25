@@ -5,6 +5,7 @@ using ClassIsland.Core.Extensions.Registry;
 using DutyIsland.Services;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
+using DutyIsland.ViewModels.SettingPages;
 using DutyIsland.Views.SettingPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +25,9 @@ public class Plugin : PluginBase
         _logger.Info("加载配置...");
         GlobalConstants.PluginConfigFolder = PluginConfigFolder;
         GlobalConstants.Config = new ConfigHandler();
+        
+        _logger.Info("注册视图模型...");
+        services.AddTransient<DutyViewModel>();
         
         _logger.Info("添加设置页面...");
         services.AddSettingsPage<DutySettingsPage>();

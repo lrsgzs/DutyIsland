@@ -27,10 +27,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="ViewModels\SettingPages\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <AdditionalFiles Include="Views\SettingPages\DutySettingsPage.axaml" />
 	</ItemGroup>
 
