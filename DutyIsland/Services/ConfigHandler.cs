@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using ClassIsland.Shared.Helpers;
-using DutyIsland.Model;
+using DutyIsland.Models;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
 

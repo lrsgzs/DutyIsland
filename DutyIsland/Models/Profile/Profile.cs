@@ -1,11 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using ClassIsland.Shared.ComponentModels;
 using CommunityToolkit.Mvvm.ComponentModel;
-using DutyIsland.Model.Duty;
+using DutyIsland.Models.Duty;
 
-namespace DutyIsland.Model.Profile;
+namespace DutyIsland.Models.Profile;
 
 public partial class Profile : ObservableObject
 {
-    [ObservableProperty] private ObservableCollection<DutyPlan> _dutyPlans = [];
-    [ObservableProperty] private ObservableCollection<DutyPlanTemplate> _dutyPlanTemplates = [];
+    [ObservableProperty] private ObservableDictionary<Guid, DutyPlan> _dutyPlans = [];
+    [ObservableProperty] private ObservableDictionary<Guid, DutyPlanTemplate> _dutyPlanTemplates = [];
 }

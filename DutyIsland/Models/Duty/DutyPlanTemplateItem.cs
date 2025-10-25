@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace DutyIsland.Model.Duty;
+namespace DutyIsland.Models.Duty;
 
 public partial class DutyPlanTemplateItem : ObservableObject
 {

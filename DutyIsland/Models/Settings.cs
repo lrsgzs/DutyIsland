@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace DutyIsland.Model;
+namespace DutyIsland.Models;
 
 public partial class Settings : ObservableObject
 {
