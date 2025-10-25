@@ -19,6 +19,7 @@ public class ConfigHandler
     {
         Data = new Settings();
         Data.PropertyChanged += OnPropertyChanged;
+        InitializeConfig();
     }
     
     /// <summary>

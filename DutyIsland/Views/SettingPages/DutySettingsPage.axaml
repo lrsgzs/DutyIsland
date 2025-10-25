@@ -61,21 +61,31 @@
                                        DefaultLabelPosition="Right">
                             <fa:CommandBar.PrimaryCommands>
                                 <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE00D;}"
-                                                     Label="添加" ToolTip.Tip="新建一个值日表。"/>
+                                                     Label="添加" ToolTip.Tip="新建一个值日表。"
+                                                     Click="ButtonAddDutyPlan_OnClick"/>
                                 <fa:CommandBarSeparator />
                                 <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE58D;}" 
-                                                     Label="复制" ToolTip.Tip="复制一个当前选中的值日表的副本。"/>
+                                                     Label="复制" ToolTip.Tip="复制一个当前选中的值日表的副本。"
+                                                     Click="ButtonDuplicateDutyPlan_OnClick"/>
                             </fa:CommandBar.PrimaryCommands>
                         </fa:CommandBar>
                         
-                        <ListBox Grid.Row="1">
-                            
+                        <ListBox Grid.Row="1"
+                                 ItemsSource="{Binding ViewModel.DutyPlans.List}"
+                                 SelectedValue="{Binding ViewModel.SelectedDutyPlan}"
+                                 SelectedValueBinding="{Binding Value}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Value.Name}" VerticalAlignment="Center" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
                         </ListBox>
                     </Grid>
                     
                     <GridSplitter Grid.Column="1" Margin="2 0" />
                     
-                    <ci:Emptiable Grid.Column="2" IsDirectContentMode="True">
+                    <ci:Emptiable Grid.Column="2" IsDirectContentMode="True"
+                                  Data="{Binding ViewModel.SelectedDutyPlan}">
                         <Grid>
                             
                         </Grid>
@@ -104,21 +114,31 @@
                                        DefaultLabelPosition="Right">
                             <fa:CommandBar.PrimaryCommands>
                                 <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE00D;}"
-                                                     Label="添加" ToolTip.Tip="新建一个值日表模板。"/>
+                                                     Label="添加" ToolTip.Tip="新建一个值日表模板。"
+                                                     Click="ButtonAddDutyPlanTemplate_OnClick"/>
                                 <fa:CommandBarSeparator />
                                 <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE58D;}" 
-                                                     Label="复制" ToolTip.Tip="复制一个当前选中的值日表模板的副本。"/>
+                                                     Label="复制" ToolTip.Tip="复制一个当前选中的值日表模板的副本。"
+                                                     Click="ButtonDuplicateDutyPlanTemplate_OnClick"/>
                             </fa:CommandBar.PrimaryCommands>
                         </fa:CommandBar>
                         
-                        <ListBox Grid.Row="1">
-                            
+                        <ListBox Grid.Row="1"
+                                 ItemsSource="{Binding ViewModel.DutyPlanTemplates.List}"
+                                 SelectedValue="{Binding ViewModel.SelectedDutyPlanTemplate}"
+                                 SelectedValueBinding="{Binding Value}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Value.TemplateName}" VerticalAlignment="Center" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
                         </ListBox>
                     </Grid>
                     
                     <GridSplitter Grid.Column="1" Margin="2 0" />
                     
-                    <ci:Emptiable Grid.Column="2" IsDirectContentMode="True">
+                    <ci:Emptiable Grid.Column="2" IsDirectContentMode="True"
+                                  Data="{Binding ViewModel.SelectedDutyPlanTemplate}">
                         <Grid>
                             
                         </Grid>
@@ -145,9 +165,9 @@
         
         <fa:CommandBar Grid.Row="0" HorizontalAlignment="Right" DefaultLabelPosition="Right">
             <fa:CommandBar.PrimaryCommands>
-                <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEEB5;}"
-                                     Label="保存"
-                                     ToolTip.Tip="保存当前档案文件。"/>
+                <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEEB5;}" Label="保存"
+                                     ToolTip.Tip="保存当前档案文件。"
+                                     Click="ButtonSave_OnClick"/>
                 <!-- <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEE2F;}" -->
                 <!--                      Label="帮助" -->
                 <!--                      Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}" -->
