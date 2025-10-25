@@ -22,6 +22,27 @@
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
+                            <ci:FluentIcon Glyph="&#xE994;" FontSize="24" Height="24" VerticalAlignment="Center" />
+                            <TextBlock FontSize="24">主页</TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                
+                <ScrollViewer>
+                    <StackPanel Classes="settings-container animated-intro">
+                        <fa:InfoBar IsOpen="True" IsVisible="True" Severity="Informational">
+                            <fa:InfoBar.Message>
+                                欢迎使用 DutyIsland！找不到启用值日表的地方？看看课表的附加设置吧。
+                            </fa:InfoBar.Message>
+                        </fa:InfoBar>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <TabItem>
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
                             <ci:FluentIcon Glyph="&#xE324;" FontSize="24" Height="24" VerticalAlignment="Center" />
                             <TextBlock FontSize="24">值日表</TextBlock>
                         </StackPanel>
