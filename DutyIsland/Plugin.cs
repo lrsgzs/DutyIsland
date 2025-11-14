@@ -2,6 +2,7 @@ using ClassIsland.Core;
 using ClassIsland.Core.Abstractions;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Extensions.Registry;
+using DutyIsland.Controls.AttachedSettingsControls;
 using DutyIsland.Services;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
@@ -27,6 +28,9 @@ public class Plugin : PluginBase
         GlobalConstants.PluginFolder = Info.PluginFolderPath;
         GlobalConstants.PluginConfigFolder = PluginConfigFolder;
         GlobalConstants.Config = new ConfigHandler();
+        
+        _logger.Info("注册附加设置...");
+        services.AddAttachedSettingsControl<DutyPlanAttachedSettingsControl>();
         
         _logger.Info("注册视图模型...");
         services.AddTransient<DutyViewModel>();

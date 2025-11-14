@@ -1,0 +1,27 @@
+﻿<ci:AttachedSettingsControlBase x:TypeArguments="attachedSettings:DutyPlanAttachedSettings"
+                                x:Class="DutyIsland.Controls.AttachedSettingsControls.DutyPlanAttachedSettingsControl"
+                                xmlns="https://github.com/avaloniaui"
+                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                                xmlns:ci="http://classisland.tech/schemas/xaml/core"
+                                xmlns:attachedSettings="clr-namespace:DutyIsland.Models.AttachedSettings"
+                                xmlns:local="clr-namespace:DutyIsland.Controls.AttachedSettingsControls"
+                                mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <StackPanel Spacing="4"
+                DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutyPlanAttachedSettingsControl}}">
+        <ci:Field Label="选择的值日表">
+            <ComboBox ItemsSource="{Binding DutyPlans.List}"
+                      SelectedItem="{Binding SelectedDutyPlanKvp}"
+                      SelectedValue="{Binding Settings.DutyPlanGuid}"
+                      SelectedValueBinding="{Binding Key}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Value.Name}"
+                                   ToolTip.Tip="{Binding Key}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </ci:Field>
+    </StackPanel>
+</ci:AttachedSettingsControlBase>

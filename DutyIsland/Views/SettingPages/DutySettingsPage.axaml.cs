@@ -9,6 +9,7 @@ using ClassIsland.Core.Models.UI;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 using CommunityToolkit.Mvvm.Input;
+using DutyIsland.Models.AttachedSettings;
 using DutyIsland.Models.Duty;
 using DutyIsland.Shared;
 using DutyIsland.ViewModels.SettingPages;
@@ -24,6 +25,7 @@ namespace DutyIsland.Views.SettingPages;
 public partial class DutySettingsPage : SettingsPageBase
 {
     private DutyViewModel ViewModel { get; } = IAppHost.GetService<DutyViewModel>();
+    private ILessonsService LessonsService { get; } = IAppHost.GetService<ILessonsService>();
     
     public DutySettingsPage()
     {
@@ -306,4 +308,20 @@ public partial class DutySettingsPage : SettingsPageBase
     }
 
     #endregion
+
+    private void ButtonGetAttachedSettings_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var settings = IAttachedSettingsHostService.GetAttachedSettingsByPriority
+            <DutyPlanAttachedSettings>(
+                Guid.Parse(GlobalConstants.DutyPlanAttachedSettingsGuid),
+                classPlan: LessonsService.CurrentClassPlan);
+        if (settings?.DutyPlanGuid == null)
+        {
+            Console.WriteLine("未获取到附加设置。");
+            return;
+        }
+
+        var currentDutyPlan = ViewModel.Settings.Profile.DutyPlans[settings.DutyPlanGuid.Value];
+        Console.WriteLine("附加设置：{0} {1}", settings.DutyPlanGuid, currentDutyPlan.Name);
+    }
 }

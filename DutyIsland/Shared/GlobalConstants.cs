@@ -21,4 +21,6 @@ public static class GlobalConstants
     /// 配置
     /// </summary>
     public static ConfigHandler? Config { get; set; }
+
+    public const string DutyPlanAttachedSettingsGuid = "4A0B491E-F6AF-431D-8D0C-B09AA8F5C661";
 }
