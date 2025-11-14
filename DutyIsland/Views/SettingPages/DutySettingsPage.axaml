@@ -195,15 +195,15 @@
                                                             <DataGridTemplateColumn Header="操作">
                                                                 <DataGridTemplateColumn.CellTemplate>
                                                                     <DataTemplate>
-                                                                        <!-- <Button ToolTip.Tip="删除这个执行者。" Foreground="IndianRed" Theme="{StaticResource TransparentButton}" -->
-                                                                        <!--         Command="{Binding DutyPlanRemoveWorkerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutySettingsPage}}" -->
-                                                                        <!--         CommandParameter="{Binding}"> -->
-                                                                        <!--     <ci:IconText Glyph="&#xE61D;" Text="删除" /> -->
-                                                                        <!-- </Button> -->
-                                                                        <ci:AnimatedIconButton Glyph="&#xE61D;" Text="删除" ToolTip.Tip="删除这个执行者。"
-                                                                                               Foreground="IndianRed" Theme="{StaticResource TransparentButton}"
-                                                                                               Command="{Binding DutyPlanRemoveWorkerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutySettingsPage}}"
-                                                                                               CommandParameter="{Binding}"/>
+                                                                        <Button ToolTip.Tip="删除这个执行者。" Foreground="IndianRed" Theme="{StaticResource TransparentButton}"
+                                                                                Command="{Binding DutyPlanRemoveWorkerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutySettingsPage}}"
+                                                                                CommandParameter="{Binding}">
+                                                                            <ci:IconText Glyph="&#xE61D;" Text="删除" />
+                                                                        </Button>
+                                                                        <!-- <ci:AnimatedIconButton Glyph="&#xE61D;" Text="删除" ToolTip.Tip="删除这个执行者。" -->
+                                                                        <!--                        Foreground="IndianRed" Theme="{StaticResource TransparentButton}" -->
+                                                                        <!--                        Command="{Binding DutyPlanRemoveWorkerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutySettingsPage}}" -->
+                                                                        <!--                        CommandParameter="{Binding}"/> -->
                                                                     </DataTemplate>
                                                                 </DataGridTemplateColumn.CellTemplate>
                                                             </DataGridTemplateColumn>
