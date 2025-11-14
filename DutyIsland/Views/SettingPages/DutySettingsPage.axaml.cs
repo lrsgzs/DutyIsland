@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System.Collections.ObjectModel;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Attributes;
@@ -10,6 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 using DutyIsland.Models.Duty;
 using DutyIsland.ViewModels.SettingPages;
 using DynamicData;
+using FluentAvalonia.UI.Controls;
 using ReactiveUI;
 
 namespace DutyIsland.Views.SettingPages;
@@ -86,7 +88,63 @@ public partial class DutySettingsPage : SettingsPageBase
         ViewModel.Settings.Profile.DutyPlans.Remove(key);
         FlyoutHelper.CloseAncestorFlyout(sender);
     }
-    
+
+    private void ButtonImportDutyPlan_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(ViewModel.ImportDutyPlanText))
+        {
+            this.ShowToast(new ToastMessage("注意到导入文本为空，不建议哦")
+            {
+                Duration = TimeSpan.FromSeconds(10),
+                Severity = InfoBarSeverity.Warning
+            });
+            return;
+        }
+
+        var peopleList = ViewModel.ImportDutyPlanText
+            .Split("\n")
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name.Trim())
+            .ToList();
+
+        if (peopleList.Count == 0)
+        {
+            this.ShowToast(new ToastMessage("注意到导入文本没有有效人员")
+            {
+                Duration = TimeSpan.FromSeconds(10),
+                Severity = InfoBarSeverity.Warning
+            });
+            return;
+        }
+        
+        var templateItems = ViewModel.SelectedDutyPlan!.TemplateItems;
+        var workerDictionary = ViewModel.SelectedDutyPlan.WorkerDictionary;
+
+        var currentPeopleIndex = 0;
+        for (var i = 0; i < templateItems!.List.Count & currentPeopleIndex < peopleList.Count; i++)
+        {
+            var templateKvp = templateItems.List[i];
+            ObservableCollection<WorkerItem> workers = [];
+            
+            for (var j = 0; j < templateKvp.Value.WorkerCount & currentPeopleIndex < peopleList.Count; j++)
+            {
+                workers.Add(new WorkerItem { Name = peopleList[currentPeopleIndex] });
+                currentPeopleIndex++;
+            }
+
+            if (workerDictionary.TryGetValue(templateKvp.Key, out var item))
+            {
+                item.Workers = workers;
+            }
+            else
+            {
+                workerDictionary[templateKvp.Key] = new DutyPlanItem { Workers = workers };
+            }
+        }
+
+        ViewModel.ImportDutyPlanText = "";
+        FlyoutHelper.CloseAncestorFlyout(sender);
+    }
     
     private void DutyPlanAddWorkerButton_OnClick(object? sender, RoutedEventArgs e)
     {

@@ -90,8 +90,18 @@
                             <fa:CommandBar Grid.Row="0" DefaultLabelPosition="Right" Classes="hide-popup-indicator">
                                 <fa:CommandBar.PrimaryCommands>
                                     <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEFDD;}"
-                                                         Label="导入" ToolTip.Tip="从文本快速导入值日人员。（还未完成）"
-                                                         IsEnabled="False"/>
+                                                         Label="导入" ToolTip.Tip="从文本快速导入值日执行者。">
+                                        <fa:CommandBarButton.Flyout>
+                                            <Flyout>
+                                                <StackPanel Spacing="8">
+                                                    <TextBlock Text="在下方粘贴值日名单，将会按「标准人数」自动填充。" />
+                                                    <TextBox Height="64" AcceptsReturn="True" Text="{Binding ViewModel.ImportDutyPlanText}" />
+                                                    <TextBlock Text="导入后将会覆盖已有执行者信息！此操作无法撤销。" />
+                                                    <Button Content="导入" Classes="accent" Click="ButtonImportDutyPlan_OnClick"/>
+                                                </StackPanel>
+                                            </Flyout>
+                                        </fa:CommandBarButton.Flyout>
+                                    </fa:CommandBarButton>
                                     
                                     <fa:CommandBarSeparator/>
                                     
@@ -284,9 +294,9 @@
                                             <Flyout>
                                                 <StackPanel Spacing="8">
                                                     <TextBlock FontWeight="Bold">
-                                                        <Run Text="要删除值日表模板" />
+                                                        <Run Text="要删除值日表模板「" />
                                                         <Run Text="{Binding ViewModel.SelectedDutyPlanTemplate.TemplateName}" />
-                                                        <Run Text="吗？" />
+                                                        <Run Text="」吗？" />
                                                     </TextBlock>
                                                     <TextBlock Text="此操作无法撤销。" />
                                                     <Button Content="删除" Classes="accent" Click="ButtonDeleteSelectedDutyPlanTemplate_OnClick"/>

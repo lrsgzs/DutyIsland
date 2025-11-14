@@ -20,12 +20,11 @@ public partial class DutyViewModel : ObservableRecipient
     public SyncDictionaryList<Guid, DutyPlanTemplate> DutyPlanTemplates { get; set; }
 
     [ObservableProperty] private DutyPlan? _selectedDutyPlan = null;
+    [ObservableProperty] private string _importDutyPlanText = string.Empty;
     [ObservableProperty] private KeyValuePair<Guid, DutyPlanTemplate>? _dutyPlanSelectedDutyPlanTemplateKvp = null;
     [ObservableProperty] private Guid? _selectedDutyPlanItemGuid = null;
     [ObservableProperty] private DutyPlanItem? _selectedDutyPlanItem = null;
-    
     private KeyValuePair<Guid, DutyPlanTemplateItem>? _selectedDutyPlanItemKvp = null;
-    
     public KeyValuePair<Guid, DutyPlanTemplateItem>? SelectedDutyPlanItemKvp
     {
         get => _selectedDutyPlanItemKvp;
@@ -63,7 +62,6 @@ public partial class DutyViewModel : ObservableRecipient
     [ObservableProperty] private ToastMessage? _currentTemplateItemDeleteRevertToast;
     [ObservableProperty] private Guid? _selectedDutyPlanTemplateItem = null;
     private KeyValuePair<Guid, DutyPlanTemplateItem>? _selectedDutyPlanTemplateItemKvp = null;
-
     public KeyValuePair<Guid, DutyPlanTemplateItem>? SelectedDutyPlanTemplateItemKvp
     {
         get => _selectedDutyPlanTemplateItemKvp;

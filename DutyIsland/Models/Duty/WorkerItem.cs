@@ -5,4 +5,9 @@ namespace DutyIsland.Models.Duty;
 public partial class WorkerItem : ObservableRecipient
 {
     [ObservableProperty] private string _name = string.Empty;
+
+    public override string ToString()
+    {
+        return Name;
+    }
 }
