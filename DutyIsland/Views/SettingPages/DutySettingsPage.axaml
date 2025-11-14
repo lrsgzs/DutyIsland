@@ -86,8 +86,99 @@
                     
                     <ci:Emptiable Grid.Column="2" IsDirectContentMode="True"
                                   Data="{Binding ViewModel.SelectedDutyPlan}">
-                        <Grid>
+                        <Grid RowDefinitions="Auto *">
+                            <fa:CommandBar Grid.Row="0" DefaultLabelPosition="Right" Classes="hide-popup-indicator">
+                                <fa:CommandBar.PrimaryCommands>
+                                    <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEFDD;}"
+                                                         Label="导入" ToolTip.Tip="从文本快速导入值日人员。（还未完成）"
+                                                         IsEnabled="False"/>
+                                    
+                                    <fa:CommandBarSeparator/>
+                                    
+                                    <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE61D;}"
+                                                         Label="删除值日表" ToolTip.Tip="删除该值日表。">
+                                        <fa:CommandBarButton.Flyout>
+                                            <Flyout>
+                                                <StackPanel Spacing="8">
+                                                    <TextBlock FontWeight="Bold">
+                                                        <Run Text="要删除值日表「" />
+                                                        <Run Text="{Binding ViewModel.SelectedDutyPlan.Name}" />
+                                                        <Run Text="」吗？" />
+                                                    </TextBlock>
+                                                    <TextBlock Text="使用了该值日表的附加设置将会失效！且此操作无法撤销。" />
+                                                    <Button Content="删除" Classes="accent" Click="ButtonDeleteSelectedDutyPlan_OnClick"/>
+                                                </StackPanel>
+                                            </Flyout>
+                                        </fa:CommandBarButton.Flyout>
+                                    </fa:CommandBarButton>
+                                </fa:CommandBar.PrimaryCommands>
+                            </fa:CommandBar>
                             
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="350" MinWidth="300" MaxWidth="450" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <ListBox Grid.Column="0" Margin="0 0 4 0"
+                                         ItemsSource="{Binding ViewModel.SelectedDutyPlan.TemplateItems.List, UpdateSourceTrigger=PropertyChanged}"
+                                         SelectedItem="{Binding ViewModel.SelectedDutyPlanItemKvp}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Value.Name}" VerticalAlignment="Center" />
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+
+                                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+                                <ScrollViewer Grid.Column="2" Margin="8">
+                                    <Grid RowDefinitions="Auto, Auto, Auto">
+                                        <StackPanel Grid.Row="0" Spacing="8">
+                                            <TextBlock Text="值日表信息" Theme="{StaticResource SubtitleTextBlockStyle}" />
+                                            
+                                            <ci:Field Label="名称">
+                                                <TextBox Text="{Binding ViewModel.SelectedDutyPlan.Name}"/>
+                                            </ci:Field>
+                                            
+                                            <ci:Field Label="模板">
+                                                <ComboBox ItemsSource="{Binding ViewModel.DutyPlanTemplates.List}"
+                                                          SelectedItem="{Binding ViewModel.DutyPlanSelectedDutyPlanTemplateKvp}"
+                                                          SelectedValue="{Binding ViewModel.SelectedDutyPlan.TemplateGuid}"
+                                                          SelectedValueBinding="{Binding Key}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Value.TemplateName}"
+                                                                       ToolTip.Tip="{Binding Key}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </ci:Field>
+                                        </StackPanel>
+                                        
+                                        <Separator Grid.Row="1" Margin="-8 16"/>
+                                        
+                                        <ci:Emptiable Grid.Row="2" IsDirectContentMode="True"
+                                                      Data="{Binding ViewModel.SelectedDutyPlanItemKvp}">
+                                            <StackPanel Spacing="8">
+                                                <TextBlock Text="任务信息" Theme="{StaticResource SubtitleTextBlockStyle}"/>
+                                                <TextBlock>
+                                                    <Run Text="任务名称:" />
+                                                    <Run Text="{Binding ViewModel.SelectedDutyPlanItemKvp.Value.Name}" />
+                                                </TextBlock>
+                                                <ListBox ItemsSource="{Binding  ViewModel.SelectedDutyPlanItem.Workers}">
+                                                    <ListBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                                                        </DataTemplate>
+                                                    </ListBox.ItemTemplate>
+                                                </ListBox>
+                                            </StackPanel>
+                                        </ci:Emptiable> 
+                                    </Grid>
+                                </ScrollViewer>
+                            </Grid>
                         </Grid>
                     </ci:Emptiable>
                 </Grid>
@@ -139,8 +230,159 @@
                     
                     <ci:Emptiable Grid.Column="2" IsDirectContentMode="True"
                                   Data="{Binding ViewModel.SelectedDutyPlanTemplate}">
-                        <Grid>
+                        <Grid RowDefinitions="Auto *">
+                            <fa:CommandBar Grid.Row="0" DefaultLabelPosition="Right" Classes="hide-popup-indicator">
+                                <fa:CommandBar.PrimaryCommands>
+                                    <fa:CommandBarButton Click="ButtonAddDutyPlanTemplateItem_OnClick" 
+                                                         IconSource="{ci:FluentIconSource &#xF198;}"
+                                                         Label="添加任务" ToolTip.Tip="添加值日任务。"/>
+                                    
+                                    <fa:CommandBarButton Click="ButtonRemoveDutyPlanTemplateItem_OnClick"
+                                                         Label="删除" ToolTip.Tip="删除选中的值日任务。"
+                                                         IsEnabled="{Binding ViewModel.SelectedDutyPlanTemplateItem, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                        <fa:CommandBarButton.IconSource>
+                                            <fa:SymbolIconSource Symbol="Remove"/>
+                                        </fa:CommandBarButton.IconSource>
+                                    </fa:CommandBarButton>
+                                    
+                                    <fa:CommandBarSeparator/>
+                                    
+                                    <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE61D;}"
+                                                         Label="删除模板" ToolTip.Tip="删除该值日表模板。">
+                                        <fa:CommandBarButton.Flyout>
+                                            <Flyout>
+                                                <StackPanel Spacing="8">
+                                                    <TextBlock FontWeight="Bold">
+                                                        <Run Text="要删除值日表模板" />
+                                                        <Run Text="{Binding ViewModel.SelectedDutyPlanTemplate.TemplateName}" />
+                                                        <Run Text="吗？" />
+                                                    </TextBlock>
+                                                    <TextBlock Text="此操作无法撤销。" />
+                                                    <Button Content="删除" Classes="accent" Click="ButtonDeleteSelectedDutyPlanTemplate_OnClick"/>
+                                                </StackPanel>
+                                            </Flyout>
+                                        </fa:CommandBarButton.Flyout>
+                                    </fa:CommandBarButton>
+                                </fa:CommandBar.PrimaryCommands>
+                            </fa:CommandBar>
                             
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="350" MinWidth="300" MaxWidth="450" />
+                                </Grid.ColumnDefinitions>
+
+                                <DataGrid Grid.Column="0" Margin="0 0 4 0"
+                                          AutoGenerateColumns="False"
+                                          CanUserSortColumns="False"
+                                          RowHeaderWidth="150"
+                                          GridLinesVisibility="Horizontal"
+                                          ItemsSource="{Binding ViewModel.SelectedDutyPlanTemplate.WorkerTemplateDictionary}"
+                                          SelectedItem="{Binding ViewModel.SelectedDutyPlanTemplateItemKvp}"
+                                          IsReadOnly="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding Value.Name}"
+                                                            Header="任务名称" />
+                                        
+                                        <DataGridTemplateColumn Header="标准人数" MinWidth="100">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <NumericUpDown Value="{Binding Value.WorkerCount}"
+                                                                   FormatString="0"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        
+                                        <DataGridCheckBoxColumn Binding="{Binding Value.NotificationData.EnableNotification}"
+                                                                Header="启用提醒?" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+                                <ScrollViewer Grid.Column="2" Margin="8">
+                                    <Grid RowDefinitions="Auto, Auto, Auto">
+                                        <StackPanel Grid.Row="0" Spacing="8"
+                                                    DataContext="{Binding ViewModel.SelectedDutyPlanTemplate}">
+                                            <TextBlock Text="值日表模板信息" Theme="{StaticResource SubtitleTextBlockStyle}" />
+                                            
+                                            <ci:Field Label="名称">
+                                                <TextBox Text="{Binding TemplateName}"/>
+                                            </ci:Field>
+                                        </StackPanel>
+                                        
+                                        <Separator Grid.Row="1" Margin="-8 16"/>
+                                        
+                                        <ci:Emptiable Grid.Row="2" IsDirectContentMode="True"
+                                                      Data="{Binding ViewModel.SelectedDutyPlanTemplateItemKvp}">
+                                            <StackPanel Spacing="8" DataContext="{Binding ViewModel.SelectedDutyPlanTemplateItemKvp.Value}">
+                                                <TextBlock Text="任务信息" Theme="{StaticResource SubtitleTextBlockStyle}"/>
+                                                
+                                                <ci:Field Label="任务名称">
+                                                    <TextBox Text="{Binding Name}"/>
+                                                </ci:Field>
+                                                
+                                                <ci:Field Label="任务人数">
+                                                    <NumericUpDown Text="{Binding WorkerCount}" FormatString="0"/>
+                                                </ci:Field>
+                                                
+                                                <Expander Classes="compact stretch-header" IsExpanded="True">
+                                                    <Expander.Header>
+                                                        <ci:IconText Glyph="&#xE025;" Text="提醒设置" />
+                                                    </Expander.Header>
+                                                    
+                                                    <StackPanel Spacing="8" DataContext="{Binding NotificationData}">
+                                                        <CheckBox Content="启用?" IsChecked="{Binding EnableNotification}" />
+                                                        
+                                                        <ci:Field Label="提醒时间">
+                                                            <TimePicker SelectedTime="{Binding NotificationTime}" UseSeconds="True" />
+                                                        </ci:Field>
+                                                        
+                                                        <ci:Field Label="遮罩内容">
+                                                            <TextBox Text="{Binding NotificationTitle}" />
+                                                        </ci:Field>
+                                                        
+                                                        <ci:Field Label="遮罩时长" Suffix="秒">
+                                                            <NumericUpDown Increment="0.5" FormatString="0.0"
+                                                                           Value="{Binding NotificationTitleDuration}" />
+                                                        </ci:Field>
+                                                        
+                                                        <ci:Field Label="正文内容">
+                                                            <Grid ColumnDefinitions="*, Auto">
+                                                                <TextBox Grid.Column="0" Text="{Binding NotificationText}" />
+                                                                
+                                                                <Button Grid.Column="1" Theme="{StaticResource TransparentButton}"
+                                                                        Content="{ci:FluentIcon &#xEE31;}">
+                                                                    <Button.Flyout>
+                                                                        <Flyout>
+                                                                            <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *">
+                                                                                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                                                                                    <Run Text="格式化变量说明" FontWeight="Bold" />
+                                                                                </TextBlock>
+                                                                                
+                                                                                <SelectableTextBlock Grid.Row="1" Grid.Column="0" Margin="0 0 4 0">
+                                                                                    <Run Text="%n - 履行该任务的成员，以 '、' 为分隔符"/><LineBreak/>
+                                                                                    <Run Text="%j - 该任务名称"/><LineBreak/>
+                                                                                </SelectableTextBlock>
+                                                                            </Grid>
+                                                                        </Flyout>
+                                                                    </Button.Flyout>
+                                                                </Button>
+                                                            </Grid>
+                                                        </ci:Field>
+                                                        
+                                                        <ci:Field Label="正文时长" Suffix="秒">
+                                                            <NumericUpDown Increment="0.5" FormatString="0.0"
+                                                                           Value="{Binding NotificationTextDuration}" />
+                                                        </ci:Field>
+                                                    </StackPanel>
+                                                </Expander>
+                                            </StackPanel>
+                                        </ci:Emptiable>
+                                    </Grid>
+                                </ScrollViewer>
+                            </Grid>
                         </Grid>
                     </ci:Emptiable>
                 </Grid>
