@@ -8,6 +8,11 @@ namespace DutyIsland.Shared;
 public static class GlobalConstants
 {
     /// <summary>
+    /// 插件路径
+    /// </summary>
+    public static string? PluginFolder { get; set; }
+    
+    /// <summary>
     /// 插件配置路径
     /// </summary>
     public static string? PluginConfigFolder { get; set; }

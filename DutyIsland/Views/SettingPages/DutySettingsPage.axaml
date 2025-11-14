@@ -6,6 +6,7 @@
                      xmlns:ci="http://classisland.tech/schemas/xaml/core"
                      xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
                      xmlns:local="clr-namespace:DutyIsland.Views.SettingPages"
+                     xmlns:system="clr-namespace:System;assembly=System.Runtime"
                      mc:Ignorable="d">
     <Grid RowDefinitions="48, *" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DutySettingsPage}}">
         <Border Grid.Row="0" Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}"
@@ -200,10 +201,6 @@
                                                                                 CommandParameter="{Binding}">
                                                                             <ci:IconText Glyph="&#xE61D;" Text="删除" />
                                                                         </Button>
-                                                                        <!-- <ci:AnimatedIconButton Glyph="&#xE61D;" Text="删除" ToolTip.Tip="删除这个执行者。" -->
-                                                                        <!--                        Foreground="IndianRed" Theme="{StaticResource TransparentButton}" -->
-                                                                        <!--                        Command="{Binding DutyPlanRemoveWorkerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutySettingsPage}}" -->
-                                                                        <!--                        CommandParameter="{Binding}"/> -->
                                                                     </DataTemplate>
                                                                 </DataGridTemplateColumn.CellTemplate>
                                                             </DataGridTemplateColumn>
@@ -224,6 +221,7 @@
                     </ci:Emptiable>
                 </Grid>
             </TabItem>
+            
             <TabItem>
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
@@ -434,6 +432,7 @@
                     </ci:Emptiable>
                 </Grid>
             </TabItem>
+            
             <TabItem>
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
@@ -446,7 +445,53 @@
                 
                 <ScrollViewer>
                     <StackPanel Classes="settings-container animated-intro">
-                        <TextBlock>666</TextBlock>
+                        <Border ClipToBounds="True">
+                            <StackPanel>
+                                <!-- <Border CornerRadius="4 4 0 0"> -->
+                                <!--     <Image Source="/Assets/Banner.png" Stretch="UniformToFill" HorizontalAlignment="Center" -->
+                                <!--            VerticalAlignment="Center" /> -->
+                                <!-- </Border> -->
+                                
+                                <StackPanel Classes="cardContainer">
+                                    <fa:SettingsExpanderItem IsClickEnabled="True" Click="UIElementAppInfo_OnMouseDown">
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <TextBlock Background="Transparent" PointerPressed="UIElementAppInfo_OnMouseDown">
+                                                <Run Text="DutyIsland" FontSize="24" />
+                                                <Run Text="0.0.0.0 (Codename Paimon)" />
+                                                <LineBreak />
+                                                <Run Text="Copyright (c) 2023-2025  lrs2187/lrsgzs"/>
+                                            </TextBlock>
+                                            
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right"
+                                                        Spacing="2">
+                                                <!-- <Button Theme="{StaticResource TransparentButton}" -->
+                                                <!--         Content="{ci:FluentIcon &#xE23C;, FontSize=20}" -->
+                                                <!--         ToolTip.Tip="文档" -->
+                                                <!--         Click="UriNavigationCommands_OnClick" -->
+                                                <!--         CommandParameter="https://docs.classisland.tech"/> -->
+                                                <Button Theme="{StaticResource TransparentButton}"
+                                                        Content="{ci:LucideIcon &#xE0EA;, FontSize=16}"
+                                                        ToolTip.Tip="GitHub"
+                                                        Click="UriNavigationCommands_OnClick"
+                                                        CommandParameter="https://github.com/lrsgzs/DutyIsland"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </fa:SettingsExpanderItem>
+
+                                    <fa:SettingsExpanderItem 
+                                        Content="查看开放源代码许可"
+                                        Click="SettingsExpanderItemShowOssLicense_OnClick"
+                                        IsClickEnabled="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        
+                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xf023;}"
+                                             Header="启用提醒?" Description="控制全局的提醒启用状态。">
+                            <fa:SettingsExpander.Footer>
+                                <ToggleSwitch IsChecked="{Binding ViewModel.Settings.GlobalEnableNotification}"/>
+                            </fa:SettingsExpander.Footer>
+                        </fa:SettingsExpander>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>

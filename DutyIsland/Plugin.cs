@@ -19,10 +19,12 @@ public class Plugin : PluginBase
     
     public override void Initialize(HostBuilderContext context, IServiceCollection services)
     {
+        _logger.Info("DutyIsland  Copyright (C) 2025  lrs2187/lrsgzs\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it under certain conditions.");
         _logger.Info("欢迎使用 DutyIsland");
         _logger.Info("初期化中...");
 
         _logger.Info("加载配置...");
+        GlobalConstants.PluginFolder = Info.PluginFolderPath;
         GlobalConstants.PluginConfigFolder = PluginConfigFolder;
         GlobalConstants.Config = new ConfigHandler();
         

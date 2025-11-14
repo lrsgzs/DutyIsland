@@ -15,6 +15,7 @@ public partial class DutyViewModel : ObservableRecipient
 {
     public ConfigHandler ConfigHandler { get; } = GlobalConstants.Config!;
     public Settings Settings { get; } = GlobalConstants.Config!.Data;
+    public int AppIconClickCount { get; set; } = 0;
     
     public SyncDictionaryList<Guid, DutyPlan> DutyPlans { get; set; }
     public SyncDictionaryList<Guid, DutyPlanTemplate> DutyPlanTemplates { get; set; }
