@@ -6,6 +6,7 @@ using ClassIsland.Core.Helpers.UI;
 using ClassIsland.Core.Models.UI;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
+using CommunityToolkit.Mvvm.Input;
 using DutyIsland.Models.Duty;
 using DutyIsland.ViewModels.SettingPages;
 using DynamicData;
@@ -84,6 +85,33 @@ public partial class DutySettingsPage : SettingsPageBase
 
         ViewModel.Settings.Profile.DutyPlans.Remove(key);
         FlyoutHelper.CloseAncestorFlyout(sender);
+    }
+    
+    
+    private void DutyPlanAddWorkerButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.SelectedDutyPlanItem?.Workers.Add(new WorkerItem());
+    }
+    
+    [RelayCommand]
+    private void DutyPlanRemoveWorker(WorkerItem item)
+    {
+        ViewModel.SelectedDutyPlanItem?.Workers.Remove(item);
+        
+        var revertButton = new Button { Content = "撤销" };
+        var toastMessage = new ToastMessage($"已删除项目「{item}」。")
+        {
+            ActionContent = revertButton,
+            Duration = TimeSpan.FromSeconds(10)
+        };
+        
+        revertButton.Click += (o, args) =>
+        {
+            ViewModel.SelectedDutyPlanItem?.Workers.Add(item);
+            toastMessage.Close();
+        };
+        
+        this.ShowToast(toastMessage);
     }
 
     #endregion
