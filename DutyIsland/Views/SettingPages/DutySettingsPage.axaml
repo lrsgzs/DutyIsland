@@ -167,7 +167,12 @@
                                                     <Run Text="任务名称:" />
                                                     <Run Text="{Binding ViewModel.SelectedDutyPlanItemKvp.Value.Name}" />
                                                 </TextBlock>
-                                                <ListBox ItemsSource="{Binding  ViewModel.SelectedDutyPlanItem.Workers}">
+                                                <TextBlock>
+                                                    <Run Text="标准人数:" />
+                                                    <Run Text="{Binding ViewModel.SelectedDutyPlanItemKvp.Value.WorkerCount}" />
+                                                </TextBlock>
+                                                
+                                                <ListBox ItemsSource="{Binding ViewModel.SelectedDutyPlanItem.Workers}">
                                                     <ListBox.ItemTemplate>
                                                         <DataTemplate>
                                                             <TextBlock Text="{Binding}" VerticalAlignment="Center" />
@@ -278,24 +283,30 @@
                                           CanUserSortColumns="False"
                                           RowHeaderWidth="150"
                                           GridLinesVisibility="Horizontal"
+                                          IsReadOnly="False"
                                           ItemsSource="{Binding ViewModel.SelectedDutyPlanTemplate.WorkerTemplateDictionary}"
-                                          SelectedItem="{Binding ViewModel.SelectedDutyPlanTemplateItemKvp}"
-                                          IsReadOnly="False">
+                                          SelectedItem="{Binding ViewModel.SelectedDutyPlanTemplateItemKvp}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding Value.Name}"
-                                                            Header="任务名称" />
+                                        <DataGridTextColumn Binding="{Binding Value.Name, Mode=TwoWay}"
+                                                            Header="任务名称" IsReadOnly="False" />
                                         
-                                        <DataGridTemplateColumn Header="标准人数" MinWidth="100">
+                                        <DataGridTemplateColumn Header="标准人数" MinWidth="100" IsReadOnly="False">
                                             <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Value.WorkerCount}"
+                                                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                            <DataGridTemplateColumn.CellEditingTemplate>
                                                 <DataTemplate>
                                                     <NumericUpDown Value="{Binding Value.WorkerCount}"
                                                                    FormatString="0"/>
                                                 </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn.CellEditingTemplate>
                                         </DataGridTemplateColumn>
                                         
-                                        <DataGridCheckBoxColumn Binding="{Binding Value.NotificationData.EnableNotification}"
-                                                                Header="启用提醒?" />
+                                        <DataGridCheckBoxColumn Binding="{Binding Value.NotificationData.EnableNotification, Mode=TwoWay}"
+                                                                Header="启用提醒?" IsReadOnly="False" />
                                     </DataGrid.Columns>
                                 </DataGrid>
 
