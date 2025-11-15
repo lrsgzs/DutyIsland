@@ -2,6 +2,7 @@ using ClassIsland.Core;
 using ClassIsland.Core.Abstractions;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Extensions.Registry;
+using ClassIsland.Shared;
 using DutyIsland.Controls.AttachedSettingsControls;
 using DutyIsland.Services;
 using DutyIsland.Shared;
@@ -29,6 +30,9 @@ public class Plugin : PluginBase
         GlobalConstants.PluginConfigFolder = PluginConfigFolder;
         GlobalConstants.Config = new ConfigHandler();
         
+        _logger.Info("注册服务...");
+        services.AddSingleton<DutyPlanService>();
+        
         _logger.Info("注册附加设置...");
         services.AddAttachedSettingsControl<DutyPlanAttachedSettingsControl>();
         
@@ -37,6 +41,13 @@ public class Plugin : PluginBase
         
         _logger.Info("添加设置页面...");
         services.AddSettingsPage<DutySettingsPage>();
+
+        // 应用启动
+        AppBase.Current.AppStarted += (_, _) =>
+        {
+            _logger.Info("兜底：启动 DutyPlanService...");
+            IAppHost.GetService<DutyPlanService>();
+        };
         
         // 应用退出
         AppBase.Current.AppStopping += (_,_) =>

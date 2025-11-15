@@ -160,12 +160,12 @@ public partial class DutySettingsPage : SettingsPageBase
         var workerDictionary = ViewModel.SelectedDutyPlan.WorkerDictionary;
 
         var currentPeopleIndex = 0;
-        for (var i = 0; i < templateItems!.List.Count & currentPeopleIndex < peopleList.Count; i++)
+        for (var i = 0; i < templateItems!.List.Count && currentPeopleIndex < peopleList.Count; i++)
         {
             var templateKvp = templateItems.List[i];
             ObservableCollection<WorkerItem> workers = [];
             
-            for (var j = 0; j < templateKvp.Value.WorkerCount & currentPeopleIndex < peopleList.Count; j++)
+            for (var j = 0; j < templateKvp.Value.WorkerCount && currentPeopleIndex < peopleList.Count; j++)
             {
                 workers.Add(new WorkerItem { Name = peopleList[currentPeopleIndex] });
                 currentPeopleIndex++;
