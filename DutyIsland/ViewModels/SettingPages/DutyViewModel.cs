@@ -4,6 +4,7 @@ using ClassIsland.Core.ComponentModels;
 using ClassIsland.Core.Models.UI;
 using ClassIsland.Shared.ComponentModels;
 using CommunityToolkit.Mvvm.ComponentModel;
+using DutyIsland.ComponentModels;
 using DutyIsland.Models;
 using DutyIsland.Models.Duty;
 using DutyIsland.Services;
@@ -25,8 +26,8 @@ public partial class DutyViewModel : ObservableRecipient
     [ObservableProperty] private KeyValuePair<Guid, DutyPlanTemplate>? _dutyPlanSelectedDutyPlanTemplateKvp = null;
     [ObservableProperty] private Guid? _selectedDutyPlanItemGuid = null;
     [ObservableProperty] private DutyPlanItem? _selectedDutyPlanItem = null;
-    private KeyValuePair<Guid, DutyPlanTemplateItem>? _selectedDutyPlanItemKvp = null;
-    public KeyValuePair<Guid, DutyPlanTemplateItem>? SelectedDutyPlanItemKvp
+    private KeyValuePair<Guid, ObservableValueTuple<DutyPlanItem, DutyPlanTemplateItem>>? _selectedDutyPlanItemKvp = null;
+    public KeyValuePair<Guid, ObservableValueTuple<DutyPlanItem, DutyPlanTemplateItem>>? SelectedDutyPlanItemKvp
     {
         get => _selectedDutyPlanItemKvp;
         set

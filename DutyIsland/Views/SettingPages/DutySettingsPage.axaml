@@ -133,11 +133,31 @@
                                 </Grid.ColumnDefinitions>
                                 
                                 <ListBox Grid.Column="0" Margin="0 0 4 0"
-                                         ItemsSource="{Binding ViewModel.SelectedDutyPlan.TemplateItems.List, UpdateSourceTrigger=PropertyChanged}"
+                                         ItemsSource="{Binding ViewModel.SelectedDutyPlan.ComplexItems.List, UpdateSourceTrigger=PropertyChanged}"
                                          SelectedItem="{Binding ViewModel.SelectedDutyPlanItemKvp}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Value.Name}" VerticalAlignment="Center" />
+                                            <Grid ColumnDefinitions="Auto, *">
+                                                <TextBlock Grid.Column="0" FontSize="13"
+                                                           Text="{Binding Value.Second.Name}" VerticalAlignment="Center" />
+                                                
+                                                <ItemsControl Grid.Column="1" HorizontalAlignment="Right" FontSize="11"
+                                                              ItemsSource="{Binding Value.First.Workers.Items}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel Orientation="Horizontal" ItemSpacing="4" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Foreground="Gray">
+                                                                <Run Text="{Binding Name}" />
+                                                            </TextBlock>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
@@ -381,7 +401,8 @@
                                                         <CheckBox Content="启用?" IsChecked="{Binding EnableNotification}" />
                                                         
                                                         <ci:Field Label="提醒时间">
-                                                            <TimePicker SelectedTime="{Binding NotificationTime}" UseSeconds="True" />
+                                                            <!-- <TimePicker SelectedTime="{Binding NotificationTime}" UseSeconds="True" /> -->
+                                                            <TextBlock Foreground="Gray" FontStyle="Italic">施工中</TextBlock>
                                                         </ci:Field>
                                                         
                                                         <ci:Field Label="遮罩内容">

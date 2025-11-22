@@ -2,6 +2,7 @@
 using ClassIsland.Core.ComponentModels;
 using ClassIsland.Shared.ComponentModels;
 using CommunityToolkit.Mvvm.ComponentModel;
+using DutyIsland.ComponentModels;
 using DutyIsland.Shared;
 
 namespace DutyIsland.Models.Duty;
@@ -20,18 +21,26 @@ public partial class DutyPlan : ObservableObject
             _templateGuid = value;
             
             OnPropertyChanged();
-            OnPropertyChanged(nameof(TemplateItems));
+            OnPropertyChanged(nameof(ComplexItems));
         }
     }
 
     [JsonIgnore]
-    public SyncDictionaryList<Guid, DutyPlanTemplateItem>? TemplateItems
+    public SyncDictionaryList<Guid, ObservableValueTuple<DutyPlanItem, DutyPlanTemplateItem>>? ComplexItems
     {   
         get
         {
             if (GlobalConstants.Config!.Data.Profile.DutyPlanTemplates.TryGetValue(TemplateGuid, out var template))
             {
-                return new SyncDictionaryList<Guid, DutyPlanTemplateItem>(template.WorkerTemplateDictionary, Guid.NewGuid);
+                return new SyncDictionaryList<Guid, ObservableValueTuple<DutyPlanItem, DutyPlanTemplateItem>>(
+                    template.WorkerTemplateDictionary
+                        .Select(e =>
+                        {
+                            var item = WorkerDictionary.GetValueOrDefault(e.Key, new DutyPlanItem());
+                            return KeyValuePair.Create(e.Key, new ObservableValueTuple<DutyPlanItem, DutyPlanTemplateItem>(item, e.Value));
+                        })
+                        .ToDictionary(),
+                    Guid.NewGuid);
             }
 
             return null;

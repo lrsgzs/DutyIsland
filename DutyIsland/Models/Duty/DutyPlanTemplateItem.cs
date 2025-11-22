@@ -6,7 +6,7 @@ public partial class DutyPlanTemplateItem : ObservableObject
 {
     [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private int _workerCount = 1;
-    [ObservableProperty] private NotificationData _notificationData = new();
+    [ObservableProperty] private Notification.NotificationData _notificationData = new();
 
     public override string ToString()
     {

@@ -156,7 +156,7 @@ public partial class DutySettingsPage : SettingsPageBase
             return;
         }
         
-        var templateItems = ViewModel.SelectedDutyPlan!.TemplateItems;
+        var templateItems = ViewModel.SelectedDutyPlan!.ComplexItems;
         var workerDictionary = ViewModel.SelectedDutyPlan.WorkerDictionary;
 
         var currentPeopleIndex = 0;
@@ -165,7 +165,7 @@ public partial class DutySettingsPage : SettingsPageBase
             var templateKvp = templateItems.List[i];
             ObservableCollection<WorkerItem> workers = [];
             
-            for (var j = 0; j < templateKvp.Value.WorkerCount && currentPeopleIndex < peopleList.Count; j++)
+            for (var j = 0; j < templateKvp.Value.Second.WorkerCount && currentPeopleIndex < peopleList.Count; j++)
             {
                 workers.Add(new WorkerItem { Name = peopleList[currentPeopleIndex] });
                 currentPeopleIndex++;

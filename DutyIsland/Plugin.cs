@@ -4,6 +4,7 @@ using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Extensions.Registry;
 using ClassIsland.Shared;
 using DutyIsland.Controls.AttachedSettingsControls;
+using DutyIsland.Controls.Components;
 using DutyIsland.Services;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
@@ -39,9 +40,12 @@ public class Plugin : PluginBase
         _logger.Info("注册视图模型...");
         services.AddTransient<DutyViewModel>();
         
-        _logger.Info("添加设置页面...");
+        _logger.Info("注册设置页面...");
         services.AddSettingsPage<DutySettingsPage>();
 
+        _logger.Info("注册组件...");
+        services.AddComponent<DutyComponent, DutyComponentSettingsControl>();
+        
         // 应用启动
         AppBase.Current.AppStarted += (_, _) =>
         {

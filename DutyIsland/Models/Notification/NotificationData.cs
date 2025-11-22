@@ -1,11 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace DutyIsland.Models;
+namespace DutyIsland.Models.Notification;
 
-public partial class NotificationData : ObservableObject
+public partial class NotificationData : ObservableRecipient
 {
     [ObservableProperty] private bool _enableNotification = false;
-    [ObservableProperty] private TimeSpan _notificationTime = TimeSpan.Zero;
+    [ObservableProperty] private ObservableCollection<NotificationTimeItem> _notificationTimes = [];
     
     [ObservableProperty] private string _notificationTitle = "值日提醒";
     [ObservableProperty] private double _notificationTitleDuration = 3.0;
