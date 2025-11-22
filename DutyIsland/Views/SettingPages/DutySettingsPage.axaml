@@ -392,19 +392,18 @@
                                                     <NumericUpDown Text="{Binding WorkerCount}" FormatString="0"/>
                                                 </ci:Field>
                                                 
-                                                <Expander Classes="compact stretch-header" IsExpanded="True">
+                                                <Expander Classes="compact stretch-header" IsExpanded="{Binding NotificationData.EnableNotification, Mode=OneWay}">
                                                     <Expander.Header>
-                                                        <ci:IconText Glyph="&#xE025;" Text="提醒设置" />
+                                                        <Grid ColumnDefinitions="*, Auto">
+                                                            <ci:IconText Grid.Column="0" Glyph="&#xE025;" Text="提醒设置" />
+                                                            
+                                                            <ToggleSwitch Grid.Column="1" Margin="0,-8,0,-4" VerticalAlignment="Center"
+                                                                          OnContent="" OffContent="" ToolTip.Tip="是否启用提醒设置"
+                                                                          IsChecked="{Binding NotificationData.EnableNotification}"/>
+                                                        </Grid>
                                                     </Expander.Header>
                                                     
                                                     <StackPanel Spacing="8" DataContext="{Binding NotificationData}">
-                                                        <CheckBox Content="启用?" IsChecked="{Binding EnableNotification}" />
-                                                        
-                                                        <ci:Field Label="提醒时间">
-                                                            <!-- <TimePicker SelectedTime="{Binding NotificationTime}" UseSeconds="True" /> -->
-                                                            <TextBlock Foreground="Gray" FontStyle="Italic">施工中</TextBlock>
-                                                        </ci:Field>
-                                                        
                                                         <ci:Field Label="遮罩内容">
                                                             <TextBox Text="{Binding NotificationTitle}" />
                                                         </ci:Field>
@@ -441,6 +440,43 @@
                                                         <ci:Field Label="正文时长" Suffix="秒">
                                                             <NumericUpDown Increment="0.5" FormatString="0.0"
                                                                            Value="{Binding NotificationTextDuration}" />
+                                                        </ci:Field>
+                                                        
+                                                        <ci:Field Label="提醒时间">
+                                                            <StackPanel>
+                                                                <DataGrid AutoGenerateColumns="False"
+                                                                          CanUserSortColumns="False"
+                                                                          IsReadOnly="False"
+                                                                          GridLinesVisibility="Horizontal"
+                                                                          ItemsSource="{Binding NotificationTimes}">
+                                                                    <DataGrid.Columns>
+                                                                        <DataGridTemplateColumn Header="时间">
+                                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                    <TimePicker SelectedTime="{Binding NotificationTime}" UseSeconds="True" />
+                                                                                </DataTemplate>
+                                                                            </DataGridTemplateColumn.CellTemplate>
+                                                                        </DataGridTemplateColumn>
+                            
+                                                                        <DataGridTemplateColumn Header="操作">
+                                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                                <DataTemplate>
+                                                                                    <Button ToolTip.Tip="删除这个时间。" Foreground="IndianRed" Theme="{StaticResource TransparentButton}"
+                                                                                            Command="{Binding DutyPlanTemplateRemoveNotificationTimeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutySettingsPage}}"
+                                                                                            CommandParameter="{Binding}">
+                                                                                        <ci:IconText Glyph="&#xE61D;" Text="删除" />
+                                                                                    </Button>
+                                                                                </DataTemplate>
+                                                                            </DataGridTemplateColumn.CellTemplate>
+                                                                        </DataGridTemplateColumn>
+                                                                    </DataGrid.Columns>
+                                                                </DataGrid>
+                    
+                                                                <Button ToolTip.Tip="添加一个时间。" Margin="0 4 0 0"
+                                                                        Click="DutyPlanTemplateAddNotificationTimeButton_OnClick">
+                                                                    <ci:IconText Glyph="&#xE00D;" Text="添加" />
+                                                                </Button>
+                                                            </StackPanel>
                                                         </ci:Field>
                                                     </StackPanel>
                                                 </Expander>

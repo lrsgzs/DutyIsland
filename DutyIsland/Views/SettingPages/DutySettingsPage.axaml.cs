@@ -11,6 +11,7 @@ using ClassIsland.Shared.Helpers;
 using CommunityToolkit.Mvvm.Input;
 using DutyIsland.Models.AttachedSettings;
 using DutyIsland.Models.Duty;
+using DutyIsland.Models.Notification;
 using DutyIsland.Shared;
 using DutyIsland.ViewModels.SettingPages;
 using DynamicData;
@@ -305,6 +306,32 @@ public partial class DutySettingsPage : SettingsPageBase
             ViewModel.SelectedDutyPlanTemplateItem = templateItemGuid;
             message.Close();
         }
+    }
+    
+    private void DutyPlanTemplateAddNotificationTimeButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.SelectedDutyPlanTemplateItemKvp?.Value.NotificationData.NotificationTimes.Add(new NotificationTimeItem());
+    }
+    
+    [RelayCommand]
+    private void DutyPlanTemplateRemoveNotificationTime(NotificationTimeItem item)
+    {
+        ViewModel.SelectedDutyPlanTemplateItemKvp?.Value.NotificationData.NotificationTimes.Remove(item);
+        
+        var revertButton = new Button { Content = "撤销" };
+        var toastMessage = new ToastMessage($"已删除时间「{item}」。")
+        {
+            ActionContent = revertButton,
+            Duration = TimeSpan.FromSeconds(10)
+        };
+        
+        revertButton.Click += (o, args) =>
+        {
+            ViewModel.SelectedDutyPlanTemplateItemKvp?.Value.NotificationData.NotificationTimes.Add(item);
+            toastMessage.Close();
+        };
+        
+        this.ShowToast(toastMessage);
     }
 
     #endregion
