@@ -1,0 +1,101 @@
+﻿<ci:ComponentBase x:Class="DutyIsland.Controls.Components.DutyComponentSettingsControl"
+                  x:TypeArguments="componentSettings:DutyComponentSettings"
+                  xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:ci="http://classisland.tech/schemas/xaml/core"
+                  xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+                  xmlns:local="clr-namespace:DutyIsland.Controls.Components"
+                  xmlns:componentSettings="clr-namespace:DutyIsland.Models.ComponentSettings"
+                  mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <ScrollViewer>
+        <StackPanel Classes="settings-container animated-intro" Margin="0"
+                    DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutyComponentSettingsControl}}">
+            <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE933;}"
+                                 Header="任务" Description="要显示的任务执行者。">
+                <fa:SettingsExpander.Footer>
+                    <ComboBox ItemsSource="{Binding DutyPlanService.CurrentDutyPlan.ComplexItems.List}"
+                              SelectedValue="{Binding Settings.JobGuid}"
+                              SelectedValueBinding="{Binding Key}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Value.Second.Name}"
+                                           ToolTip.Tip="{Binding Key}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+            
+            <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xEDC7;}" Header="连接符" Description="两个执行者之间的连接符。">
+                <fa:SettingsExpander.Footer>
+                    <TextBox MinWidth="128"
+                             Text="{Binding Settings.ConnectorString}" />
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+            
+            <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xECF3;}"
+                                 Header="回滚选项" Description="在找不到目标任务 Guid 时自动回滚。">
+                <fa:SettingsExpander.Footer>
+                    <ToggleSwitch IsChecked="{Binding Settings.FallbackEnabled, Mode=TwoWay}" />
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+                
+            <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xECCF;}" Header="名称回滚" Description="回滚为右侧任务名称"
+                                 IsVisible="{Binding Settings.FallbackEnabled}">
+                <fa:SettingsExpander.Footer>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox MinWidth="128"
+                                 Text="{Binding Settings.FallbackJobName}" />
+                            
+                        <ci:AnimatedIconButton HorizontalAlignment="Right" VerticalAlignment="Stretch"
+                                               Glyph="&#xE47C;" Text="当前值" Theme="{StaticResource TransparentButton}"
+                                               Click="UseCurrentValueButton_OnClick"
+                                               ToolTip.Tip="填入当前值" />
+                    </StackPanel>
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+                
+            <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xECD9;}" Header="执行者回滚" Description="回滚为下方执行者列表"
+                                 IsVisible="{Binding Settings.FallbackEnabled}">
+                <fa:SettingsExpanderItem>
+                    <StackPanel>
+                        <DataGrid AutoGenerateColumns="False"
+                                  CanUserSortColumns="False"
+                                  IsReadOnly="False"
+                                  GridLinesVisibility="Horizontal"
+                                  ItemsSource="{Binding Settings.FallbackWorkers}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="执行者" IsReadOnly="False"
+                                                    Binding="{Binding Name}" />
+
+                                <DataGridTemplateColumn Header="操作">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button ToolTip.Tip="删除这个执行者。" Foreground="IndianRed" Theme="{StaticResource TransparentButton}"
+                                                    Command="{Binding FallbackWorkersRemoveWorkerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutyComponentSettingsControl}}"
+                                                    CommandParameter="{Binding}">
+                                                <ci:IconText Glyph="&#xE61D;" Text="删除" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <Button ToolTip.Tip="添加一个执行者。" Margin="0 4 0 0"
+                                Click="FallbackWorkersAddWorkerButton_OnClick">
+                            <ci:IconText Glyph="&#xE00D;" Text="添加" />
+                        </Button>
+                    </StackPanel>
+                </fa:SettingsExpanderItem>
+            </fa:SettingsExpander>
+            
+            <TextBlock Foreground="Gray" TextAlignment="Center" FontStyle="Italic"
+                       IsVisible="{Binding Settings.FallbackEnabled}">
+                Tips: 回滚时先查找是否存在您指定的任务名称，如不存在再使用您指定的执行者。
+            </TextBlock>
+        </StackPanel>
+    </ScrollViewer>
+</ci:ComponentBase>

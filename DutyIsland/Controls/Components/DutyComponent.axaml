@@ -1,0 +1,15 @@
+﻿<ci:ComponentBase x:Class="DutyIsland.Controls.Components.DutyComponent"
+                  x:TypeArguments="componentSettings:DutyComponentSettings"
+                  xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:componentSettings="clr-namespace:DutyIsland.Models.ComponentSettings"
+                  xmlns:ci="http://classisland.tech/schemas/xaml/core"
+                  mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                  Loaded="Control_OnLoaded"
+                  Unloaded="Control_OnUnloaded">
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <TextBlock x:Name="WorkersContentTextBlock">loading...</TextBlock>
+    </StackPanel>
+</ci:ComponentBase>

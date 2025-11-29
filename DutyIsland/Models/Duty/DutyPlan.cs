@@ -26,6 +26,9 @@ public partial class DutyPlan : ObservableObject
     }
 
     [JsonIgnore]
+    public DutyPlanTemplate? Template => GlobalConstants.Config!.Data.Profile.DutyPlanTemplates.GetValueOrDefault(TemplateGuid);
+
+    [JsonIgnore]
     public SyncDictionaryList<Guid, ObservableValueTuple<DutyPlanItem, DutyPlanTemplateItem>>? ComplexItems
     {   
         get
