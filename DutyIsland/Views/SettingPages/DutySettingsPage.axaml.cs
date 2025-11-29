@@ -28,6 +28,7 @@ public partial class DutySettingsPage : SettingsPageBase
 {
     private DutyViewModel ViewModel { get; } = IAppHost.GetService<DutyViewModel>();
     private ILessonsService LessonsService { get; } = IAppHost.GetService<ILessonsService>();
+    private string PluginVersion { get; } = GlobalConstants.PluginVersion;
     
     public DutySettingsPage()
     {
