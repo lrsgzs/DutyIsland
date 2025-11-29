@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Attributes;
@@ -342,13 +343,28 @@ public partial class DutySettingsPage : SettingsPageBase
             <DutyPlanAttachedSettings>(
                 Guid.Parse(GlobalConstants.DutyPlanAttachedSettingsGuid),
                 classPlan: LessonsService.CurrentClassPlan);
+        
         if (settings?.DutyPlanGuid == null)
         {
-            Console.WriteLine("未获取到附加设置。");
+            this.ShowToast(new ToastMessage("未获取到附加设置。")
+            {
+                Severity = InfoBarSeverity.Warning,
+                Duration = TimeSpan.FromSeconds(10)
+            });
+            
             return;
         }
 
         var currentDutyPlan = ViewModel.Settings.Profile.DutyPlans[settings.DutyPlanGuid.Value];
-        Console.WriteLine("附加设置：{0} {1}", settings.DutyPlanGuid, currentDutyPlan.Name);
+        
+        this.ShowToast(new ToastMessage($"附加设置中当前启用的课表为「{currentDutyPlan.Name}」。")
+        {
+            Duration = TimeSpan.FromSeconds(10),
+            ActionContent = new TextBlock
+            {
+                Text = settings.DutyPlanGuid.ToString(),
+                Foreground = Brushes.Gray
+            }
+        });
     }
 }

@@ -28,14 +28,8 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
-
+	
 	<ItemGroup>
-	  <AdditionalFiles Include="Views\SettingPages\DutySettingsPage.axaml" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="Views\SettingPages\DutySettingsPage.axaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
+		<AvaloniaResource Include="Assets\**" />
 	</ItemGroup>
 </Project>

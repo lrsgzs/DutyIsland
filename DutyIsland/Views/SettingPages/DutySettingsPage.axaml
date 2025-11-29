@@ -30,10 +30,16 @@
                 </TabItem.HeaderTemplate>
                 
                 <ScrollViewer>
-                    <StackPanel Classes="settings-container animated-intro">
+                    <StackPanel Classes="settings-container animated-intro" Spacing="8">
                         <fa:InfoBar IsOpen="True" IsVisible="True" Severity="Informational">
                             <fa:InfoBar.Message>
                                 欢迎使用 DutyIsland！找不到启用值日表的地方？看看课表的附加设置吧。
+                            </fa:InfoBar.Message>
+                        </fa:InfoBar>
+                        
+                        <fa:InfoBar IsOpen="True" IsVisible="True" Severity="Warning">
+                            <fa:InfoBar.Message>
+                                请注意，DutyIsland 目前不支持自动提醒。将会于一（大）段时间后推出。
                             </fa:InfoBar.Message>
                         </fa:InfoBar>
                     </StackPanel>
@@ -502,46 +508,47 @@
                 
                 <ScrollViewer>
                     <StackPanel Classes="settings-container animated-intro">
-                        <Border ClipToBounds="True">
-                            <StackPanel>
-                                <!-- <Border CornerRadius="4 4 0 0"> -->
-                                <!--     <Image Source="/Assets/Banner.png" Stretch="UniformToFill" HorizontalAlignment="Center" -->
-                                <!--            VerticalAlignment="Center" /> -->
-                                <!-- </Border> -->
+                        <fa:SettingsExpander Header="DutyIsland" IsExpanded="True">
+                            <fa:SettingsExpander.IconSource>
+                                <fa:ImageIconSource Source="/Assets/PluginIcon.png"/>
+                            </fa:SettingsExpander.IconSource>
+                            
+                            <fa:SettingsExpander.Footer>
+                                <TextBlock Text="0.0.0.0 (Codename Paimon)"
+                                           FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                            </fa:SettingsExpander.Footer>
+                            
+                            <fa:SettingsExpanderItem Description="本项目基于 GNU General Public License v3.0 获得许可。">
+                                <fa:SettingsExpanderItem.Footer>
+                                    <WrapPanel Classes="animated-resize" ItemSpacing="4">
+                                        <HyperlinkButton Click="SettingsExpanderItemShowOssLicense_OnClick">
+                                            <TextBlock Text="开放源代码许可"/>
+                                        </HyperlinkButton>
+                                    </WrapPanel>
+                                </fa:SettingsExpanderItem.Footer>
                                 
-                                <StackPanel Classes="cardContainer">
-                                    <fa:SettingsExpanderItem IsClickEnabled="True" Click="UIElementAppInfo_OnMouseDown">
-                                        <Grid HorizontalAlignment="Stretch">
-                                            <TextBlock Background="Transparent" PointerPressed="UIElementAppInfo_OnMouseDown">
-                                                <Run Text="DutyIsland" FontSize="24" />
-                                                <Run Text="0.0.0.0 (Codename Paimon)" />
-                                                <LineBreak />
-                                                <Run Text="Copyright (c) 2023-2025  lrs2187/lrsgzs"/>
-                                            </TextBlock>
-                                            
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right"
-                                                        Spacing="2">
-                                                <!-- <Button Theme="{StaticResource TransparentButton}" -->
-                                                <!--         Content="{ci:FluentIcon &#xE23C;, FontSize=20}" -->
-                                                <!--         ToolTip.Tip="文档" -->
-                                                <!--         Click="UriNavigationCommands_OnClick" -->
-                                                <!--         CommandParameter="https://docs.classisland.tech"/> -->
-                                                <Button Theme="{StaticResource TransparentButton}"
-                                                        Content="{ci:LucideIcon &#xE0EA;, FontSize=16}"
-                                                        ToolTip.Tip="GitHub"
-                                                        Click="UriNavigationCommands_OnClick"
-                                                        CommandParameter="https://github.com/lrsgzs/DutyIsland"/>
-                                            </StackPanel>
-                                        </Grid>
-                                    </fa:SettingsExpanderItem>
-
-                                    <fa:SettingsExpanderItem 
-                                        Content="查看开放源代码许可"
-                                        Click="SettingsExpanderItemShowOssLicense_OnClick"
-                                        IsClickEnabled="True"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
+                                <TextBlock Background="Transparent" PointerPressed="UIElementAppInfo_OnMouseDown"
+                                           Text="Copyright (c) 2025  lrs2187/lrsgzs"/>
+                            </fa:SettingsExpanderItem>
+                            
+                            <fa:SettingsExpanderItem Content="常用链接">
+                                <fa:SettingsExpanderItem.Footer>
+                                    <WrapPanel Classes="animated-resize" ItemSpacing="4">
+                                        <!-- <Button Theme="{StaticResource TransparentButton}" -->
+                                        <!--         Content="{ci:FluentIcon &#xE23C;, FontSize=20}" -->
+                                        <!--         ToolTip.Tip="文档" -->
+                                        <!--         Click="UriNavigationCommands_OnClick" -->
+                                        <!--         CommandParameter="https://docs.classisland.tech"/> -->
+                                        
+                                        <Button Theme="{StaticResource TransparentButton}"
+                                                Content="{ci:LucideIcon &#xE0EA;, FontSize=16}"
+                                                ToolTip.Tip="GitHub"
+                                                Click="UriNavigationCommands_OnClick"
+                                                CommandParameter="https://github.com/lrsgzs/DutyIsland"/>
+                                    </WrapPanel>
+                                </fa:SettingsExpanderItem.Footer>
+                            </fa:SettingsExpanderItem>
+                        </fa:SettingsExpander>
                         
                         <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xf023;}"
                                              Header="启用提醒?" Description="控制全局的提醒启用状态。">

@@ -49,7 +49,7 @@ public class Plugin : PluginBase
         // 应用启动
         AppBase.Current.AppStarted += (_, _) =>
         {
-            _logger.Info("兜底：启动 DutyPlanService...");
+            _logger.Info("启动 DutyPlanService...");
             IAppHost.GetService<DutyPlanService>();
         };
         
