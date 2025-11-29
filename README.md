@@ -1,12 +1,21 @@
-﻿# DutyIsland
+﻿<div align="center">
+  <img src="https://livefile.xesimg.com/programme/python_assets/2e2e0047bd2262e4341ef4c589926e31.png" width="256" alt="DutyIsland Icon">
+
+# DutyIsland
+
+</div>
+
 > 为 ClassIsland 添加个垃圾值日表（正在编写）
 
 ## 功能
 - [x] 值日表编辑
 - [ ] 值日表展示
-  - [ ] 格式化字符串版本(legacy)
+  - [x] 只显示执行者(第一代)
+  - [ ] 格式化字符串(第二代)
   - [ ] 高级文本(较晚)
 - [ ] 值日提醒
+  - [ ] 通过行动提醒
+  - [ ] 自动提醒
 - [ ] ...
 
 ## 开放源代码许可协议
