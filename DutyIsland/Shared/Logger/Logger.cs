@@ -17,12 +17,12 @@ public class Logger(string name, bool showTime = true, Theme? theme = null)
     /// </summary>
     /// <param name="level">日志等级</param>
     /// <param name="messages">消息</param>
-    public void BaseLog(string level, params object[] messages)
+    public void BaseLog(string level, params object?[] messages)
     {
         level = level.ToUpper();
 
         var messageList = messages
-            .Select(e => e.ToString() ?? "");
+            .Select(e => e?.ToString() ?? "");
 
         foreach (var message in messageList)
         {
@@ -41,21 +41,26 @@ public class Logger(string name, bool showTime = true, Theme? theme = null)
         }
     }
     
-    public void Log(params object[] message) => BaseLog("INFO", message);
+    public void Log(params object?[] message) => BaseLog("INFO", message);
     
-    public void Info(params object[] message) => BaseLog("INFO", message);
+    public void Info(params object?[] message) => BaseLog("INFO", message);
 
-    public void Warn(params object[] message) => BaseLog("WARN", message);
+    public void Warn(params object?[] message) => BaseLog("WARN", message);
     
-    public void Error(params object[] message) => BaseLog("ERROR", message);
+    public void Error(params object?[] message) => BaseLog("ERROR", message);
     
-    public void Debug(params object[] message) => BaseLog("DEBUG", message);
+    public void Debug(params object?[] message) => BaseLog("DEBUG", message);
 
     /// <summary>
     /// 渲染 Exception
     /// </summary>
     public void FormatException(Exception exception)
     {
+        if (exception.InnerException != null)
+        {
+            FormatException(exception.InnerException);
+        }
+        
         var exceptionType = exception.GetType().ToString();
         Error($"{exceptionType}: {exception.Message}\nStackTrace:\n{exception.StackTrace}\nHelpLink: {exception.HelpLink}");
     }

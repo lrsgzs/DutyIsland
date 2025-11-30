@@ -1,12 +1,15 @@
+using Avalonia.Threading;
 using ClassIsland.Core;
 using ClassIsland.Core.Abstractions;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Extensions.Registry;
 using ClassIsland.Shared;
+using DutyIsland.Controls.ActionSettingsControls;
 using DutyIsland.Controls.AttachedSettingsControls;
 using DutyIsland.Controls.Components;
 using DutyIsland.Controls.ComponentSettingsControls;
 using DutyIsland.Services;
+using DutyIsland.Services.Automations.Actions;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
 using DutyIsland.ViewModels.SettingPages;
@@ -45,6 +48,14 @@ public class Plugin : PluginBase
                 options.AutoSessionTracking = true;
                 options.Environment = GlobalConstants.Environment;
             });
+
+            Dispatcher.UIThread.UnhandledException += (_, e) =>
+            {
+                if (!IsDutyIslandException(e.Exception)) return;
+                
+                _logger.Error("出错了吗...交给 Sentry 吧！");
+                SentrySdk.CaptureException(e.Exception);
+            };
         }
         else
         {
@@ -80,6 +91,16 @@ public class Plugin : PluginBase
             _logger.Info("兜底：保存全部配置...");
             GlobalConstants.Config.Save();
         };
+    }
+
+    private static bool IsDutyIslandException(Exception e)
+    {
+        if (e.StackTrace == null || e.StackTrace.Contains("dutyisland", StringComparison.CurrentCultureIgnoreCase))
+        {
+            return true;
+        }
+
+        return e.InnerException != null && IsDutyIslandException(e.InnerException);
     }
 }
 
