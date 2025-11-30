@@ -25,4 +25,10 @@ public static class GlobalConstants
     public static string PluginVersion { get; set; } = "???";
 
     public const string DutyPlanAttachedSettingsGuid = "4A0B491E-F6AF-431D-8D0C-B09AA8F5C661";
+    
+    #if DEBUG
+        public static string Environment { get; } = "development";
+    #else
+        public static string Environment { get; } = "production";
+    #endif
 }

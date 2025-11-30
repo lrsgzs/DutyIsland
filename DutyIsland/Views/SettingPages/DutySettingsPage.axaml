@@ -558,6 +558,13 @@
                             </fa:SettingsExpander.Footer>
                         </fa:SettingsExpander>
                         
+                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xf023;}"
+                                             Header="启用遥测?" Description="控制 DutyIsland 的 Sentry 遥测启用状态。">
+                            <fa:SettingsExpander.Footer>
+                                <ToggleSwitch IsChecked="{Binding ViewModel.Settings.EnableSentry}"/>
+                            </fa:SettingsExpander.Footer>
+                        </fa:SettingsExpander>
+                        
                         <Button Click="ButtonGetAttachedSettings_OnClick">获取附加设置</Button>
                     </StackPanel>
                 </ScrollViewer>

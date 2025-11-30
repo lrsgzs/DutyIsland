@@ -23,7 +23,7 @@ public class Plugin : PluginBase
     public override void Initialize(HostBuilderContext context, IServiceCollection services)
     {
         _logger.Info("DutyIsland  Copyright (C) 2025  lrs2187/lrsgzs\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it under certain conditions.");
-        _logger.Info($"欢迎使用 DutyIsland！");
+        _logger.Info("欢迎使用 DutyIsland！");
         _logger.Info("初期化中...");
         
         _logger.Info("加载配置...");
@@ -31,6 +31,24 @@ public class Plugin : PluginBase
         GlobalConstants.PluginFolder = Info.PluginFolderPath;
         GlobalConstants.PluginConfigFolder = PluginConfigFolder;
         GlobalConstants.Config = new ConfigHandler();
+        
+        if (GlobalConstants.Config.Data.EnableSentry)
+        {
+            _logger.Info("遥测已启用! 感谢您的帮助~");
+            _logger.Info("初始化 Sentry...");
+
+            SentrySdk.Init(options =>
+            {
+                options.Dsn = "https://c7689eb24b7f331dcca5d44960a0b974@o4510452375552000.ingest.us.sentry.io/4510452383612928";
+                options.Release = GlobalConstants.PluginVersion;
+                options.AutoSessionTracking = true;
+                options.Environment = GlobalConstants.Environment;
+            });
+        }
+        else
+        {
+            _logger.Info("没开遥测吗...可惜了。");
+        }
         
         _logger.Info("注册服务...");
         services.AddSingleton<DutyPlanService>();

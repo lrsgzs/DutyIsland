@@ -15,7 +15,6 @@ using DutyIsland.Models.Duty;
 using DutyIsland.Models.Notification;
 using DutyIsland.Shared;
 using DutyIsland.ViewModels.SettingPages;
-using DynamicData;
 using FluentAvalonia.UI.Controls;
 using ReactiveUI;
 
@@ -29,10 +28,18 @@ public partial class DutySettingsPage : SettingsPageBase
     private DutyViewModel ViewModel { get; } = IAppHost.GetService<DutyViewModel>();
     private ILessonsService LessonsService { get; } = IAppHost.GetService<ILessonsService>();
     private string PluginVersion { get; } = GlobalConstants.PluginVersion;
+    private bool _notifiedRestart = false;
     
     public DutySettingsPage()
     {
         InitializeComponent();
+        ViewModel.Settings.RestartPropertyChanged += () =>
+        {
+            if (_notifiedRestart) return;
+            
+            RequestRestart();
+            _notifiedRestart = true;
+        };
     }
 
     #region Misc
