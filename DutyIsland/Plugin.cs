@@ -61,6 +61,7 @@ public class Plugin : PluginBase
         
         _logger.Info("注册设置页面...");
         services.AddSettingsPage<DutySettingsPage>();
+        services.AddSettingsPage<DebugSettingsPage>();
 
         _logger.Info("注册组件...");
         services.AddComponent<DutyComponent, DutyComponentSettingsControl>();

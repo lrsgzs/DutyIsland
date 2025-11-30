@@ -344,35 +344,4 @@ public partial class DutySettingsPage : SettingsPageBase
     }
 
     #endregion
-
-    private void ButtonGetAttachedSettings_OnClick(object? sender, RoutedEventArgs e)
-    {
-        var settings = IAttachedSettingsHostService.GetAttachedSettingsByPriority
-            <DutyPlanAttachedSettings>(
-                Guid.Parse(GlobalConstants.DutyPlanAttachedSettingsGuid),
-                classPlan: LessonsService.CurrentClassPlan);
-        
-        if (settings?.DutyPlanGuid == null)
-        {
-            this.ShowToast(new ToastMessage("未获取到附加设置。")
-            {
-                Severity = InfoBarSeverity.Warning,
-                Duration = TimeSpan.FromSeconds(10)
-            });
-            
-            return;
-        }
-
-        var currentDutyPlan = ViewModel.Settings.Profile.DutyPlans[settings.DutyPlanGuid.Value];
-        
-        this.ShowToast(new ToastMessage($"附加设置中当前启用的课表为「{currentDutyPlan.Name}」。")
-        {
-            Duration = TimeSpan.FromSeconds(10),
-            ActionContent = new TextBlock
-            {
-                Text = settings.DutyPlanGuid.ToString(),
-                Foreground = Brushes.Gray
-            }
-        });
-    }
 }

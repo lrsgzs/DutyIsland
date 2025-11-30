@@ -564,8 +564,6 @@
                                 <ToggleSwitch IsChecked="{Binding ViewModel.Settings.EnableSentry}"/>
                             </fa:SettingsExpander.Footer>
                         </fa:SettingsExpander>
-                        
-                        <Button Click="ButtonGetAttachedSettings_OnClick">获取附加设置</Button>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
