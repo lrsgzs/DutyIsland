@@ -5,6 +5,7 @@ using ClassIsland.Core.Extensions.Registry;
 using ClassIsland.Shared;
 using DutyIsland.Controls.AttachedSettingsControls;
 using DutyIsland.Controls.Components;
+using DutyIsland.Controls.ComponentSettingsControls;
 using DutyIsland.Services;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;

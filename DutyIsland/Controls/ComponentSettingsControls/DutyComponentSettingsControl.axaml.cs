@@ -1,17 +1,15 @@
-﻿using System.ComponentModel;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Helpers.UI;
 using ClassIsland.Core.Models.UI;
 using ClassIsland.Shared;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DutyIsland.Models.ComponentSettings;
 using DutyIsland.Models.Duty;
 using DutyIsland.Services;
 
-namespace DutyIsland.Controls.Components;
+namespace DutyIsland.Controls.ComponentSettingsControls;
 
 public partial class DutyComponentSettingsControl : ComponentBase<DutyComponentSettings>
 {

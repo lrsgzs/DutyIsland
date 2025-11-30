@@ -1,4 +1,4 @@
-﻿<ci:ComponentBase x:Class="DutyIsland.Controls.Components.DutyComponentSettingsControl"
+﻿<ci:ComponentBase x:Class="DutyIsland.Controls.ComponentSettingsControls.DutyComponentSettingsControl"
                   x:TypeArguments="componentSettings:DutyComponentSettings"
                   xmlns="https://github.com/avaloniaui"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,7 +6,7 @@
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:ci="http://classisland.tech/schemas/xaml/core"
                   xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
-                  xmlns:local="clr-namespace:DutyIsland.Controls.Components"
+                  xmlns:local="clr-namespace:DutyIsland.Controls.ComponentSettingsControls"
                   xmlns:componentSettings="clr-namespace:DutyIsland.Models.ComponentSettings"
                   mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
     <ScrollViewer>
