@@ -10,6 +10,7 @@ using DutyIsland.Controls.Components;
 using DutyIsland.Controls.ComponentSettingsControls;
 using DutyIsland.Services;
 using DutyIsland.Services.Automations.Actions;
+using DutyIsland.Services.NotificationProviders;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
 using DutyIsland.ViewModels.SettingPages;
@@ -67,6 +68,9 @@ public class Plugin : PluginBase
         
         _logger.Info("注册附加设置...");
         services.AddAttachedSettingsControl<DutyPlanAttachedSettingsControl>();
+        
+        _logger.Info("注册提醒提供方...");
+        services.AddNotificationProvider<DutyNotificationProvider>();
         
         _logger.Info("注册视图模型...");
         services.AddTransient<DutyViewModel>();
