@@ -397,15 +397,11 @@
                                                     <NumericUpDown Text="{Binding WorkerCount}" FormatString="0"/>
                                                 </ci:Field>
                                                 
-                                                <Expander Classes="compact stretch-header" IsExpanded="{Binding NotificationData.EnableNotification, Mode=OneWay}">
+                                                <CheckBox Content="启用提醒?" IsChecked="{Binding NotificationData.EnableNotification}" />
+                                                
+                                                <Expander Classes="compact stretch-header" IsExpanded="True">
                                                     <Expander.Header>
-                                                        <Grid ColumnDefinitions="*, Auto">
-                                                            <ci:IconText Grid.Column="0" Glyph="&#xE025;" Text="提醒设置" />
-                                                            
-                                                            <ToggleSwitch Grid.Column="1" Margin="0,-8,0,-4" VerticalAlignment="Center"
-                                                                          OnContent="" OffContent="" ToolTip.Tip="是否启用提醒设置"
-                                                                          IsChecked="{Binding NotificationData.EnableNotification}"/>
-                                                        </Grid>
+                                                        <ci:IconText Grid.Column="0" Glyph="&#xE025;" Text="提醒设置" />
                                                     </Expander.Header>
                                                     
                                                     <StackPanel Spacing="8" DataContext="{Binding NotificationData}">
