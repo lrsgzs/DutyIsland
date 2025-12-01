@@ -37,31 +37,35 @@ public class Plugin : PluginBase
         GlobalConstants.PluginConfigFolder = PluginConfigFolder;
         GlobalConstants.Config = new ConfigHandler();
         
-        if (GlobalConstants.Config.Data.EnableSentry)
-        {
-            _logger.Info("遥测已启用! 感谢您的帮助~");
-            _logger.Info("初始化 Sentry...");
-
-            SentrySdk.Init(options =>
+        #if DEBUG
+            _logger.Info("这是开发构建，遥测将会被关闭！");
+        #else
+            if (GlobalConstants.Config.Data.EnableSentry)
             {
-                options.Dsn = "https://c7689eb24b7f331dcca5d44960a0b974@o4510452375552000.ingest.us.sentry.io/4510452383612928";
-                options.Release = GlobalConstants.PluginVersion;
-                options.AutoSessionTracking = true;
-                options.Environment = GlobalConstants.Environment;
-            });
+                _logger.Info("遥测已启用! 感谢您的帮助~");
+                _logger.Info("初始化 Sentry...");
 
-            Dispatcher.UIThread.UnhandledException += (_, e) =>
+                SentrySdk.Init(options =>
+                {
+                    options.Dsn = "https://c7689eb24b7f331dcca5d44960a0b974@o4510452375552000.ingest.us.sentry.io/4510452383612928";
+                    options.Release = GlobalConstants.PluginVersion;
+                    options.AutoSessionTracking = true;
+                    options.Environment = GlobalConstants.Environment;
+                });
+
+                Dispatcher.UIThread.UnhandledException += (_, e) =>
+                {
+                    if (!IsDutyIslandException(e.Exception)) return;
+                    
+                    _logger.Error("出错了吗...交给 Sentry 吧！");
+                    SentrySdk.CaptureException(e.Exception);
+                };
+            }
+            else
             {
-                if (!IsDutyIslandException(e.Exception)) return;
-                
-                _logger.Error("出错了吗...交给 Sentry 吧！");
-                SentrySdk.CaptureException(e.Exception);
-            };
-        }
-        else
-        {
-            _logger.Info("没开遥测吗...可惜了。");
-        }
+                _logger.Info("没开遥测吗...可惜了。");
+            }
+        #endif
         
         _logger.Info("注册服务...");
         services.AddSingleton<DutyPlanService>();
