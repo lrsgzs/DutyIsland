@@ -140,6 +140,18 @@ public partial class DutySettingsPage : SettingsPageBase
 
     private void ButtonImportDutyPlan_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (ViewModel.SelectedDutyPlan == null) return;
+
+        if (ViewModel.SelectedDutyPlan.Template == null)
+        {
+            this.ShowToast(new ToastMessage("注意到值日表模板为空，无法导入喵")
+            {
+                Duration = TimeSpan.FromSeconds(10),
+                Severity = InfoBarSeverity.Warning
+            });
+            return;
+        }
+        
         if (string.IsNullOrWhiteSpace(ViewModel.ImportDutyPlanText))
         {
             this.ShowToast(new ToastMessage("注意到导入文本为空，不建议哦")
@@ -166,7 +178,7 @@ public partial class DutySettingsPage : SettingsPageBase
             return;
         }
         
-        var templateItems = ViewModel.SelectedDutyPlan!.ComplexItems;
+        var templateItems = ViewModel.SelectedDutyPlan.ComplexItems;
         var workerDictionary = ViewModel.SelectedDutyPlan.WorkerDictionary;
 
         var currentPeopleIndex = 0;
