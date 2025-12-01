@@ -36,7 +36,7 @@
             </fa:SettingsExpander>
             
             <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xECF3;}"
-                                 Header="回滚选项" Description="在找不到目标任务 Guid 时自动回滚。">
+                                 Header="回滚?" Description="在找不到目标任务 Guid 时自动回滚。">
                 <fa:SettingsExpander.Footer>
                     <ToggleSwitch IsChecked="{Binding Settings.FallbackEnabled, Mode=TwoWay}" />
                 </fa:SettingsExpander.Footer>
@@ -92,7 +92,7 @@
                 </fa:SettingsExpanderItem>
             </fa:SettingsExpander>
             
-            <TextBlock Foreground="Gray" TextAlignment="Center" FontStyle="Italic"
+            <TextBlock Foreground="Gray" TextAlignment="Center" FontStyle="Italic" TextWrapping="Wrap"
                        IsVisible="{Binding Settings.FallbackEnabled}">
                 Tips: 回滚时先查找是否存在您指定的任务名称，如不存在再使用您指定的执行者。
             </TextBlock>
