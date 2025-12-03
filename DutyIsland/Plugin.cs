@@ -86,6 +86,9 @@ public class Plugin : PluginBase
         _logger.Info("注册组件...");
         services.AddComponent<DutyComponent, DutyComponentSettingsControl>();
         
+        _logger.Info("注册行动...");
+        services.AddAction<NotifyDutyAction, NotifyDutyActionSettingsControl>();
+        
         // 应用启动
         AppBase.Current.AppStarted += (_, _) =>
         {
