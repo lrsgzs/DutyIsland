@@ -2,7 +2,7 @@
 
 namespace DutyIsland.Models.Duty;
 
-public partial class WorkerItem : ObservableRecipient
+public partial class DutyWorkerItem : ObservableRecipient
 {
     [ObservableProperty] private string _name = string.Empty;
 

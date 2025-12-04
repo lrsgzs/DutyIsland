@@ -26,13 +26,13 @@ public partial class DutyComponentSettingsControl : ComponentBase<DutyComponentS
         {
             Name = "???"
         });
-        Settings.FallbackJobName = templateItem?.Name ?? "???";
+        Settings.FallbackSettings.JobName = templateItem?.Name ?? "???";
     }
     
     [RelayCommand]
-    private void FallbackWorkersRemoveWorker(WorkerItem item)
+    private void FallbackWorkersRemoveWorker(DutyWorkerItem item)
     {
-        Settings.FallbackWorkers.Remove(item);
+        Settings.FallbackSettings.Workers.Remove(item);
         
         var revertButton = new Button { Content = "撤销" };
         var toastMessage = new ToastMessage($"已删除项目「{item}」。")
@@ -43,7 +43,7 @@ public partial class DutyComponentSettingsControl : ComponentBase<DutyComponentS
         
         revertButton.Click += (o, args) =>
         {
-            Settings.FallbackWorkers.Add(item);
+            Settings.FallbackSettings.Workers.Add(item);
             toastMessage.Close();
         };
         
@@ -52,6 +52,6 @@ public partial class DutyComponentSettingsControl : ComponentBase<DutyComponentS
     
     private void FallbackWorkersAddWorkerButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        Settings.FallbackWorkers.Add(new WorkerItem());
+        Settings.FallbackSettings.Workers.Add(new DutyWorkerItem());
     }
 }

@@ -5,7 +5,6 @@ using ClassIsland.Shared;
 using DutyIsland.Models.ComponentSettings;
 using DutyIsland.Models.Duty;
 using DutyIsland.Services;
-using DutyIsland.Shared;
 
 namespace DutyIsland.Controls.Components;
 
@@ -32,7 +31,7 @@ public partial class DutyComponent : ComponentBase<DutyComponentSettings>
         Settings.PropertyChanged -= RefreshContent;
     }
 
-    private string WorkersToString(IEnumerable<WorkerItem> workers)
+    private string WorkersToString(IEnumerable<DutyWorkerItem> workers)
     {
         var text = string.Empty;
         foreach (var workerItem in workers)
@@ -62,16 +61,16 @@ public partial class DutyComponent : ComponentBase<DutyComponentSettings>
             return WorkersToString(item.Workers);
         }
         
-        if (!Settings.FallbackEnabled)
+        if (!Settings.FallbackSettings.Enabled)
         {
             return "???";
         }
         
-        if (Settings.FallbackJobName != string.Empty)
+        if (Settings.FallbackSettings.JobName != string.Empty)
         {
             var fallbackItems =
                 DutyPlanService.CurrentDutyPlan.ComplexItems?.List
-                .Where(pair => pair.Value.Second.Name == Settings.FallbackJobName)
+                .Where(pair => pair.Value.Second.Name == Settings.FallbackSettings.JobName)
                 .ToList();
             
             if (fallbackItems != null && fallbackItems.Count != 0)
@@ -80,9 +79,9 @@ public partial class DutyComponent : ComponentBase<DutyComponentSettings>
             }
         }
         
-        if (Settings.FallbackWorkers.Count != 0)
+        if (Settings.FallbackSettings.Workers.Count != 0)
         {
-            return WorkersToString(Settings.FallbackWorkers);
+            return WorkersToString(Settings.FallbackSettings.Workers);
         }
         
         return "???";

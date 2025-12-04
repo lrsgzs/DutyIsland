@@ -1,4 +1,3 @@
-using Avalonia.Threading;
 using ClassIsland.Core;
 using ClassIsland.Core.Abstractions;
 using ClassIsland.Core.Attributes;

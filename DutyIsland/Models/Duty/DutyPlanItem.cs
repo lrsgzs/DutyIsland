@@ -5,5 +5,5 @@ namespace DutyIsland.Models.Duty;
 
 public partial class DutyPlanItem : ObservableObject
 {
-    [ObservableProperty] private ObservableCollection<WorkerItem> _workers = [];
+    [ObservableProperty] private ObservableCollection<DutyWorkerItem> _workers = [];
 }

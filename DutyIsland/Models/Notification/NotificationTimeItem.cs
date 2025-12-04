@@ -4,10 +4,10 @@ namespace DutyIsland.Models.Notification;
 
 public partial class NotificationTimeItem : ObservableRecipient
 {
-    [ObservableProperty] private TimeSpan _notificationTime = TimeSpan.Zero;
+    [ObservableProperty] private TimeSpan _time = TimeSpan.Zero;
 
     public override string ToString()
     {
-        return NotificationTime.ToString();
+        return Time.ToString();
     }
 }

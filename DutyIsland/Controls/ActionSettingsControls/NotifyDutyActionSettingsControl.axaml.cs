@@ -1,8 +1,5 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml.Templates;
-using Avalonia.VisualTree;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Helpers.UI;
 using ClassIsland.Core.Models.UI;
@@ -11,7 +8,6 @@ using CommunityToolkit.Mvvm.Input;
 using DutyIsland.Models.ActionSettings;
 using DutyIsland.Models.Duty;
 using DutyIsland.Services;
-using FluentAvalonia.UI.Controls;
 
 namespace DutyIsland.Controls.ActionSettingsControls;
 
@@ -37,13 +33,13 @@ public partial class NotifyDutyActionSettingsControl : ActionSettingsControlBase
         {
             Name = "???"
         });
-        Settings.FallbackJobName = templateItem?.Name ?? "???";
+        Settings.FallbackSettings.JobName = templateItem?.Name ?? "???";
     }
     
     [RelayCommand]
-    private void FallbackWorkersRemoveWorker(WorkerItem item)
+    private void FallbackWorkersRemoveWorker(DutyWorkerItem item)
     {
-        Settings.FallbackWorkers.Remove(item);
+        Settings.FallbackSettings.Workers.Remove(item);
         
         var revertButton = new Button { Content = "撤销" };
         var toastMessage = new ToastMessage($"已删除项目「{item}」。")
@@ -54,7 +50,7 @@ public partial class NotifyDutyActionSettingsControl : ActionSettingsControlBase
         
         revertButton.Click += (o, args) =>
         {
-            Settings.FallbackWorkers.Add(item);
+            Settings.FallbackSettings.Workers.Add(item);
             toastMessage.Close();
         };
         
@@ -63,6 +59,6 @@ public partial class NotifyDutyActionSettingsControl : ActionSettingsControlBase
     
     private void FallbackWorkersAddWorkerButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        Settings.FallbackWorkers.Add(new WorkerItem());
+        Settings.FallbackSettings.Workers.Add(new DutyWorkerItem());
     }
 }

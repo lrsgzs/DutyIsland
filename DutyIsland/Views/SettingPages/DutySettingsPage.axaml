@@ -201,11 +201,11 @@
                                                 <TextBlock Text="任务信息" Theme="{StaticResource SubtitleTextBlockStyle}"/>
                                                 <TextBlock>
                                                     <Run Text="任务名称:" />
-                                                    <Run Text="{Binding ViewModel.SelectedDutyPlanItemKvp.Value.Name}" />
+                                                    <Run Text="{Binding ViewModel.SelectedDutyPlanItemKvp.Value.Second.Name}" />
                                                 </TextBlock>
                                                 <TextBlock>
                                                     <Run Text="标准人数:" />
-                                                    <Run Text="{Binding ViewModel.SelectedDutyPlanItemKvp.Value.WorkerCount}" />
+                                                    <Run Text="{Binding ViewModel.SelectedDutyPlanItemKvp.Value.Second.WorkerCount}" />
                                                 </TextBlock>
                                                 
                                                 <StackPanel>
@@ -364,7 +364,7 @@
                                             </DataGridTemplateColumn.CellEditingTemplate>
                                         </DataGridTemplateColumn>
                                         
-                                        <DataGridCheckBoxColumn Binding="{Binding Value.NotificationData.EnableNotification, Mode=TwoWay}"
+                                        <DataGridCheckBoxColumn Binding="{Binding Value.NotificationTimes.Enable, Mode=TwoWay}"
                                                                 Header="启用提醒?" IsReadOnly="False" />
                                     </DataGrid.Columns>
                                 </DataGrid>
@@ -397,26 +397,26 @@
                                                     <NumericUpDown Text="{Binding WorkerCount}" FormatString="0"/>
                                                 </ci:Field>
                                                 
-                                                <CheckBox Content="启用提醒?" IsChecked="{Binding NotificationData.EnableNotification}" />
+                                                <CheckBox Content="启用提醒?" IsChecked="{Binding NotificationTimes.Enable}" />
                                                 
                                                 <Expander Classes="compact stretch-header" IsExpanded="True">
                                                     <Expander.Header>
                                                         <ci:IconText Grid.Column="0" Glyph="&#xE025;" Text="提醒设置" />
                                                     </Expander.Header>
                                                     
-                                                    <StackPanel Spacing="8" DataContext="{Binding NotificationData}">
+                                                    <StackPanel Spacing="8">
                                                         <ci:Field Label="遮罩内容">
-                                                            <TextBox Text="{Binding NotificationTitle}" />
+                                                            <TextBox Text="{Binding NotificationSettings.Title}" />
                                                         </ci:Field>
                                                         
                                                         <ci:Field Label="遮罩时长" Suffix="秒">
                                                             <NumericUpDown Increment="0.5" FormatString="0.0"
-                                                                           Value="{Binding NotificationTitleDuration}" />
+                                                                           Value="{Binding NotificationSettings.TitleDuration}" />
                                                         </ci:Field>
                                                         
                                                         <ci:Field Label="正文内容">
                                                             <Grid ColumnDefinitions="*, Auto">
-                                                                <TextBox Grid.Column="0" Text="{Binding NotificationText}" />
+                                                                <TextBox Grid.Column="0" Text="{Binding NotificationSettings.Text}" />
                                                                 
                                                                 <Button Grid.Column="1" Theme="{StaticResource TransparentButton}"
                                                                         Content="{ci:FluentIcon &#xEE31;}">
@@ -440,7 +440,7 @@
                                                         
                                                         <ci:Field Label="正文时长" Suffix="秒">
                                                             <NumericUpDown Increment="0.5" FormatString="0.0"
-                                                                           Value="{Binding NotificationTextDuration}" />
+                                                                           Value="{Binding NotificationSettings.TextDuration}" />
                                                         </ci:Field>
                                                         
                                                         <ci:Field Label="提醒时间">
@@ -449,12 +449,12 @@
                                                                           CanUserSortColumns="False"
                                                                           IsReadOnly="False"
                                                                           GridLinesVisibility="Horizontal"
-                                                                          ItemsSource="{Binding NotificationTimes}">
+                                                                          ItemsSource="{Binding NotificationTimes.Times}">
                                                                     <DataGrid.Columns>
                                                                         <DataGridTemplateColumn Header="时间">
                                                                             <DataGridTemplateColumn.CellTemplate>
                                                                                 <DataTemplate>
-                                                                                    <TimePicker SelectedTime="{Binding NotificationTime}" UseSeconds="True" />
+                                                                                    <TimePicker SelectedTime="{Binding Time}" UseSeconds="True" />
                                                                                 </DataTemplate>
                                                                             </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>

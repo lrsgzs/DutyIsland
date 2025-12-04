@@ -38,16 +38,16 @@
             <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xECF3;}"
                                  Header="回滚?" Description="在找不到目标任务 Guid 时自动回滚。">
                 <fa:SettingsExpander.Footer>
-                    <ToggleSwitch IsChecked="{Binding Settings.FallbackEnabled, Mode=TwoWay}" />
+                    <ToggleSwitch IsChecked="{Binding Settings.FallbackSettings.Enabled, Mode=TwoWay}" />
                 </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>
                 
             <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xECCF;}" Header="名称回滚" Description="回滚为右侧任务名称"
-                                 IsVisible="{Binding Settings.FallbackEnabled}">
+                                 IsVisible="{Binding Settings.FallbackSettings.Enabled}">
                 <fa:SettingsExpander.Footer>
                     <StackPanel Orientation="Horizontal">
                         <TextBox MinWidth="128"
-                                 Text="{Binding Settings.FallbackJobName}" />
+                                 Text="{Binding Settings.FallbackSettings.JobName}" />
                             
                         <ci:AnimatedIconButton HorizontalAlignment="Right" VerticalAlignment="Stretch"
                                                Glyph="&#xE47C;" Text="当前值" Theme="{StaticResource TransparentButton}"
@@ -58,14 +58,14 @@
             </fa:SettingsExpander>
                 
             <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xECD9;}" Header="执行者回滚" Description="回滚为下方执行者列表"
-                                 IsVisible="{Binding Settings.FallbackEnabled}">
+                                 IsVisible="{Binding Settings.FallbackSettings.Enabled}">
                 <fa:SettingsExpanderItem>
                     <StackPanel>
                         <DataGrid AutoGenerateColumns="False"
                                   CanUserSortColumns="False"
                                   IsReadOnly="False"
                                   GridLinesVisibility="Horizontal"
-                                  ItemsSource="{Binding Settings.FallbackWorkers}">
+                                  ItemsSource="{Binding Settings.FallbackSettings.Workers}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="执行者" IsReadOnly="False"
                                                     Binding="{Binding Name}" />
@@ -93,7 +93,7 @@
             </fa:SettingsExpander>
             
             <TextBlock Foreground="Gray" TextAlignment="Center" FontStyle="Italic" TextWrapping="Wrap"
-                       IsVisible="{Binding Settings.FallbackEnabled}">
+                       IsVisible="{Binding Settings.FallbackSettings.Enabled}">
                 Tips: 回滚时先查找是否存在您指定的任务名称，如不存在再使用您指定的执行者。
             </TextBlock>
         </StackPanel>

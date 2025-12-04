@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DutyIsland.Models.Notification;
 
 namespace DutyIsland.Models.Duty;
 
@@ -6,7 +7,8 @@ public partial class DutyPlanTemplateItem : ObservableObject
 {
     [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private int _workerCount = 1;
-    [ObservableProperty] private Notification.NotificationData _notificationData = new();
+    [ObservableProperty] private NotificationSettings _notificationSettings = new();
+    [ObservableProperty] private NotificationTimes _notificationTimes = new();
 
     public override string ToString()
     {

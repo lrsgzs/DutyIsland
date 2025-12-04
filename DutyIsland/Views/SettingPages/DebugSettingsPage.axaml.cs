@@ -10,7 +10,6 @@ using ClassIsland.Core.Models.UI;
 using ClassIsland.Shared;
 using DutyIsland.Models.AttachedSettings;
 using DutyIsland.Shared;
-using DutyIsland.ViewModels.SettingPages;
 using FluentAvalonia.UI.Controls;
 
 namespace DutyIsland.Views.SettingPages;

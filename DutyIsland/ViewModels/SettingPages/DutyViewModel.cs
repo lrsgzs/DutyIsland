@@ -1,8 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using ClassIsland.Core.ComponentModels;
+﻿using ClassIsland.Core.ComponentModels;
 using ClassIsland.Core.Models.UI;
-using ClassIsland.Shared.ComponentModels;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DutyIsland.ComponentModels;
 using DutyIsland.Models;

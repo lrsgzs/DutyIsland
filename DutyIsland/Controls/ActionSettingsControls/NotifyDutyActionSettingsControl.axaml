@@ -13,13 +13,13 @@
                       d:DataContext="{d:DesignInstance local:NotifyDutyActionSettingsControl}">
             <StackPanel Classes="animated-intro" Spacing="8">
                 <CheckBox Content="启用回滚?" ToolTip.Tip="在找不到目标任务 Guid 时自动回滚。"
-                          IsChecked="{Binding Settings.FallbackEnabled, Mode=TwoWay}" />
+                          IsChecked="{Binding Settings.FallbackSettings.Enabled, Mode=TwoWay}" />
                 
                 <ci:Field Label="名称回滚" ToolTip.Tip="回滚为下方任务名称"
-                          IsVisible="{Binding Settings.FallbackEnabled}">
+                          IsVisible="{Binding Settings.FallbackSettings.Enabled}">
                     <StackPanel Orientation="Horizontal">
                         <TextBox MinWidth="128"
-                                 Text="{Binding Settings.FallbackJobName}" />
+                                 Text="{Binding Settings.FallbackSettings.JobName}" />
                                 
                         <ci:AnimatedIconButton HorizontalAlignment="Right" VerticalAlignment="Stretch"
                                                Glyph="&#xE47C;" Text="当前值" Theme="{StaticResource TransparentButton}"
@@ -29,7 +29,7 @@
                 </ci:Field>
                 
                 <Expander Classes="compact stretch-header" IsExpanded="False"
-                          IsVisible="{Binding Settings.FallbackEnabled}">
+                          IsVisible="{Binding Settings.FallbackSettings.Enabled}">
                     <Expander.Header>
                         <ci:IconText Grid.Column="0" Glyph="&#xECD9;" Text="执行者回滚" ToolTip.Tip="回滚为下方执行者列表" />
                     </Expander.Header>
@@ -39,7 +39,7 @@
                                   CanUserSortColumns="False"
                                   IsReadOnly="False"
                                   GridLinesVisibility="Horizontal"
-                                  ItemsSource="{Binding Settings.FallbackWorkers}">
+                                  ItemsSource="{Binding Settings.FallbackSettings.Workers}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="执行者" IsReadOnly="False"
                                                     Binding="{Binding Name}" />
@@ -66,7 +66,7 @@
                 </Expander>
                 
                 <TextBlock Foreground="Gray" TextAlignment="Center" FontStyle="Italic" TextWrapping="Wrap"
-                           IsVisible="{Binding Settings.FallbackEnabled}">
+                           IsVisible="{Binding Settings.FallbackSettings.Enabled}">
                     Tips: 回滚时先查找是否存在您指定的任务名称，如不存在再使用您指定的执行者。
                 </TextBlock>
                 
@@ -83,17 +83,17 @@
                     
                     <StackPanel Spacing="8" DataContext="{Binding Settings}">
                         <ci:Field Label="遮罩内容">
-                            <TextBox Text="{Binding NotificationTitle}" />
+                            <TextBox Text="{Binding CustomNotificationSettings.Title}" />
                         </ci:Field>
                         
                         <ci:Field Label="遮罩时长" Suffix="秒">
                             <NumericUpDown Increment="0.5" FormatString="0.0"
-                                           Value="{Binding NotificationTitleDuration}" />
+                                           Value="{Binding CustomNotificationSettings.TitleDuration}" />
                         </ci:Field>
                         
                         <ci:Field Label="正文内容">
                             <Grid ColumnDefinitions="*, Auto">
-                                <TextBox Grid.Column="0" Text="{Binding NotificationText}" />
+                                <TextBox Grid.Column="0" Text="{Binding CustomNotificationSettings.Text}" />
                                 
                                 <Button Grid.Column="1" Theme="{StaticResource TransparentButton}"
                                         Content="{ci:FluentIcon &#xEE31;}">
@@ -117,7 +117,7 @@
                         
                         <ci:Field Label="正文时长" Suffix="秒">
                             <NumericUpDown Increment="0.5" FormatString="0.0"
-                                           Value="{Binding NotificationTextDuration}" />
+                                           Value="{Binding CustomNotificationSettings.TextDuration}" />
                         </ci:Field>
                     </StackPanel>
                 </Expander>

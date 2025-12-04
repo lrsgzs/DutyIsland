@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Media;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Attributes;
@@ -10,7 +9,6 @@ using ClassIsland.Core.Models.UI;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 using CommunityToolkit.Mvvm.Input;
-using DutyIsland.Models.AttachedSettings;
 using DutyIsland.Models.Duty;
 using DutyIsland.Models.Notification;
 using DutyIsland.Shared;
@@ -185,11 +183,11 @@ public partial class DutySettingsPage : SettingsPageBase
         for (var i = 0; i < templateItems!.List.Count && currentPeopleIndex < peopleList.Count; i++)
         {
             var templateKvp = templateItems.List[i];
-            ObservableCollection<WorkerItem> workers = [];
+            ObservableCollection<DutyWorkerItem> workers = [];
             
             for (var j = 0; j < templateKvp.Value.Second.WorkerCount && currentPeopleIndex < peopleList.Count; j++)
             {
-                workers.Add(new WorkerItem { Name = peopleList[currentPeopleIndex] });
+                workers.Add(new DutyWorkerItem { Name = peopleList[currentPeopleIndex] });
                 currentPeopleIndex++;
             }
 
@@ -209,11 +207,11 @@ public partial class DutySettingsPage : SettingsPageBase
     
     private void DutyPlanAddWorkerButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        ViewModel.SelectedDutyPlanItem?.Workers.Add(new WorkerItem());
+        ViewModel.SelectedDutyPlanItem?.Workers.Add(new DutyWorkerItem());
     }
     
     [RelayCommand]
-    private void DutyPlanRemoveWorker(WorkerItem item)
+    private void DutyPlanRemoveWorker(DutyWorkerItem item)
     {
         ViewModel.SelectedDutyPlanItem?.Workers.Remove(item);
         
@@ -331,13 +329,13 @@ public partial class DutySettingsPage : SettingsPageBase
     
     private void DutyPlanTemplateAddNotificationTimeButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        ViewModel.SelectedDutyPlanTemplateItemKvp?.Value.NotificationData.NotificationTimes.Add(new NotificationTimeItem());
+        ViewModel.SelectedDutyPlanTemplateItemKvp?.Value.NotificationTimes.Times.Add(new NotificationTimeItem());
     }
     
     [RelayCommand]
     private void DutyPlanTemplateRemoveNotificationTime(NotificationTimeItem item)
     {
-        ViewModel.SelectedDutyPlanTemplateItemKvp?.Value.NotificationData.NotificationTimes.Remove(item);
+        ViewModel.SelectedDutyPlanTemplateItemKvp?.Value.NotificationTimes.Times.Remove(item);
         
         var revertButton = new Button { Content = "撤销" };
         var toastMessage = new ToastMessage($"已删除时间「{item}」。")
@@ -348,7 +346,7 @@ public partial class DutySettingsPage : SettingsPageBase
         
         revertButton.Click += (o, args) =>
         {
-            ViewModel.SelectedDutyPlanTemplateItemKvp?.Value.NotificationData.NotificationTimes.Add(item);
+            ViewModel.SelectedDutyPlanTemplateItemKvp?.Value.NotificationTimes.Times.Add(item);
             toastMessage.Close();
         };
         
