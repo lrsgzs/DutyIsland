@@ -559,15 +559,15 @@
                             </fa:SettingsExpanderItem>
                         </fa:SettingsExpander>
                         
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xf023;}"
+                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xF023;}"
                                              Header="启用提醒?" Description="控制全局的提醒启用状态。">
                             <fa:SettingsExpander.Footer>
                                 <ToggleSwitch IsChecked="{Binding ViewModel.Settings.GlobalEnableNotification}"/>
                             </fa:SettingsExpander.Footer>
                         </fa:SettingsExpander>
                         
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xf023;}"
-                                             Header="启用遥测?" Description="控制 DutyIsland 的 Sentry 遥测启用状态。">
+                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE4E8;}"
+                                             Header="启用遥测?" Description="控制 DutyIsland 的 Sentry 遥测启用状态。本插件通过 SentrySDK 来收集本应用中的使用情况与错误信息，以改进本插件。您的信息会匿名上传，不会包含您的个人信息。您可以自行启用或禁用此功能。">
                             <fa:SettingsExpander.Footer>
                                 <ToggleSwitch IsChecked="{Binding ViewModel.Settings.EnableSentry}"/>
                             </fa:SettingsExpander.Footer>
