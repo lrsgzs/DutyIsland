@@ -30,65 +30,10 @@ public partial class DutyComponent : ComponentBase<DutyComponentSettings>
         DutyPlanService.WhenRefreshDutyPlan -= RefreshContent;
         Settings.PropertyChanged -= RefreshContent;
     }
-
-    private string WorkersToString(IEnumerable<DutyWorkerItem> workers)
-    {
-        var text = string.Empty;
-        foreach (var workerItem in workers)
-        {
-            if (text == string.Empty)
-            {
-                text += workerItem.Name;
-            }
-            else
-            {
-                text += $"{Settings.ConnectorString}{workerItem.Name}";
-            }
-        }
-
-        return text;
-    }
-    
-    private string GetWorkersContent()
-    {
-        if (DutyPlanService.CurrentDutyPlan is null)
-        {
-            return "???";
-        }
-        
-        if (DutyPlanService.CurrentDutyPlan.WorkerDictionary.TryGetValue(Settings.JobGuid, out var item))
-        {
-            return WorkersToString(item.Workers);
-        }
-        
-        if (!Settings.FallbackSettings.Enabled)
-        {
-            return "???";
-        }
-        
-        if (Settings.FallbackSettings.JobName != string.Empty)
-        {
-            var fallbackItems =
-                DutyPlanService.CurrentDutyPlan.ComplexItems?.List
-                .Where(pair => pair.Value.Second.Name == Settings.FallbackSettings.JobName)
-                .ToList();
-            
-            if (fallbackItems != null && fallbackItems.Count != 0)
-            {
-                return WorkersToString(fallbackItems[0].Value.First.Workers);
-            }
-        }
-        
-        if (Settings.FallbackSettings.Workers.Count != 0)
-        {
-            return WorkersToString(Settings.FallbackSettings.Workers);
-        }
-        
-        return "???";
-    }
     
     private void RefreshContent(object? sender, EventArgs e)
     {
-        WorkersContentTextBlock.Text = GetWorkersContent();
+        WorkersContentTextBlock.Text = DutyPlanService.GetWorkersContent(
+            Settings.JobGuid, Settings.FallbackSettings, Settings.ConnectorString);
     }
 }

@@ -3,6 +3,7 @@ using ClassIsland.Shared;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DutyIsland.Models.AttachedSettings;
 using DutyIsland.Models.Duty;
+using DutyIsland.Models.Worker;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
 
@@ -62,5 +63,62 @@ public partial class DutyPlanService : ObservableRecipient
         }
         
         WhenRefreshDutyPlan?.Invoke(this, EventArgs.Empty);
+    }
+    
+    
+    public static string WorkersToString(IEnumerable<DutyWorkerItem> workers, string connectorString)
+    {
+        var text = string.Empty;
+        foreach (var workerItem in workers)
+        {
+            if (text == string.Empty)
+            {
+                text += workerItem.Name;
+            }
+            else
+            {
+                text += $"{connectorString}{workerItem.Name}";
+            }
+        }
+
+        return text;
+    }
+    
+    public string GetWorkersContent(Guid jobGuid, FallbackSettings fallbackSettings, string connectorString = "、")
+    {
+        if (CurrentDutyPlan is null)
+        {
+            return "???";
+        }
+        
+        if (CurrentDutyPlan.WorkerDictionary.TryGetValue(jobGuid, out var item))
+        {
+            return WorkersToString(item.Workers, connectorString);
+        }
+        
+        if (!fallbackSettings.Enabled)
+        {
+            return "???";
+        }
+        
+        if (fallbackSettings.JobName != string.Empty)
+        {
+            var fallbackItems =
+                CurrentDutyPlan.ComplexItems?.List
+                    .Where(pair => pair.Value.Second.Name == fallbackSettings.JobName)
+                    .ToList();
+            
+            if (fallbackItems != null && fallbackItems.Count != 0)
+            {
+                return WorkersToString(fallbackItems[0].Value.First.Workers, connectorString);
+            }
+        }
+        
+        if (fallbackSettings.Workers.Count != 0)
+        {
+            return WorkersToString(fallbackSettings.Workers, connectorString);
+        }
+        
+        return "???";
     }
 }
