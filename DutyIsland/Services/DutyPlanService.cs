@@ -83,6 +83,48 @@ public partial class DutyPlanService : ObservableRecipient
 
         return text;
     }
+
+    public DutyPlanTemplateItem? GetTemplateItem(Guid jobGuid, FallbackSettings fallbackSettings)
+    {
+        if (CurrentDutyPlan is null)
+        {
+            return null;
+        }
+        
+        if (CurrentDutyPlan.Template!.WorkerTemplateDictionary.TryGetValue(jobGuid, out var item))
+        {
+            return item;
+        }
+        
+        if (!fallbackSettings.Enabled)
+        {
+            return null;
+        }
+        
+        if (fallbackSettings.JobName != string.Empty)
+        {
+            var fallbackItems =
+                CurrentDutyPlan.ComplexItems?.List
+                    .Where(pair => pair.Value.Second.Name == fallbackSettings.JobName)
+                    .ToList();
+            
+            if (fallbackItems != null && fallbackItems.Count != 0)
+            {
+                return fallbackItems[0].Value.Second;
+            }
+        }
+        
+        if (fallbackSettings.Workers.Count != 0)
+        {
+            return new DutyPlanTemplateItem
+            {
+                Name = fallbackSettings.JobName,
+                WorkerCount = fallbackSettings.Workers.Count
+            };
+        }
+
+        return null;
+    }
     
     public string GetWorkersContent(Guid jobGuid, FallbackSettings fallbackSettings, string connectorString = "、")
     {

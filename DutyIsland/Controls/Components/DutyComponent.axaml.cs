@@ -3,7 +3,6 @@ using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Shared;
 using DutyIsland.Models.ComponentSettings;
-using DutyIsland.Models.Duty;
 using DutyIsland.Services;
 
 namespace DutyIsland.Controls.Components;
