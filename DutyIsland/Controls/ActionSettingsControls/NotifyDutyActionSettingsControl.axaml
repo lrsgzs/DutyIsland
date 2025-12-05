@@ -6,7 +6,8 @@
                               xmlns:ci="http://classisland.tech/schemas/xaml/core"
                               xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
                               xmlns:local="clr-namespace:DutyIsland.Controls.ActionSettingsControls"
-                              xmlns:actionSettings="clr-namespace:DutyIsland.Models.ActionSettings">
+                              xmlns:actionSettings="clr-namespace:DutyIsland.Models.ActionSettings"
+                              xmlns:controls="clr-namespace:DutyIsland.Controls">
     
     <ci:ActionSettingsControlBase.Resources>
         <ScrollViewer x:Key="NotificationSettingsDrawer" x:Shared="False" Width="400"
@@ -34,35 +35,7 @@
                         <ci:IconText Grid.Column="0" Glyph="&#xECD9;" Text="执行者回滚" ToolTip.Tip="回滚为下方执行者列表" />
                     </Expander.Header>
                     
-                    <StackPanel>
-                        <DataGrid AutoGenerateColumns="False"
-                                  CanUserSortColumns="False"
-                                  IsReadOnly="False"
-                                  GridLinesVisibility="Horizontal"
-                                  ItemsSource="{Binding Settings.FallbackSettings.Workers}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="执行者" IsReadOnly="False"
-                                                    Binding="{Binding Name}" />
-
-                                <DataGridTemplateColumn Header="操作">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button ToolTip.Tip="删除这个执行者。" Foreground="IndianRed" Theme="{StaticResource TransparentButton}"
-                                                    Command="{Binding FallbackWorkersRemoveWorkerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NotifyDutyActionSettingsControl}}"
-                                                    CommandParameter="{Binding}">
-                                                <ci:IconText Glyph="&#xE61D;" Text="删除" />
-                                            </Button>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                        <Button ToolTip.Tip="添加一个执行者。" Margin="0 4 0 0"
-                                Click="FallbackWorkersAddWorkerButton_OnClick">
-                            <ci:IconText Glyph="&#xE00D;" Text="添加" />
-                        </Button>
-                    </StackPanel>
+                    <controls:FallbackWorkersDataGridControl Settings="{Binding Settings.FallbackSettings}" />
                 </Expander>
                 
                 <TextBlock Foreground="Gray" TextAlignment="Center" FontStyle="Italic" TextWrapping="Wrap"
@@ -81,45 +54,7 @@
                         </Grid>
                     </Expander.Header>
                     
-                    <StackPanel Spacing="8" DataContext="{Binding Settings}">
-                        <ci:Field Label="遮罩内容">
-                            <TextBox Text="{Binding CustomNotificationSettings.Title}" />
-                        </ci:Field>
-                        
-                        <ci:Field Label="遮罩时长" Suffix="秒">
-                            <NumericUpDown Increment="0.5" FormatString="0.0"
-                                           Value="{Binding CustomNotificationSettings.TitleDuration}" />
-                        </ci:Field>
-                        
-                        <ci:Field Label="正文内容">
-                            <Grid ColumnDefinitions="*, Auto">
-                                <TextBox Grid.Column="0" Text="{Binding CustomNotificationSettings.Text}" />
-                                
-                                <Button Grid.Column="1" Theme="{StaticResource TransparentButton}"
-                                        Content="{ci:FluentIcon &#xEE31;}">
-                                    <Button.Flyout>
-                                        <Flyout>
-                                            <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *">
-                                                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-                                                    <Run Text="格式化变量说明" FontWeight="Bold" />
-                                                </TextBlock>
-                                                
-                                                <SelectableTextBlock Grid.Row="1" Grid.Column="0" Margin="0 0 4 0">
-                                                    <Run Text="%n - 履行该任务的成员，以 '、' 为分隔符"/><LineBreak/>
-                                                    <Run Text="%j - 该任务名称"/><LineBreak/>
-                                                </SelectableTextBlock>
-                                            </Grid>
-                                        </Flyout>
-                                    </Button.Flyout>
-                                </Button>
-                            </Grid>
-                        </ci:Field>
-                        
-                        <ci:Field Label="正文时长" Suffix="秒">
-                            <NumericUpDown Increment="0.5" FormatString="0.0"
-                                           Value="{Binding CustomNotificationSettings.TextDuration}" />
-                        </ci:Field>
-                    </StackPanel>
+                    <controls:NotificationSettingsControl Settings="{Binding Settings.CustomNotificationSettings}" />
                 </Expander>
                 
                 <TextBlock Foreground="Gray" TextAlignment="Center" FontStyle="Italic" TextWrapping="Wrap">

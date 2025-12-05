@@ -35,30 +35,4 @@ public partial class NotifyDutyActionSettingsControl : ActionSettingsControlBase
         });
         Settings.FallbackSettings.JobName = templateItem?.Name ?? "???";
     }
-    
-    [RelayCommand]
-    private void FallbackWorkersRemoveWorker(DutyWorkerItem item)
-    {
-        Settings.FallbackSettings.Workers.Remove(item);
-        
-        var revertButton = new Button { Content = "撤销" };
-        var toastMessage = new ToastMessage($"已删除项目「{item}」。")
-        {
-            ActionContent = revertButton,
-            Duration = TimeSpan.FromSeconds(10)
-        };
-        
-        revertButton.Click += (o, args) =>
-        {
-            Settings.FallbackSettings.Workers.Add(item);
-            toastMessage.Close();
-        };
-        
-        this.ShowToast(toastMessage);
-    }
-    
-    private void FallbackWorkersAddWorkerButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        Settings.FallbackSettings.Workers.Add(new DutyWorkerItem());
-    }
 }

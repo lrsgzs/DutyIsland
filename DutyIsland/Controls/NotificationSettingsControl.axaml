@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="DutyIsland.Controls.NotificationSettingsControl"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ci="http://classisland.tech/schemas/xaml/core"
+             xmlns:local="clr-namespace:DutyIsland.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             d:DataContext="{d:DesignInstance local:NotificationSettingsControl}">
+    <StackPanel Spacing="8">
+        <ci:Field Label="遮罩内容">
+            <TextBox Text="{Binding Settings.Title}" />
+        </ci:Field>
+        
+        <ci:Field Label="遮罩时长" Suffix="秒">
+            <NumericUpDown Increment="0.5" FormatString="0.0"
+                           Value="{Binding Settings.TitleDuration}" />
+        </ci:Field>
+        
+        <ci:Field Label="正文内容">
+            <Grid ColumnDefinitions="*, Auto">
+                <TextBox Grid.Column="0" Text="{Binding Settings.Text}" />
+                
+                <Button Grid.Column="1" Theme="{StaticResource TransparentButton}"
+                        Content="{ci:FluentIcon &#xEE31;}">
+                    <Button.Flyout>
+                        <Flyout>
+                            <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *">
+                                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                                    <Run Text="格式化变量说明" FontWeight="Bold" />
+                                </TextBlock>
+                                
+                                <SelectableTextBlock Grid.Row="1" Grid.Column="0" Margin="0 0 4 0">
+                                    <Run Text="%n - 履行该任务的成员，以 '、' 为分隔符"/><LineBreak/>
+                                    <Run Text="%j - 该任务名称"/><LineBreak/>
+                                </SelectableTextBlock>
+                            </Grid>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </Grid>
+        </ci:Field>
+        
+        <ci:Field Label="正文时长" Suffix="秒">
+            <NumericUpDown Increment="0.5" FormatString="0.0"
+                           Value="{Binding Settings.TextDuration}" />
+        </ci:Field>
+    </StackPanel>
+</UserControl>
