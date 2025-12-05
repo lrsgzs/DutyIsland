@@ -52,13 +52,16 @@ public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
                     notificationSettings.Title, hasRightIcon: true, rightIcon: "\uE31E",
                     factory: x => {
                         x.Duration = TimeSpanHelper.FromSecondsSafe(notificationSettings.TitleDuration);
+                        x.IsSpeechEnabled = notificationSettings.TitleEnableSpeech;
                     }),
                 OverlayContent = string.IsNullOrEmpty(text) || notificationSettings.TextDuration <= 0
                     ? null
-                    : NotificationContent.CreateSimpleTextContent(text, factory: x =>
-                    {
-                        x.Duration = TimeSpanHelper.FromSecondsSafe(notificationSettings.TextDuration);
-                    }),
+                    : NotificationContent.CreateSimpleTextContent(text,
+                        factory: x =>
+                        {
+                            x.Duration = TimeSpanHelper.FromSecondsSafe(notificationSettings.TextDuration);
+                            x.IsSpeechEnabled = notificationSettings.TextEnableSpeech;
+                        })
             };
             await DutyNotificationProvider.ShowNotificationAsync(request);
         });

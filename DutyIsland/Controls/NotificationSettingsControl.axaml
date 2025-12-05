@@ -17,6 +17,9 @@
                            Value="{Binding Settings.TitleDuration}" />
         </ci:Field>
         
+        <CheckBox IsChecked="{Binding Settings.TitleEnableSpeech}"
+                  Content="启用遮罩语音" />
+        
         <ci:Field Label="正文内容">
             <Grid ColumnDefinitions="*, Auto">
                 <TextBox Grid.Column="0" Text="{Binding Settings.Text}" />
@@ -45,5 +48,8 @@
             <NumericUpDown Increment="0.5" FormatString="0.0"
                            Value="{Binding Settings.TextDuration}" />
         </ci:Field>
+        
+        <CheckBox IsChecked="{Binding Settings.TextEnableSpeech}"
+                  Content="启用正文语音" />
     </StackPanel>
 </UserControl>
