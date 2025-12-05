@@ -35,4 +35,6 @@ public partial class NotifyDutyActionSettingsControl : ActionSettingsControlBase
         });
         Settings.FallbackSettings.JobName = templateItem?.Name ?? "???";
     }
+    
+    protected override bool IsUndoDeleteRequested() => true;
 }

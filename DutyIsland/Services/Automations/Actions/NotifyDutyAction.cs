@@ -15,9 +15,10 @@ namespace DutyIsland.Services.Automations.Actions;
 public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
 {
     private DutyPlanService DutyPlanService { get; } = IAppHost.GetService<DutyPlanService>();
-    static DutyNotificationProvider DutyNotificationProvider { get; } =
+    private static DutyNotificationProvider DutyNotificationProvider { get; } =
         IAppHost.Host!.Services.GetServices<IHostedService>().OfType<DutyNotificationProvider>().First();
-
+    private NotificationRequest? _request;
+    
     protected override async Task OnInvoke()
     {
         await base.OnInvoke();
@@ -46,7 +47,7 @@ public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
         
         await Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            var request = new NotificationRequest
+            _request = new NotificationRequest
             {
                 MaskContent = NotificationContent.CreateTwoIconsMask(
                     notificationSettings.Title, hasRightIcon: true, rightIcon: "\uE31E",
@@ -63,7 +64,17 @@ public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
                             x.IsSpeechEnabled = notificationSettings.TextEnableSpeech;
                         })
             };
-            await DutyNotificationProvider.ShowNotificationAsync(request);
+            await DutyNotificationProvider.ShowNotificationAsync(_request);
+        });
+    }
+    
+    protected override async Task OnInterrupted()
+    {
+        await base.OnInterrupted();
+        
+        _ = Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            _request?.Cancel();
         });
     }
 }
