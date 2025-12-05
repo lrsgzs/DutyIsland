@@ -10,10 +10,12 @@ public partial class NotificationSettingsControl : UserControl
         AvaloniaProperty.RegisterDirect<NotificationSettingsControl, NotificationSettings>(
             nameof(Settings), o => o.Settings, (o, v) => o.Settings = v);
 
+    private NotificationSettings _settings = new();
+    
     public NotificationSettings Settings
     {
-        get => GetValue(SettingsProperty);
-        set => SetValue(SettingsProperty, value);
+        get => _settings;
+        set => SetAndRaise(SettingsProperty, ref _settings, value);
     }
     
     public NotificationSettingsControl()

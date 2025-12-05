@@ -16,10 +16,12 @@ public partial class FallbackWorkersDataGridControl : UserControl
         AvaloniaProperty.RegisterDirect<FallbackWorkersDataGridControl, FallbackSettings>(
             nameof(Settings), o => o.Settings, (o, v) => o.Settings = v);
 
+    private FallbackSettings _settings = new();
+    
     public FallbackSettings Settings
     {
-        get => GetValue(SettingsProperty);
-        set => SetValue(SettingsProperty, value);
+        get => _settings;
+        set => SetAndRaise(SettingsProperty, ref _settings, value);
     }
     
     public FallbackWorkersDataGridControl()
