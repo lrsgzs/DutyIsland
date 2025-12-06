@@ -101,7 +101,8 @@
                                         <fa:CommandBarButton.Flyout>
                                             <Flyout>
                                                 <StackPanel Spacing="8">
-                                                    <TextBlock Text="在下方粘贴值日名单，将会按「标准人数」自动填充。" />
+                                                    <TextBlock Text="在下方粘贴值日名单，一行一个执行者。" />
+                                                    <TextBlock Text="导入时将会按值日项的「标准人数」自动填充。" />
                                                     <TextBox Height="64" AcceptsReturn="True" Text="{Binding ViewModel.ImportDutyPlanText}" />
                                                     <TextBlock Text="导入后将会覆盖已有执行者信息！此操作无法撤销。" />
                                                     <Button Content="导入" Classes="accent" Click="ButtonImportDutyPlan_OnClick"/>
@@ -394,7 +395,7 @@
                                                     <TextBox Text="{Binding Name}"/>
                                                 </ci:Field>
                                                 
-                                                <ci:Field Label="任务人数">
+                                                <ci:Field Label="标准人数">
                                                     <NumericUpDown Text="{Binding WorkerCount}" FormatString="0"/>
                                                 </ci:Field>
                                                 
@@ -523,7 +524,7 @@
                         </fa:SettingsExpander>
                         
                         <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xF023;}"
-                                             Header="启用提醒?" Description="控制全局的提醒启用状态。">
+                                             Header="启用自动提醒?" Description="控制全局的自动提醒启用状态。">
                             <fa:SettingsExpander.Footer>
                                 <ToggleSwitch IsChecked="{Binding ViewModel.Settings.GlobalEnableNotification}"/>
                             </fa:SettingsExpander.Footer>
