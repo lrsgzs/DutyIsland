@@ -14,6 +14,7 @@
 			<ExcludeAssets>runtime; native</ExcludeAssets>
 		</PackageReference>
 		<PackageReference Include="Sentry" Version="6.0.0-rc.2-prerelease" />
+		<PackageReference Include="SuperAutoIsland.Interface" Version="0.1.2.4" />
 	</ItemGroup>
 
 	<ItemGroup>

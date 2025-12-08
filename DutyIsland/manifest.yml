@@ -10,3 +10,6 @@ url: https://github.com/lrsgzs/DutyIsland
 version: 0.1.0.0
 apiVersion: 2.0.0.0
 author: lrs2187
+dependencies:
+  - id: lrs2187.sai
+    isRequired: false

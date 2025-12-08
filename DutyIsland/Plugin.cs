@@ -1,6 +1,7 @@
 using Avalonia.Threading;
 using ClassIsland.Core;
 using ClassIsland.Core.Abstractions;
+using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Extensions.Registry;
 using ClassIsland.Shared;
@@ -17,6 +18,10 @@ using DutyIsland.ViewModels.SettingPages;
 using DutyIsland.Views.SettingPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SuperAutoIsland.Interface;
+using SuperAutoIsland.Interface.MetaData;
+using SuperAutoIsland.Interface.MetaData.ArgsType;
+using SuperAutoIsland.Interface.Services;
 
 namespace DutyIsland;
 
@@ -93,7 +98,106 @@ public class Plugin : PluginBase
         AppBase.Current.AppStarted += (_, _) =>
         {
             _logger.Info("启动 DutyPlanService...");
-            IAppHost.GetService<DutyPlanService>();
+            var dutyPlanService = IAppHost.GetService<DutyPlanService>();
+
+            if (IsPluginInstalled("lrs2187.sai", new Version(0, 1, 2, 4)))
+            {
+                var saiServerService = IAppHost.GetService<ISaiServer>();
+
+                _logger.Info("注册 SuperAutoIsland 元素...");
+                saiServerService.RegisterBlocks("DutyIsland", new RegisterData
+                {
+                    Actions =
+                    [
+                        new BlockMetadata
+                        {
+                            Id = "duty.actions.notifyDuty",
+                            Name = "提醒值日人员",
+                            Icon = ("日历助手", "\uE314"),
+                            Args = new Dictionary<string, MetaArgsBase>
+                            {
+                                ["JobGuid"] = new DropDownMetaArgs
+                                {
+                                    Name = "",
+                                    Type = MetaType.dropdown,
+                                    Options = EnsureListHasItemOrDefaultListItem(
+                                        dutyPlanService.CurrentDutyPlan?.Template?.WorkerTemplateDictionary
+                                            .Select(e => (e.Value.Name, e.Key.ToString()))
+                                            .ToList(),
+                                        new ValueTuple<string, string>("???", GlobalConstants.TemplateNullGuid.ToString()))
+                                },
+                                ["FallbackSettings.Enabled"] = new CheckboxMetaArgs
+                                {
+                                    Name = "启用回滚?",
+                                    Type = MetaType.checkbox,
+                                    DefaultValue = false
+                                },
+                                ["FallbackSettings.JobName"] = new CommonMetaArgs
+                                {
+                                    Name = "回滚任务名称",
+                                    Type = MetaType.text
+                                },
+                                ["UseCustomNotificationSettings"] = new CheckboxMetaArgs
+                                {
+                                    Name = "启用自定义提醒设置?",
+                                    Type = MetaType.checkbox,
+                                    DefaultValue = false
+                                },
+                                ["CustomNotificationSettings.Title"] = new CommonMetaArgs
+                                {
+                                    Name = "遮罩内容",
+                                    Type = MetaType.text
+                                },
+                                ["CustomNotificationSettings.TitleDuration"] = new CommonMetaArgs
+                                {
+                                    Name = "遮罩时长",
+                                    Type = MetaType.number
+                                },
+                                ["CustomNotificationSettings.TitleEnableSpeech"] = new CommonMetaArgs
+                                {
+                                    Name = "启用遮罩语音?",
+                                    Type = MetaType.boolean
+                                },
+                                ["CustomNotificationSettings.Text"] = new CommonMetaArgs
+                                {
+                                    Name = "正文内容",
+                                    Type = MetaType.text
+                                },
+                                ["_string0"] = new CommonMetaArgs
+                                {
+                                    Name = "说明:",
+                                    Type = MetaType.dummy
+                                },
+                                ["_string1"] = new CommonMetaArgs
+                                {
+                                    Name = "%n - 履行该任务的成员",
+                                    Type = MetaType.dummy
+                                },
+                                ["_string2"] = new CommonMetaArgs
+                                {
+                                    Name = "%j - 该任务名称",
+                                    Type = MetaType.dummy
+                                },
+                                ["CustomNotificationSettings.TextDuration"] = new CommonMetaArgs
+                                {
+                                    Name = "正文时长",
+                                    Type = MetaType.number
+                                },
+                                ["CustomNotificationSettings.TextEnableSpeech"] = new CommonMetaArgs
+                                {
+                                    Name = "启用正文语音?",
+                                    Type = MetaType.boolean
+                                }
+                            },
+                            DropdownUseNumbers = false,
+                            InlineField = false,
+                            InlineBlock = false,
+                            IsRule = false
+                        }
+                    ],
+                    Rules = []
+                });
+            }
         };
         
         // 应用退出
@@ -112,6 +216,16 @@ public class Plugin : PluginBase
         }
 
         return e.InnerException != null && IsDutyIslandException(e.InnerException);
+    }
+
+    private static bool IsPluginInstalled(string pkgName, Version? version = null)
+    {
+        return IPluginService.LoadedPlugins.Any(info => info.Manifest.Id == pkgName && new Version(info.Manifest.Version) >= version);
+    }
+
+    private List<T> EnsureListHasItemOrDefaultListItem<T>(List<T>? data, T defaultItem)
+    {
+        return data?.Count > 0 ? data : [defaultItem];
     }
 }
 

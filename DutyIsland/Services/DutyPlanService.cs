@@ -27,6 +27,8 @@ public partial class DutyPlanService : ObservableRecipient
         {
             Logger.Info($"值日表变化为「{CurrentDutyPlan?.Name}」");
         };
+        
+        RefreshDutyPlan();
     }
 
     private void LessonsServiceOnPostMainTimerTicked(object? sender, EventArgs e)

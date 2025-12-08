@@ -23,6 +23,11 @@ public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
     {
         await base.OnInvoke();
 
+        if (Settings.JobGuid == GlobalConstants.TemplateNullGuid)
+        {
+            return;
+        }
+        
         if (DutyPlanService.CurrentDutyPlan == null
             || !DutyPlanService.CurrentDutyPlan.Template!.WorkerTemplateDictionary.ContainsKey(Settings.JobGuid)
             || !DutyPlanService.CurrentDutyPlan.WorkerDictionary.ContainsKey(Settings.JobGuid))
