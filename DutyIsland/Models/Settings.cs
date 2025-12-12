@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DutyIsland.Enums;
 
 namespace DutyIsland.Models;
 
@@ -7,6 +8,7 @@ public partial class Settings : ObservableObject
     [ObservableProperty] private Profile.Profile _profile = new();
     
     [ObservableProperty] private bool _globalEnableNotification = true;
+    [ObservableProperty] private TimeSource _timeSource = TimeSource.ClassIsland;
     private bool _enableSentry = true;
 
     public bool EnableSentry

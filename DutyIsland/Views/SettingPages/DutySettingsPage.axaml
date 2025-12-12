@@ -530,6 +530,29 @@
                             </fa:SettingsExpander.Footer>
                         </fa:SettingsExpander>
                         
+                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE4C4;}"
+                                             IsVisible="{Binding ViewModel.Settings.GlobalEnableNotification}"
+                                             Header="自动提醒时间获取来源" Description="控制全局的自动提醒时间获取来源。">
+                            <fa:SettingsExpander.Footer>
+                                <Grid>
+                                    <TabStrip Classes="compact toggle" Theme="{StaticResource TabStripStyle}"
+                                              SelectedIndex="{Binding ViewModel.Settings.TimeSource}"
+                                              Margin="0 0 4 0">
+                                        <TabStripItem>
+                                            <ci:AnimatedIconButton Classes="display-role"
+                                                                   Glyph="&#xE47A;" Text="ClassIsland"
+                                                                   IsKeepingExpanded="{Binding $parent[TabStripItem].IsSelected}" />
+                                        </TabStripItem>
+                                        <TabStripItem>
+                                            <ci:AnimatedIconButton Classes="display-role"
+                                                                   Glyph="&#xF0BD;" Text="系统"
+                                                                   IsKeepingExpanded="{Binding $parent[TabStripItem].IsSelected}"/>
+                                        </TabStripItem>
+                                    </TabStrip>
+                                </Grid>
+                            </fa:SettingsExpander.Footer>
+                        </fa:SettingsExpander>
+                        
                         <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE4E8;}"
                                              Header="启用遥测?" Description="控制 DutyIsland 的 Sentry 遥测启用状态。本插件通过 SentrySDK 来收集本应用中的使用情况与错误信息，以改进本插件。您的信息会匿名上传，不会包含您的个人信息。您可以自行启用或禁用此功能。">
                             <fa:SettingsExpander.Footer>
