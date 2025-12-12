@@ -210,7 +210,7 @@ public class Plugin : PluginBase
 
     private static bool IsDutyIslandException(Exception e)
     {
-        if (e.StackTrace == null || e.StackTrace.Contains("dutyisland", StringComparison.CurrentCultureIgnoreCase))
+        if (e.StackTrace?.Contains("dutyisland", StringComparison.CurrentCultureIgnoreCase) ?? false)
         {
             return true;
         }
