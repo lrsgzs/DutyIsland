@@ -1,8 +1,10 @@
 ﻿using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Shared;
 using CommunityToolkit.Mvvm.ComponentModel;
+using DutyIsland.Enums;
 using DutyIsland.Models.AttachedSettings;
 using DutyIsland.Models.Duty;
+using DutyIsland.Models.Notification;
 using DutyIsland.Models.Worker;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
@@ -12,10 +14,13 @@ namespace DutyIsland.Services;
 public partial class DutyPlanService : ObservableRecipient
 {
     [ObservableProperty] private DutyPlan? _currentDutyPlan = null;
+    
     public event EventHandler? WhenRefreshDutyPlan;
     public event EventHandler? WhenDutyPlanChanged;
+    public event EventHandler<AutoNotificationInfo>? OnDutyJobAutoNotificationEvent;
     
     private ILessonsService LessonsService { get; } = IAppHost.GetService<ILessonsService>();
+    private IExactTimeService ExactTimeService { get; } = IAppHost.GetService<IExactTimeService>();
     private Logger<DutyPlanService> Logger { get;} = new();
     private byte _ticks = 0;
     
@@ -26,6 +31,11 @@ public partial class DutyPlanService : ObservableRecipient
         WhenDutyPlanChanged += (sender, args) =>
         {
             Logger.Info($"值日表变化为「{CurrentDutyPlan?.Name}」");
+        };
+
+        OnDutyJobAutoNotificationEvent += (sender, info) =>
+        {
+            Logger.Info($"触发「{info.TemplateItem.Name}」自动提醒");
         };
         
         RefreshDutyPlan();
@@ -38,6 +48,11 @@ public partial class DutyPlanService : ObservableRecipient
         {
             _ticks = 0;
             RefreshDutyPlan();
+
+            if (GlobalConstants.Config!.Data.GlobalEnableNotification)
+            {
+                CheckDutyJobNotificationTime();
+            }
         }
     }
 
@@ -66,7 +81,48 @@ public partial class DutyPlanService : ObservableRecipient
         
         WhenRefreshDutyPlan?.Invoke(this, EventArgs.Empty);
     }
-    
+
+    public void CheckDutyJobNotificationTime()
+    {
+        if (CurrentDutyPlan?.Template == null)
+        {
+            return;
+        }
+
+        var now = GlobalConstants.Config!.Data.TimeSource switch
+        {
+            TimeSource.ClassIsland => ExactTimeService.GetCurrentLocalDateTime().TimeOfDay,
+            TimeSource.System => DateTime.Now.TimeOfDay,
+            _ => TimeSpan.Zero
+        };
+        
+        var notifications = CurrentDutyPlan.Template.WorkerTemplateDictionary
+            .Where(kvp => kvp.Value.NotificationTimes.Times.Any(item => IsTimeSpanEqual(item.Time, now))
+                          && CurrentDutyPlan.WorkerDictionary.ContainsKey(kvp.Key)
+                          && !kvp.Value.IsActivated)
+            .Select(kvp =>
+            {
+                kvp.Value.IsActivated = true;
+                
+                return new AutoNotificationInfo
+                {
+                    Guid = kvp.Key,
+                    Item = CurrentDutyPlan.WorkerDictionary[kvp.Key],
+                    TemplateItem = kvp.Value,
+                    NotificationSettings = kvp.Value.NotificationSettings
+                };
+            });
+
+        foreach (var notification in notifications)
+        {
+            OnDutyJobAutoNotificationEvent?.Invoke(this, notification);
+        }
+    }
+
+    public static bool IsTimeSpanEqual(TimeSpan ts1, TimeSpan ts2)
+    {
+        return ts1.Hours == ts2.Hours && ts1.Minutes == ts2.Minutes && ts1.Seconds == ts2.Seconds;
+    }
     
     public static string WorkersToString(IEnumerable<DutyWorkerItem> workers, string connectorString)
     {

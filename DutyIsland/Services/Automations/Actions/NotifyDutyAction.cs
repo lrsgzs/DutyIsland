@@ -69,7 +69,7 @@ public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
                             x.IsSpeechEnabled = notificationSettings.TextEnableSpeech;
                         })
             };
-            await DutyNotificationProvider.ShowNotificationAsync(_request);
+            await DutyNotificationProvider.ShowActionNotification(_request);
         });
     }
     
