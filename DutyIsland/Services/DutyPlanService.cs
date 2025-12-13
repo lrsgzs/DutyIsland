@@ -51,11 +51,7 @@ public partial class DutyPlanService : ObservableRecipient
         {
             _ticks = 0;
             RefreshDutyPlan();
-
-            if (GlobalConstants.Config!.Data.GlobalEnableNotification)
-            {
-                CheckDutyJobNotificationTime();
-            }
+            CheckDutyJobNotificationTime();
         }
     }
 
@@ -87,6 +83,11 @@ public partial class DutyPlanService : ObservableRecipient
 
     public void CheckDutyJobNotificationTime()
     {
+        if (!GlobalConstants.Config!.Data.GlobalEnableNotification)
+        {
+            return;
+        }
+
         if (CurrentDutyPlan?.Template == null)
         {
             return;
@@ -100,9 +101,10 @@ public partial class DutyPlanService : ObservableRecipient
         };
         
         var notifications = CurrentDutyPlan.Template.WorkerTemplateDictionary
-            .Where(kvp => kvp.Value.NotificationTimes.Times.Any(item => IsTimeSpanEqual(item.Time, now))
-                          && CurrentDutyPlan.WorkerDictionary.ContainsKey(kvp.Key)
-                          && !kvp.Value.IsActivated)
+            .Where(kvp => kvp.Value.NotificationTimes.Enable
+                          && !kvp.Value.IsActivated
+                          && kvp.Value.NotificationTimes.Times.Any(item => IsTimeSpanEqual(item.Time, now))
+                          && CurrentDutyPlan.WorkerDictionary.ContainsKey(kvp.Key))
             .Select(kvp =>
             {
                 kvp.Value.IsActivated = true;
