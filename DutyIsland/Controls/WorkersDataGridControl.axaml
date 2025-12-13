@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="DutyIsland.Controls.FallbackWorkersDataGridControl"
+﻿<UserControl x:Class="DutyIsland.Controls.WorkersDataGridControl"
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,13 +6,13 @@
              xmlns:local="clr-namespace:DutyIsland.Controls"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             d:DataContext="{d:DesignInstance local:FallbackWorkersDataGridControl}">
+             d:DataContext="{d:DesignInstance local:WorkersDataGridControl}">
     <StackPanel Spacing="4">
         <DataGrid AutoGenerateColumns="False"
                   CanUserSortColumns="False"
                   IsReadOnly="False"
                   GridLinesVisibility="Horizontal"
-                  ItemsSource="{Binding Settings.Workers}">
+                  ItemsSource="{Binding Workers}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="执行者" IsReadOnly="False"
                                     Binding="{Binding Name}" />
@@ -21,7 +21,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button ToolTip.Tip="删除这个执行者。" Foreground="IndianRed" Theme="{StaticResource TransparentButton}"
-                                    Command="{Binding FallbackWorkersRemoveWorkerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:FallbackWorkersDataGridControl}}"
+                                    Command="{Binding FallbackWorkersRemoveWorkerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:WorkersDataGridControl}}"
                                     CommandParameter="{Binding}">
                                 <ci:IconText Glyph="&#xE61D;" Text="删除" />
                             </Button>

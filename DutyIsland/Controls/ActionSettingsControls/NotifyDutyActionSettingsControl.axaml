@@ -35,7 +35,7 @@
                         <ci:IconText Grid.Column="0" Glyph="&#xECD9;" Text="执行者回滚" ToolTip.Tip="回滚为下方执行者列表" />
                     </Expander.Header>
                     
-                    <controls:FallbackWorkersDataGridControl Settings="{Binding Settings.FallbackSettings}" />
+                    <controls:WorkersDataGridControl Workers="{Binding Settings.FallbackSettings.Workers}" />
                 </Expander>
                 
                 <TextBlock Foreground="Gray" TextAlignment="Center" FontStyle="Italic" TextWrapping="Wrap"

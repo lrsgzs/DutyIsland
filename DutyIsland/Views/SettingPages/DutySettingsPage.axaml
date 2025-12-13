@@ -206,35 +206,7 @@
                                                     <Run Text="{Binding ViewModel.SelectedDutyPlanItemKvp.Value.Second.WorkerCount}" />
                                                 </TextBlock>
                                                 
-                                                <StackPanel>
-                                                    <DataGrid AutoGenerateColumns="False"
-                                                              CanUserSortColumns="False"
-                                                              IsReadOnly="False"
-                                                              GridLinesVisibility="Horizontal"
-                                                              ItemsSource="{Binding ViewModel.SelectedDutyPlanItem.Workers}">
-                                                        <DataGrid.Columns>
-                                                            <DataGridTextColumn Header="执行者" IsReadOnly="False"
-                                                                                Binding="{Binding Name}" />
-                
-                                                            <DataGridTemplateColumn Header="操作">
-                                                                <DataGridTemplateColumn.CellTemplate>
-                                                                    <DataTemplate>
-                                                                        <Button ToolTip.Tip="删除这个执行者。" Foreground="IndianRed" Theme="{StaticResource TransparentButton}"
-                                                                                Command="{Binding DutyPlanRemoveWorkerCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutySettingsPage}}"
-                                                                                CommandParameter="{Binding}">
-                                                                            <ci:IconText Glyph="&#xE61D;" Text="删除" />
-                                                                        </Button>
-                                                                    </DataTemplate>
-                                                                </DataGridTemplateColumn.CellTemplate>
-                                                            </DataGridTemplateColumn>
-                                                        </DataGrid.Columns>
-                                                    </DataGrid>
-        
-                                                    <Button ToolTip.Tip="添加一个执行者。" Margin="0 4 0 0"
-                                                            Click="DutyPlanAddWorkerButton_OnClick">
-                                                        <ci:IconText Glyph="&#xE00D;" Text="添加" />
-                                                    </Button>
-                                                </StackPanel>
+                                                <controls:WorkersDataGridControl Workers="{Binding ViewModel.SelectedDutyPlanItemKvp.Value.First.Workers}" />
                                             </StackPanel>
                                         </ci:Emptiable> 
                                     </Grid>

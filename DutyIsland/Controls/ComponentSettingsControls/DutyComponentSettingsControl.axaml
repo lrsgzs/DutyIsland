@@ -87,7 +87,7 @@
             <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xECD9;}" Header="执行者回滚" Description="回滚为下方执行者列表"
                                  IsVisible="{Binding Settings.FallbackSettings.Enabled}">
                 <fa:SettingsExpanderItem>
-                    <controls:FallbackWorkersDataGridControl Settings="{Binding Settings.FallbackSettings}" />
+                    <controls:WorkersDataGridControl Workers="{Binding Settings.FallbackSettings.Workers}" />
                 </fa:SettingsExpanderItem>
             </fa:SettingsExpander>
             

@@ -1,30 +1,29 @@
-﻿using Avalonia;
+﻿using System.Collections.ObjectModel;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using ClassIsland.Core.Helpers.UI;
 using ClassIsland.Core.Models.UI;
 using CommunityToolkit.Mvvm.Input;
 using DutyIsland.Models.Duty;
-using DutyIsland.Models.Worker;
 
 namespace DutyIsland.Controls;
 
-public partial class FallbackWorkersDataGridControl : UserControl
+public partial class WorkersDataGridControl : UserControl
 {
-    public static readonly DirectProperty<FallbackWorkersDataGridControl, FallbackSettings> SettingsProperty =
-        AvaloniaProperty.RegisterDirect<FallbackWorkersDataGridControl, FallbackSettings>(
-            nameof(Settings), o => o.Settings, (o, v) => o.Settings = v);
+    public static readonly DirectProperty<WorkersDataGridControl, ObservableCollection<DutyWorkerItem>> WorkersProperty =
+        AvaloniaProperty.RegisterDirect<WorkersDataGridControl, ObservableCollection<DutyWorkerItem>>(
+            nameof(Workers), o => o.Workers, (o, v) => o.Workers = v);
 
-    private FallbackSettings _settings = new();
+    private ObservableCollection<DutyWorkerItem> _workers = [];
     
-    public FallbackSettings Settings
+    public ObservableCollection<DutyWorkerItem> Workers
     {
-        get => _settings;
-        set => SetAndRaise(SettingsProperty, ref _settings, value);
+        get => _workers;
+        set => SetAndRaise(WorkersProperty, ref _workers, value);
     }
     
-    public FallbackWorkersDataGridControl()
+    public WorkersDataGridControl()
     {
         DataContext = this;
         InitializeComponent();
@@ -33,7 +32,7 @@ public partial class FallbackWorkersDataGridControl : UserControl
     [RelayCommand]
     private void FallbackWorkersRemoveWorker(DutyWorkerItem item)
     {
-        Settings.Workers.Remove(item);
+        Workers.Remove(item);
         
         var revertButton = new Button { Content = "撤销" };
         var toastMessage = new ToastMessage($"已删除项目「{item}」。")
@@ -44,7 +43,7 @@ public partial class FallbackWorkersDataGridControl : UserControl
         
         revertButton.Click += (o, args) =>
         {
-            Settings.Workers.Add(item);
+            Workers.Add(item);
             toastMessage.Close();
         };
         
@@ -53,6 +52,6 @@ public partial class FallbackWorkersDataGridControl : UserControl
     
     private void FallbackWorkersAddWorkerButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        Settings.Workers.Add(new DutyWorkerItem());
+        Workers.Add(new DutyWorkerItem());
     }
 }
