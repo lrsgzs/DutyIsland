@@ -12,7 +12,7 @@
                   CanUserSortColumns="False"
                   IsReadOnly="False"
                   GridLinesVisibility="Horizontal"
-                  ItemsSource="{Binding Settings.FallbackSettings.Workers}">
+                  ItemsSource="{Binding Settings.Workers}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="执行者" IsReadOnly="False"
                                     Binding="{Binding Name}" />
