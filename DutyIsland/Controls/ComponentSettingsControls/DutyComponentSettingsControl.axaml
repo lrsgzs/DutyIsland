@@ -29,6 +29,32 @@
                 </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>
             
+            <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE777;}" Header="格式化文本" Description="用于显示的格式化文本。">
+                <fa:SettingsExpander.Footer>
+                    <Grid ColumnDefinitions="*, Auto">
+                        <TextBox Grid.Column="0" MinWidth="128" Text="{Binding Settings.FormatString}" />
+                
+                        <Button Grid.Column="1" Theme="{StaticResource TransparentButton}"
+                                Content="{ci:FluentIcon &#xEE31;}">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *">
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                                            <Run Text="格式化变量说明" FontWeight="Bold" />
+                                        </TextBlock>
+                                
+                                        <SelectableTextBlock Grid.Row="1" Grid.Column="0" Margin="0 0 4 0">
+                                            <Run Text="%n - 履行该任务的成员，以 '、' 为分隔符"/><LineBreak/>
+                                            <Run Text="%j - 该任务名称"/><LineBreak/>
+                                        </SelectableTextBlock>
+                                    </Grid>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </Grid>
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+            
             <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xEDC7;}" Header="连接符" Description="两个执行者之间的连接符。">
                 <fa:SettingsExpander.Footer>
                     <TextBox MinWidth="128"

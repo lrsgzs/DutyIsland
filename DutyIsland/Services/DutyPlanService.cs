@@ -147,6 +147,13 @@ public partial class DutyPlanService : ObservableRecipient
         return text;
     }
 
+    public static string FormatString(string text, string workersText, DutyPlanTemplateItem? dutyPlanTemplateItem)
+    {
+        return text
+            .Replace("%j", dutyPlanTemplateItem?.Name ?? "???")
+            .Replace("%n", workersText);
+    }
+
     public DutyPlanTemplateItem? GetTemplateItem(Guid jobGuid, FallbackSettings fallbackSettings)
     {
         if (CurrentDutyPlan is null)

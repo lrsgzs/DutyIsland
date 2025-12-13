@@ -50,10 +50,7 @@ public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
             ? Settings.CustomNotificationSettings
             : templateItem.NotificationSettings;
         var workersText = DutyPlanService.GetWorkersContent(Settings.JobGuid, Settings.FallbackSettings);
-
-        var text = notificationSettings.Text
-            .Replace("%j", templateItem.Name)
-            .Replace("%n", workersText);
+        var text = DutyPlanService.FormatString(notificationSettings.Text, workersText, templateItem);
         
         await Dispatcher.UIThread.InvokeAsync(async () =>
         {
