@@ -8,12 +8,8 @@
                      xmlns:local="clr-namespace:DutyIsland.Views.SettingPages"
                      xmlns:controls="clr-namespace:DutyIsland.Controls"
                      mc:Ignorable="d">
-    <Grid RowDefinitions="48, *" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DutySettingsPage}}">
-        <Border Grid.Row="0" Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}"
-                VerticalAlignment="Stretch"
-                HorizontalAlignment="Stretch" />
-        
-        <TabControl Grid.Row="0" Grid.RowSpan="2">
+    <Grid RowDefinitions="*, Auto" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DutySettingsPage}}">
+        <TabControl Grid.Row="0">
             <TabItem Header="DutyIsland" IsEnabled="False">
                 <ci:Empty Text="你真厉害，居然来到这里了。"
                           Icon="{ci:FluentIconSource &#xE059;, FontSize=48}"/>
@@ -37,9 +33,9 @@
                             </fa:InfoBar.Message>
                         </fa:InfoBar>
                         
-                        <fa:InfoBar IsOpen="True" IsVisible="True" Severity="Warning">
+                        <fa:InfoBar IsOpen="True" IsVisible="True" Severity="Success">
                             <fa:InfoBar.Message>
-                                请注意，DutyIsland 目前不支持自动提醒。将会于一（大）段时间后推出。
+                                自动提醒功能已推出！该功能类似于自动化工作流 cron + 提醒值日人员，但更方便。
                             </fa:InfoBar.Message>
                         </fa:InfoBar>
                     </StackPanel>
@@ -523,7 +519,7 @@
                             </fa:SettingsExpanderItem>
                         </fa:SettingsExpander>
                         
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xF023;}"
+                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE31C;}"
                                              Header="启用自动提醒?" Description="控制全局的自动提醒启用状态。">
                             <fa:SettingsExpander.Footer>
                                 <ToggleSwitch IsChecked="{Binding ViewModel.Settings.GlobalEnableNotification}"/>
@@ -564,17 +560,20 @@
             </TabItem>
         </TabControl>
         
-        <fa:CommandBar Grid.Row="0" HorizontalAlignment="Right" DefaultLabelPosition="Right">
-            <fa:CommandBar.PrimaryCommands>
-                <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEEB5;}" Label="保存"
-                                     ToolTip.Tip="保存当前档案文件。"
-                                     Click="ButtonSave_OnClick"/>
-                <!-- <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEE2F;}" -->
-                <!--                      Label="帮助" -->
-                <!--                      Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}" -->
-                <!--                      CommandParameter="https://docs.classisland.tech/app/profile/" -->
-                <!--                      ToolTip.Tip="查看值日表编辑器帮助"/> -->
-            </fa:CommandBar.PrimaryCommands>
-        </fa:CommandBar>
+        <Border Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
+            <fa:CommandBar HorizontalAlignment="Right" DefaultLabelPosition="Right">
+                <fa:CommandBar.PrimaryCommands>
+                    <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEEB5;}" Label="保存"
+                                         ToolTip.Tip="保存当前档案文件。"
+                                         Click="ButtonSave_OnClick"/>
+                    <!-- <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEE2F;}" -->
+                    <!--                      Label="帮助" -->
+                    <!--                      Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}" -->
+                    <!--                      CommandParameter="https://docs.classisland.tech/app/profile/" -->
+                    <!--                      ToolTip.Tip="查看值日表编辑器帮助"/> -->
+                </fa:CommandBar.PrimaryCommands>
+            </fa:CommandBar>
+        </Border>
     </Grid>
 </ci:SettingsPageBase>
