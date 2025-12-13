@@ -7,7 +7,12 @@
                      xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
                      xmlns:local="clr-namespace:DutyIsland.Views.SettingPages"
                      xmlns:controls="clr-namespace:DutyIsland.Controls"
+                     xmlns:converters="clr-namespace:DutyIsland.Converters"
                      mc:Ignorable="d">
+    <ci:SettingsPageBase.Resources>
+        <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
+    </ci:SettingsPageBase.Resources>
+    
     <Grid RowDefinitions="*, Auto" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DutySettingsPage}}">
         <TabControl Grid.Row="0">
             <TabItem Header="DutyIsland" IsEnabled="False">
@@ -439,6 +444,112 @@
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
+                            <ci:FluentIcon Glyph="&#xECDB;" FontSize="24" Height="24" VerticalAlignment="Center" />
+                            <TextBlock FontSize="24">人员</TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                
+                <Grid RowDefinitions="Auto *">
+                    <fa:CommandBar Grid.Row="0" DefaultLabelPosition="Right" Classes="hide-popup-indicator">
+                        <fa:CommandBar.PrimaryCommands>
+                            <fa:CommandBarButton Click="ButtonAddWorker_OnClick" 
+                                                 IconSource="{ci:FluentIconSource &#xF198;}"
+                                                 Label="添加人员" ToolTip.Tip="添加一位人员。"/>
+                            
+                            <fa:CommandBarButton Click="ButtonRemoveWorker_OnClick"
+                                                 Label="删除" ToolTip.Tip="删除选中的人员。"
+                                                 IsEnabled="{Binding ViewModel.SelectedWorkerItem, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <fa:CommandBarButton.IconSource>
+                                    <fa:SymbolIconSource Symbol="Remove"/>
+                                </fa:CommandBarButton.IconSource>
+                            </fa:CommandBarButton>
+                            
+                            <fa:CommandBarSeparator />
+                            
+                            <fa:CommandBarButton Click="ButtonImportWorkers_OnClick"
+                                                 IconSource="{ci:FluentIconSource &#xEFDD;}"
+                                                 Label="导入" ToolTip.Tip="导入人员" />
+                        </fa:CommandBar.PrimaryCommands>
+                    </fa:CommandBar>
+                    
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="350" MinWidth="300" MaxWidth="450" />
+                        </Grid.ColumnDefinitions>
+
+                        <DataGrid Grid.Column="0" Margin="0 0 4 0"
+                                  AutoGenerateColumns="False"
+                                  CanUserSortColumns="False"
+                                  RowHeaderWidth="150"
+                                  GridLinesVisibility="Horizontal"
+                                  IsReadOnly="False"
+                                  ItemsSource="{Binding ViewModel.Workers}"
+                                  SelectedItem="{Binding ViewModel.SelectedWorkerItem}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}"
+                                                    Header="姓名" IsReadOnly="False" />
+                                
+                                <DataGridTextColumn Binding="{Binding Id, Mode=TwoWay}"
+                                                    Header="编号" IsReadOnly="False" />
+                                
+                                <DataGridTemplateColumn Header="性别" IsReadOnly="False">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                       Text="{Binding Sex, Converter={StaticResource HumanSexToStringConverter}}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                    <DataGridTemplateColumn.CellEditingTemplate>
+                                        <DataTemplate>
+                                            <fa:FAComboBox SelectedIndex="{Binding Sex}">
+                                                <fa:FAComboBoxItem>男</fa:FAComboBoxItem>
+                                                <fa:FAComboBoxItem>女</fa:FAComboBoxItem>
+                                                <fa:FAComboBoxItem>未知</fa:FAComboBoxItem>
+                                            </fa:FAComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellEditingTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+                        <ci:Emptiable Grid.Column="2" IsDirectContentMode="True"
+                                      Data="{Binding ViewModel.SelectedWorkerItem}">
+                            <ScrollViewer Margin="8">
+                                <StackPanel Spacing="8" DataContext="{Binding ViewModel.SelectedWorkerItem}">
+                                    <TextBlock Text="人员信息" Theme="{StaticResource SubtitleTextBlockStyle}"/>
+                                    
+                                    <ci:Field Label="姓名">
+                                        <TextBox Text="{Binding Name}"/>
+                                    </ci:Field>
+                                    
+                                    <ci:Field Label="编号">
+                                        <TextBox Text="{Binding Id}"/>
+                                    </ci:Field>
+                                    
+                                    <ci:Field Label="性别">
+                                        <ListBox Theme="{StaticResource ChipListBoxTheme}" HorizontalAlignment="Left"
+                                                 SelectionMode="Single" SelectedIndex="{Binding Sex}">
+                                            <ListBoxItem>男</ListBoxItem>
+                                            <ListBoxItem>女</ListBoxItem>
+                                            <ListBoxItem>未知</ListBoxItem>
+                                        </ListBox>
+                                    </ci:Field>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </ci:Emptiable>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            
+            <TabItem>
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
                             <ci:FluentIcon Glyph="&#xEF27;" FontSize="24" Height="24" VerticalAlignment="Center" />
                             <TextBlock FontSize="24">设置</TextBlock>
                         </StackPanel>
@@ -504,8 +615,7 @@
                             <fa:SettingsExpander.Footer>
                                 <Grid>
                                     <TabStrip Classes="compact toggle" Theme="{StaticResource TabStripStyle}"
-                                              SelectedIndex="{Binding ViewModel.Settings.TimeSource}"
-                                              Margin="0 0 4 0">
+                                              SelectedIndex="{Binding ViewModel.Settings.TimeSource}">
                                         <TabStripItem>
                                             <ci:AnimatedIconButton Classes="display-role"
                                                                    Glyph="&#xE47A;" Text="ClassIsland"

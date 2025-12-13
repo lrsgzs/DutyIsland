@@ -1,0 +1,15 @@
+﻿<ci:MyWindow x:Class="DutyIsland.Views.ImportWorkersWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ci="http://classisland.tech/schemas/xaml/core"
+             xmlns:local="clr-namespace:DutyIsland.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="local:ImportWorkersWindow"
+             Icon="avares://DutyIsland/Assets/PluginIcon.png"
+             Title="DutyIsland - 导入人员向导"
+             EnableMicaWindow="True"
+             Height="600" Width="800">
+    Welcome to Avalonia!
+</ci:MyWindow>

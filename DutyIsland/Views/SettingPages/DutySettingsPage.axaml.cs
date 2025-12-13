@@ -9,8 +9,10 @@ using ClassIsland.Core.Models.UI;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 using CommunityToolkit.Mvvm.Input;
+using DutyIsland.Enums;
 using DutyIsland.Models.Duty;
 using DutyIsland.Models.Notification;
+using DutyIsland.Models.Worker;
 using DutyIsland.Shared;
 using DutyIsland.ViewModels.SettingPages;
 using FluentAvalonia.UI.Controls;
@@ -50,41 +52,6 @@ public partial class DutySettingsPage : SettingsPageBase
             Message = "保存成功",
             Duration = TimeSpan.FromSeconds(5)
         });
-    }
-
-    private async void SettingsExpanderItemShowOssLicense_OnClick(object? sender, RoutedEventArgs e)
-    {
-        var license = await File.ReadAllTextAsync(GlobalConstants.PluginFolder + "/LICENSE");
-        await new ContentDialog()
-        {
-            Title = "开放源代码许可",
-            Content = new TextBlock()
-            {
-                Text = license
-            },
-            PrimaryButtonText = "关闭",
-            DefaultButton = ContentDialogButton.Primary
-        }.ShowAsync();
-    }
-    
-    private void UIElementAppInfo_OnMouseDown(object? sender, RoutedEventArgs pointerPressedEventArgs)
-    {
-        ViewModel.AppIconClickCount++;
-        if (ViewModel.AppIconClickCount >= 20)
-        {
-            TopLevel.GetTopLevel(this)?.Clipboard?.SetTextAsync("5rS+6JKZ77yM5pyA5aW955qE5LyZ5Ly077yB");
-        }
-    }
-
-    private void UriNavigationCommands_OnClick(object sender, RoutedEventArgs e)
-    {
-        var url = e.Source switch
-        {
-            SettingsExpanderItem s => s.CommandParameter?.ToString(),
-            Button s => s.CommandParameter?.ToString(),
-            _ => "classisland://app/test/"
-        };
-        IAppHost.TryGetService<IUriNavigationService>()?.NavigateWrapped(new Uri(url!));
     }
 
     #endregion
@@ -351,6 +318,94 @@ public partial class DutySettingsPage : SettingsPageBase
         };
         
         this.ShowToast(toastMessage);
+    }
+
+    #endregion
+
+    #region Worker
+    
+    private void ButtonAddWorker_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.Workers.Add(new WorkerItem());
+    }
+
+    private void ButtonRemoveWorker_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var item = ViewModel.SelectedWorkerItem;
+        if (item == null)
+        {
+            return;
+        }
+        
+        ViewModel.Workers.Remove(item);
+        
+        var revertButton = new Button { Content = "撤销" };
+        var toastMessage = new ToastMessage($"已删除人员「{item}」。")
+        {
+            ActionContent = revertButton,
+            Duration = TimeSpan.FromSeconds(10)
+        };
+        
+        revertButton.Click += (o, args) =>
+        {
+            ViewModel.Workers.Add(item);
+            toastMessage.Close();
+        };
+        
+        this.ShowToast(toastMessage);
+    }
+
+    private void ButtonImportWorkers_OnClick(object? sender, RoutedEventArgs e)
+    {
+        IAppHost.GetService<ImportWorkersWindow>().Open();
+    }
+
+    [RelayCommand]
+    private void WorkerItemSetSex(HumanSex sex)
+    {
+        if (ViewModel.SelectedWorkerItem != null)
+        {
+            ViewModel.SelectedWorkerItem.Sex = sex;
+        }
+    }
+    
+    #endregion
+
+    #region Settings
+
+    private async void SettingsExpanderItemShowOssLicense_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var license = await File.ReadAllTextAsync(GlobalConstants.PluginFolder + "/LICENSE");
+        await new ContentDialog()
+        {
+            Title = "开放源代码许可",
+            Content = new TextBlock()
+            {
+                Text = license
+            },
+            PrimaryButtonText = "关闭",
+            DefaultButton = ContentDialogButton.Primary
+        }.ShowAsync();
+    }
+    
+    private void UIElementAppInfo_OnMouseDown(object? sender, RoutedEventArgs pointerPressedEventArgs)
+    {
+        ViewModel.AppIconClickCount++;
+        if (ViewModel.AppIconClickCount >= 20)
+        {
+            TopLevel.GetTopLevel(this)?.Clipboard?.SetTextAsync("5rS+6JKZ77yM5pyA5aW955qE5LyZ5Ly077yB");
+        }
+    }
+
+    private void UriNavigationCommands_OnClick(object sender, RoutedEventArgs e)
+    {
+        var url = e.Source switch
+        {
+            SettingsExpanderItem s => s.CommandParameter?.ToString(),
+            Button s => s.CommandParameter?.ToString(),
+            _ => "classisland://app/test/"
+        };
+        IAppHost.TryGetService<IUriNavigationService>()?.NavigateWrapped(new Uri(url!));
     }
 
     #endregion

@@ -14,7 +14,9 @@ using DutyIsland.Services.Automations.Actions;
 using DutyIsland.Services.NotificationProviders;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
+using DutyIsland.ViewModels;
 using DutyIsland.ViewModels.SettingPages;
+using DutyIsland.Views;
 using DutyIsland.Views.SettingPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -75,23 +77,19 @@ public class Plugin : PluginBase
         _logger.Info("注册服务...");
         services.AddSingleton<DutyPlanService>();
         
-        _logger.Info("注册附加设置...");
-        services.AddAttachedSettingsControl<DutyPlanAttachedSettingsControl>();
-        
-        _logger.Info("注册提醒提供方...");
-        services.AddNotificationProvider<DutyNotificationProvider>();
-        
         _logger.Info("注册视图模型...");
         services.AddTransient<DutyViewModel>();
+        services.AddTransient<ImportWorkersViewModel>();
         
-        _logger.Info("注册设置页面...");
+        _logger.Info("注册页面...");
+        services.AddSingleton<ImportWorkersWindow>();
         services.AddSettingsPage<DutySettingsPage>();
         services.AddSettingsPage<DebugSettingsPage>();
-
-        _logger.Info("注册组件...");
-        services.AddComponent<DutyComponent, DutyComponentSettingsControl>();
         
-        _logger.Info("注册行动...");
+        _logger.Info("注册 ClassIsland 元素...");
+        services.AddAttachedSettingsControl<DutyPlanAttachedSettingsControl>();
+        services.AddNotificationProvider<DutyNotificationProvider>();
+        services.AddComponent<DutyComponent, DutyComponentSettingsControl>();
         services.AddAction<NotifyDutyAction, NotifyDutyActionSettingsControl>();
         
         // 应用启动

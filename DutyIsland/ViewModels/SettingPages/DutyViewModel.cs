@@ -1,9 +1,11 @@
-﻿using ClassIsland.Core.ComponentModels;
+﻿using System.Collections.ObjectModel;
+using ClassIsland.Core.ComponentModels;
 using ClassIsland.Core.Models.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DutyIsland.ComponentModels;
 using DutyIsland.Models;
 using DutyIsland.Models.Duty;
+using DutyIsland.Models.Worker;
 using DutyIsland.Services;
 using DutyIsland.Shared;
 
@@ -15,8 +17,9 @@ public partial class DutyViewModel : ObservableRecipient
     public Settings Settings { get; } = GlobalConstants.Config!.Data;
     public int AppIconClickCount { get; set; } = 0;
     
-    public SyncDictionaryList<Guid, DutyPlan> DutyPlans { get; set; }
-    public SyncDictionaryList<Guid, DutyPlanTemplate> DutyPlanTemplates { get; set; }
+    public SyncDictionaryList<Guid, DutyPlan> DutyPlans { get; }
+    public SyncDictionaryList<Guid, DutyPlanTemplate> DutyPlanTemplates { get; }
+    public ObservableCollection<WorkerItem> Workers { get; }
 
     [ObservableProperty] private DutyPlan? _selectedDutyPlan = null;
     [ObservableProperty] private string _importDutyPlanText = string.Empty;
@@ -82,10 +85,12 @@ public partial class DutyViewModel : ObservableRecipient
         }
     }
 
+    [ObservableProperty] private WorkerItem? _selectedWorkerItem = null;
 
     public DutyViewModel()
     {
         DutyPlans = new SyncDictionaryList<Guid, DutyPlan>(Settings.Profile.DutyPlans, Guid.NewGuid);
         DutyPlanTemplates = new SyncDictionaryList<Guid, DutyPlanTemplate>(Settings.Profile.DutyPlanTemplates, Guid.NewGuid);
+        Workers = Settings.Profile.Workers;
     }
 }
