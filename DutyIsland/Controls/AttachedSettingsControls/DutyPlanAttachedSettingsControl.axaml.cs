@@ -14,8 +14,6 @@ namespace DutyIsland.Controls.AttachedSettingsControls;
 public partial class DutyPlanAttachedSettingsControl : AttachedSettingsControlBase<DutyPlanAttachedSettings>
 {
     private SyncDictionaryList<Guid, DutyPlan> DutyPlans { get; set; }
-    private KeyValuePair<Guid, DutyPlan>? SelectedDutyPlanKvp { get; set; }
-    
     private Settings DutyIslandSettings { get; } = GlobalConstants.Config!.Data;
     
     public DutyPlanAttachedSettingsControl()

@@ -19,13 +19,16 @@ public partial class DutyPlanService : ObservableRecipient
     public event EventHandler? WhenDutyPlanChanged;
     public event EventHandler<AutoNotificationInfo>? OnDutyJobAutoNotificationEvent;
     
-    private ILessonsService LessonsService { get; } = IAppHost.GetService<ILessonsService>();
-    private IExactTimeService ExactTimeService { get; } = IAppHost.GetService<IExactTimeService>();
+    private ILessonsService LessonsService { get; }
+    private IExactTimeService ExactTimeService { get; }
     private Logger<DutyPlanService> Logger { get;} = new();
     private byte _ticks = 0;
     
-    public DutyPlanService()
+    public DutyPlanService(ILessonsService lessonService, IExactTimeService exactTimeService)
     {
+        LessonsService = lessonService;
+        ExactTimeService = exactTimeService;
+        
         LessonsService.PostMainTimerTicked += LessonsServiceOnPostMainTimerTicked;
 
         WhenDutyPlanChanged += (sender, args) =>

@@ -14,10 +14,15 @@ namespace DutyIsland.Services.Automations.Actions;
 [ActionInfo("duty.actions.notifyDuty", "提醒值日人员", "\uE314")]
 public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
 {
-    private DutyPlanService DutyPlanService { get; } = IAppHost.GetService<DutyPlanService>();
-    private static DutyNotificationProvider DutyNotificationProvider { get; } =
-        IAppHost.Host!.Services.GetServices<IHostedService>().OfType<DutyNotificationProvider>().First();
+    private DutyPlanService DutyPlanService { get; }
+    private DutyNotificationProvider DutyNotificationProvider { get; }
     private NotificationRequest? _request;
+
+    public NotifyDutyAction(DutyPlanService dutyPlanService)
+    {
+        DutyPlanService = dutyPlanService;
+        DutyNotificationProvider = IAppHost.Host!.Services.GetServices<IHostedService>().OfType<DutyNotificationProvider>().First();
+    }
     
     protected override async Task OnInvoke()
     {

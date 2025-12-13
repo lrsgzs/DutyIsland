@@ -1,7 +1,6 @@
 ﻿using ClassIsland.Core.Abstractions.Services.NotificationProviders;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Models.Notification;
-using ClassIsland.Shared;
 using DutyIsland.Models.Notification;
 using DutyIsland.Models.Worker;
 using DutyIsland.Shared;
@@ -13,10 +12,12 @@ namespace DutyIsland.Services.NotificationProviders;
 [NotificationChannelInfo(GlobalConstants.DutyAutoNotificationChannelGuid, "值日自动提醒", "\uE31C", description:"通过值日表模板中设置的自动提醒所发出的提醒。")]
 public class DutyNotificationProvider : NotificationProviderBase
 {
-    private DutyPlanService DutyPlanService { get; } = IAppHost.GetService<DutyPlanService>();
+    private DutyPlanService DutyPlanService { get; }
 
-    public DutyNotificationProvider() : base()
+    public DutyNotificationProvider(DutyPlanService dutyPlanService)
     {
+        DutyPlanService = dutyPlanService;
+        
         DutyPlanService.OnDutyJobAutoNotificationEvent +=
             (sender, info) => _ = OnAutoNotification(sender, info);
     }
@@ -54,7 +55,6 @@ public class DutyNotificationProvider : NotificationProviderBase
         };
         
         await Channel(GlobalConstants.DutyAutoNotificationChannelGuid).ShowNotificationAsync(request);
-
         info.TemplateItem.IsActivated = false;
     }
 }

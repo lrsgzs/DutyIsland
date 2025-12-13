@@ -12,7 +12,6 @@
                 DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutyPlanAttachedSettingsControl}}">
         <ci:Field Label="选择的值日表">
             <ComboBox ItemsSource="{Binding DutyPlans.List}"
-                      SelectedItem="{Binding SelectedDutyPlanKvp}"
                       SelectedValue="{Binding Settings.DutyPlanGuid}"
                       SelectedValueBinding="{Binding Key}">
                 <ComboBox.ItemTemplate>
