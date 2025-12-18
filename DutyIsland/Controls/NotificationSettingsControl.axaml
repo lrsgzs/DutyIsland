@@ -5,9 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              xmlns:local="clr-namespace:DutyIsland.Controls"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             d:DataContext="{d:DesignInstance local:NotificationSettingsControl}">
-    <StackPanel Spacing="8">
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <StackPanel Spacing="8" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:NotificationSettingsControl}}">
         <ci:Field Label="遮罩内容">
             <TextBox Text="{Binding Settings.Title}" />
         </ci:Field>
