@@ -29,6 +29,19 @@ public static class GlobalConstants
     public const string DutyNotificationProviderGuid = "CA0B77B2-FBC3-449F-A14D-B6D4EAA2726C";
     public const string DutyActionNotificationChannelGuid = "881AAD3D-26FD-4FCF-B6E2-D39A996C59AC";
     public const string DutyAutoNotificationChannelGuid = "7B973AB0-98EE-41AA-BD67-464B8EB011B1";
+
+    public static class ImportSheetStaticTexts
+    {
+        public static readonly List<string> NameHeaderTexts = ["姓名", "名字", "name"];
+        public static readonly List<string> IdHeaderTexts = ["编号", "学号", "考号", "id"];
+        public static readonly List<string> SexHeaderTexts = ["性别", "sex"];
+
+        public static class SexTexts
+        {
+            public static readonly List<string> Male = ["男", "male", "boy", "man", "1"];
+            public static readonly List<string> Female = ["女", "female", "girl", "woman", "0"];
+        }
+    }
     
     #if DEBUG
         public static string Environment { get; } = "development";

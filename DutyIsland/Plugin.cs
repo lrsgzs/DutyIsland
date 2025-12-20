@@ -82,7 +82,6 @@ public class Plugin : PluginBase
         services.AddTransient<ImportWorkersViewModel>();
         
         _logger.Info("注册页面...");
-        services.AddSingleton<ImportWorkersWindow>();
         services.AddSettingsPage<DutySettingsPage>();
         services.AddSettingsPage<DebugSettingsPage>();
         
@@ -221,7 +220,7 @@ public class Plugin : PluginBase
         return IPluginService.LoadedPlugins.Any(info => info.Manifest.Id == pkgName && new Version(info.Manifest.Version) >= version);
     }
 
-    private List<T> EnsureListHasItemOrDefaultListItem<T>(List<T>? data, T defaultItem)
+    private static List<T> EnsureListHasItemOrDefaultListItem<T>(List<T>? data, T defaultItem)
     {
         return data?.Count > 0 ? data : [defaultItem];
     }

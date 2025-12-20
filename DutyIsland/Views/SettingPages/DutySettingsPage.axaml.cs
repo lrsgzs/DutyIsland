@@ -27,6 +27,7 @@ public partial class DutySettingsPage : SettingsPageBase
 {
     private DutyViewModel ViewModel { get; } = IAppHost.GetService<DutyViewModel>();
     private ILessonsService LessonsService { get; } = IAppHost.GetService<ILessonsService>();
+    private ImportWorkersWindow? ImportWorkersWindow { get; set; }
     private string PluginVersion { get; } = GlobalConstants.PluginVersion;
     private bool _notifiedRestart = false;
     
@@ -357,7 +358,8 @@ public partial class DutySettingsPage : SettingsPageBase
 
     private void ButtonImportWorkers_OnClick(object? sender, RoutedEventArgs e)
     {
-        IAppHost.GetService<ImportWorkersWindow>().Open();
+        ImportWorkersWindow = new ImportWorkersWindow();
+        ImportWorkersWindow.Show();
     }
 
     [RelayCommand]

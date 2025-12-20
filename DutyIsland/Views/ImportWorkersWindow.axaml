@@ -1,15 +1,214 @@
 ﻿<ci:MyWindow x:Class="DutyIsland.Views.ImportWorkersWindow"
+             x:Name="RootWindow"
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              xmlns:local="clr-namespace:DutyIsland.Views"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:converters="clr-namespace:DutyIsland.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="local:ImportWorkersWindow"
+             d:DataContext="{d:DesignInstance local:ImportWorkersWindow}"
              Icon="avares://DutyIsland/Assets/PluginIcon.png"
              Title="DutyIsland - 导入人员向导"
              EnableMicaWindow="True"
-             Height="600" Width="800">
-    Welcome to Avalonia!
+             Height="400" Width="600"
+             WindowStartupLocation="CenterScreen"
+             Unloaded="OnUnloaded">
+    <ci:MyWindow.Resources>
+        <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
+    </ci:MyWindow.Resources>
+    
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
+        <Border Grid.Row="0" Padding="8">
+            <StackPanel Orientation="Horizontal" Margin="4 0">
+                <TextBlock Text="导入人员向导"
+                           Theme="{StaticResource TitleTextBlockStyle}" FontWeight="Medium"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Margin="0,0,16,0" />
+            </StackPanel>
+        </Border>
+        
+        <Carousel Grid.Row="1" SelectedIndex="{Binding ViewModel.SlideIndex}">
+            <Carousel.PageTransition>
+                <CompositePageTransition>
+                    <PageSlide Duration="0:0:0.3" Orientation="Horizontal"
+                               SlideOutEasing="0.76, 0, 0.24, 1"
+                               SlideInEasing="0.76, 0, 0.24, 1"/>
+                    <CrossFade Duration="0:0:0.3"/>
+                </CompositePageTransition>
+            </Carousel.PageTransition>
+            <Carousel.Items>
+                <TextBlock Margin="8">
+                    欢迎来到 DutyIsland 人员导入向导！<LineBreak />
+                    本向导将会指导您如何进行人员的导入。<LineBreak />
+                    在导入完成后，您可以在编辑值日表的时候快速填入人名。<LineBreak />
+                    如不导入人员，您仍可以填充值日表。
+                </TextBlock>
+                
+                <Grid RowDefinitions="Auto, *" RowSpacing="8" Margin="8">
+                    <TextBlock Grid.Row="0">请在下方直接粘贴从 Microsoft Office Excel 或 WPS Office 复制的表格内容。</TextBlock>
+                    <TextBox Grid.Row="1" AcceptsReturn="True" AcceptsTab="True"
+                             Text="{Binding ViewModel.ImportSheetText}" />
+                </Grid>
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MinWidth="256" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="*" MinWidth="256" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0" Margin="8" Orientation="Vertical" Spacing="8">
+                        <CheckBox IsChecked="{Binding ViewModel.HasSheetHeader}">包含表头</CheckBox>
+
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <CheckBox IsChecked="{Binding ViewModel.HasNameColumn}">姓名列</CheckBox>
+                            
+                            <ComboBox IsVisible="{Binding ViewModel.HasNameColumn}"
+                                      ItemsSource="{Binding ViewModel.SheetHeaders}"
+                                      SelectedValue="{Binding ViewModel.NameColumnInfo.Header}"
+                                      SelectedValueBinding="{Binding HeaderText}"
+                                      SelectedIndex="{Binding ViewModel.NameColumnInfo.Index}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <TextBlock Text="{Binding HeaderText}" IsVisible="{Binding ViewModel.HasSheetHeader, ElementName=RootWindow}" />
+                                            <TextBlock Text="{Binding IndexText}" IsVisible="{Binding !ViewModel.HasSheetHeader, ElementName=RootWindow}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <CheckBox IsChecked="{Binding ViewModel.HasIdColumn}">编号列</CheckBox>
+                            
+                            <ComboBox IsVisible="{Binding ViewModel.HasIdColumn}"
+                                      ItemsSource="{Binding ViewModel.SheetHeaders}"
+                                      SelectedValue="{Binding ViewModel.IdColumnInfo.Header}"
+                                      SelectedValueBinding="{Binding HeaderText}"
+                                      SelectedIndex="{Binding ViewModel.IdColumnInfo.Index}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <TextBlock Text="{Binding HeaderText}" IsVisible="{Binding ViewModel.HasSheetHeader, ElementName=RootWindow}" />
+                                            <TextBlock Text="{Binding IndexText}" IsVisible="{Binding !ViewModel.HasSheetHeader, ElementName=RootWindow}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <CheckBox IsChecked="{Binding ViewModel.HasSexColumn}">性别列</CheckBox>
+                            
+                            <ComboBox IsVisible="{Binding ViewModel.HasSexColumn}"
+                                      ItemsSource="{Binding ViewModel.SheetHeaders}"
+                                      SelectedValue="{Binding ViewModel.SexColumnInfo.Header}"
+                                      SelectedValueBinding="{Binding HeaderText}"
+                                      SelectedIndex="{Binding ViewModel.SexColumnInfo.Index}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <TextBlock Text="{Binding HeaderText}" IsVisible="{Binding ViewModel.HasSheetHeader, ElementName=RootWindow}" />
+                                            <TextBlock Text="{Binding IndexText}" IsVisible="{Binding !ViewModel.HasSheetHeader, ElementName=RootWindow}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        
+                        <Button Classes="accent" Click="ButtonApplySettings_OnClick">
+                            <ci:IconText Glyph="&#xE424;" Text="应用当前设置" />
+                        </Button>
+                    </StackPanel>
+                    
+                    <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                    
+                    <Grid Grid.Column="2" RowDefinitions="Auto *">
+                        <TextBlock Grid.Row="0" Margin="4 0 0 0">预览</TextBlock>
+                        
+                        <DataGrid Grid.Row="1"
+                                  AutoGenerateColumns="False"
+                                  CanUserSortColumns="False"
+                                  RowHeaderWidth="150"
+                                  GridLinesVisibility="Horizontal"
+                                  IsReadOnly="True"
+                                  ItemsSource="{Binding ViewModel.Workers}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}"
+                                                    Header="姓名" IsReadOnly="True" />
+                            
+                                <DataGridTextColumn Binding="{Binding Id, Mode=OneWay}"
+                                                    Header="编号" IsReadOnly="True" />
+                            
+                                <DataGridTextColumn Binding="{Binding Sex, Converter={StaticResource HumanSexToStringConverter}, Mode=OneWay}"
+                                                    Header="性别" IsReadOnly="True" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Grid>
+            </Carousel.Items>
+        </Carousel>
+        
+        <Separator Grid.Row="2" Margin="0 8 0 0" />
+
+        <Grid Grid.Row="3" ColumnDefinitions="Auto, *, Auto" 
+              Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
+            <StackPanel Grid.Column="0"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Bottom"
+                    Margin="6">
+                <Button Margin="0 0 4 0"
+                        IsCancel="True"
+                        Click="ButtonCancel_OnClick"
+                        ToolTip.Tip="取消导入操作。">
+                    <ci:IconText Glyph="&#xe671;" Text="取消" />
+                </Button>
+                
+                <Button Margin="0 0 4 0"
+                        Click="ButtonPrev_OnClick" ToolTip.Tip="返回上一步。">
+                    <Button.IsVisible>
+                        <Binding Path="ViewModel.SlideIndex" Converter="{x:Static ObjectConverters.NotEqual}">
+                            <Binding.ConverterParameter>
+                                <system:Int32>0</system:Int32>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </Button.IsVisible>
+                    <ci:IconText Glyph="&#xe109;" Text="上一步" />
+                </Button>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" VerticalAlignment="Bottom" Margin="6"
+                        Orientation="Horizontal">
+                <Button Margin="12 0 0 0" Click="ButtonNext_OnClick"
+                        ToolTip.Tip="进入下一步。" Classes="accent">
+                    <Button.IsVisible>
+                        <Binding Path="ViewModel.SlideIndex" Converter="{x:Static ObjectConverters.NotEqual}">
+                            <Binding.ConverterParameter>
+                                <system:Int32>2</system:Int32>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </Button.IsVisible>
+                    <ci:IconText Glyph="&#xe131;" Text="下一步" />
+                </Button>
+                
+                <Button Margin="12 0 0 0" ToolTip.Tip="确认导入。"
+                        Click="ButtonConfirmImport_OnClick"
+                        Classes="accent">
+                    <Button.IsVisible>
+                        <Binding Path="ViewModel.SlideIndex" Converter="{x:Static ObjectConverters.Equal}">
+                            <Binding.ConverterParameter>
+                                <system:Int32>2</system:Int32>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </Button.IsVisible>
+                    <ci:IconText Glyph="&#xe424;" Text="确认" />
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
 </ci:MyWindow>
