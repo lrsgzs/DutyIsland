@@ -381,9 +381,10 @@ public partial class DutySettingsPage : SettingsPageBase
         await new ContentDialog()
         {
             Title = "开放源代码许可",
-            Content = new TextBlock()
+            Content = new TextBox
             {
-                Text = license
+                Text = license,
+                IsReadOnly = true
             },
             PrimaryButtonText = "关闭",
             DefaultButton = ContentDialogButton.Primary

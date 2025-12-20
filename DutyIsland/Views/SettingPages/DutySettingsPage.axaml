@@ -15,7 +15,15 @@
     
     <Grid RowDefinitions="*, Auto" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DutySettingsPage}}">
         <TabControl Grid.Row="0">
-            <TabItem Header="DutyIsland" IsEnabled="False">
+            <TabItem IsEnabled="False">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="20">DutyIsland</TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                
                 <ci:Empty Text="你真厉害，居然来到这里了。"
                           Icon="{ci:FluentIconSource &#xE059;, FontSize=48}"/>
             </TabItem>
@@ -24,8 +32,8 @@
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <ci:FluentIcon Glyph="&#xE994;" FontSize="24" Height="24" VerticalAlignment="Center" />
-                            <TextBlock FontSize="24">主页</TextBlock>
+                            <ci:FluentIcon Glyph="&#xE994;" FontSize="20" Height="20" VerticalAlignment="Center" />
+                            <TextBlock FontSize="20">主页</TextBlock>
                         </StackPanel>
                     </DataTemplate>
                 </TabItem.HeaderTemplate>
@@ -51,8 +59,8 @@
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <ci:FluentIcon Glyph="&#xE324;" FontSize="24" Height="24" VerticalAlignment="Center" />
-                            <TextBlock FontSize="24">值日表</TextBlock>
+                            <ci:FluentIcon Glyph="&#xE324;" FontSize="20" Height="20" VerticalAlignment="Center" />
+                            <TextBlock FontSize="20">值日表</TextBlock>
                         </StackPanel>
                     </DataTemplate>
                 </TabItem.HeaderTemplate>
@@ -226,8 +234,8 @@
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <ci:FluentIcon Glyph="&#xE31C;" FontSize="24" Height="24" VerticalAlignment="Center" />
-                            <TextBlock FontSize="24">值日表模板</TextBlock>
+                            <ci:FluentIcon Glyph="&#xE31C;" FontSize="20" Height="20" VerticalAlignment="Center" />
+                            <TextBlock FontSize="20">值日表模板</TextBlock>
                         </StackPanel>
                     </DataTemplate>
                 </TabItem.HeaderTemplate>
@@ -444,8 +452,8 @@
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <ci:FluentIcon Glyph="&#xECDB;" FontSize="24" Height="24" VerticalAlignment="Center" />
-                            <TextBlock FontSize="24">人员</TextBlock>
+                            <ci:FluentIcon Glyph="&#xECDB;" FontSize="20" Height="20" VerticalAlignment="Center" />
+                            <TextBlock FontSize="20">人员</TextBlock>
                         </StackPanel>
                     </DataTemplate>
                 </TabItem.HeaderTemplate>
@@ -550,8 +558,8 @@
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <ci:FluentIcon Glyph="&#xEF27;" FontSize="24" Height="24" VerticalAlignment="Center" />
-                            <TextBlock FontSize="24">设置</TextBlock>
+                            <ci:FluentIcon Glyph="&#xEF27;" FontSize="20" Height="20" VerticalAlignment="Center" />
+                            <TextBlock FontSize="20">设置</TextBlock>
                         </StackPanel>
                     </DataTemplate>
                 </TabItem.HeaderTemplate>
@@ -586,17 +594,15 @@
                             <fa:SettingsExpanderItem Content="常用链接">
                                 <fa:SettingsExpanderItem.Footer>
                                     <WrapPanel Classes="animated-resize" ItemSpacing="4">
-                                        <!-- <Button Theme="{StaticResource TransparentButton}" -->
-                                        <!--         Content="{ci:FluentIcon &#xE23C;, FontSize=20}" -->
-                                        <!--         ToolTip.Tip="文档" -->
-                                        <!--         Click="UriNavigationCommands_OnClick" -->
-                                        <!--         CommandParameter="https://docs.classisland.tech"/> -->
+                                        <HyperlinkButton Click="UriNavigationCommands_OnClick"
+                                                         CommandParameter="https://github.com/lrsgzs/DutyIsland">
+                                            <TextBlock Text="GitHub"/>
+                                        </HyperlinkButton>
                                         
-                                        <Button Theme="{StaticResource TransparentButton}"
-                                                Content="{ci:LucideIcon &#xE0EA;, FontSize=16}"
-                                                ToolTip.Tip="GitHub"
-                                                Click="UriNavigationCommands_OnClick"
-                                                CommandParameter="https://github.com/lrsgzs/DutyIsland"/>
+                                        <HyperlinkButton Click="UriNavigationCommands_OnClick"
+                                                         CommandParameter="https://qm.qq.com/q/PeyliibxE4">
+                                            <TextBlock Text="加入插件交流 QQ 群"/>
+                                        </HyperlinkButton>
                                     </WrapPanel>
                                 </fa:SettingsExpanderItem.Footer>
                             </fa:SettingsExpanderItem>
