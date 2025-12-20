@@ -8,4 +8,9 @@ public static class TimeSpanHelper
     {
         return !double.IsRealNumber(seconds) ? TimeSpan.Zero : TimeSpan.FromSeconds(Math.Max(0, Math.Min(MaxTimeSpanSeconds, seconds)));
     }
+    
+    public static bool IsTimeSpanEqual(TimeSpan ts1, TimeSpan ts2)
+    {
+        return ts1.Hours == ts2.Hours && ts1.Minutes == ts2.Minutes && ts1.Seconds == ts2.Seconds;
+    }
 }

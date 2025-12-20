@@ -103,7 +103,7 @@ public partial class DutyPlanService : ObservableRecipient
         var notifications = CurrentDutyPlan.Template.WorkerTemplateDictionary
             .Where(kvp => kvp.Value.NotificationTimes.Enable
                           && !kvp.Value.IsActivated
-                          && kvp.Value.NotificationTimes.Times.Any(item => IsTimeSpanEqual(item.Time, now))
+                          && kvp.Value.NotificationTimes.Times.Any(item => TimeSpanHelper.IsTimeSpanEqual(item.Time, now))
                           && CurrentDutyPlan.WorkerDictionary.ContainsKey(kvp.Key))
             .Select(kvp =>
             {
@@ -122,11 +122,6 @@ public partial class DutyPlanService : ObservableRecipient
         {
             OnDutyJobAutoNotificationEvent?.Invoke(this, notification);
         }
-    }
-
-    public static bool IsTimeSpanEqual(TimeSpan ts1, TimeSpan ts2)
-    {
-        return ts1.Hours == ts2.Hours && ts1.Minutes == ts2.Minutes && ts1.Seconds == ts2.Seconds;
     }
     
     public static string WorkersToString(IEnumerable<DutyWorkerItem> workers, string connectorString)
