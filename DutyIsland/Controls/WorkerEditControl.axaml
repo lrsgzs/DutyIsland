@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="DutyIsland.Controls.WorkerEditControl"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ci="http://classisland.tech/schemas/xaml/core"
+             xmlns:local="clr-namespace:DutyIsland.Controls"
+             xmlns:converters="clr-namespace:DutyIsland.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <UserControl.Resources>
+        <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
+    </UserControl.Resources>
+    
+    <Grid ColumnDefinitions="* Auto" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:WorkerEditControl}}">
+        <TextBox Grid.Column="0" Text="{Binding Worker}" />
+        
+        <ci:AnimatedIconButton Grid.Column="1" Glyph="&#xEEF3;" Text="搜索" ToolTip.Tip="搜索执行者">
+            <ci:AnimatedIconButton.Flyout>
+                <Flyout>
+                    <Grid RowDefinitions="Auto * Auto" ColumnDefinitions="Auto * Auto">
+                        <ListBox Grid.Row="0" Grid.Column="0" SelectionMode="Multiple,Toggle" Theme="{StaticResource ChipListBoxTheme}">
+                            <ListBoxItem IsSelected="{Binding Model.IsFilteredMale}">男</ListBoxItem>
+                            <ListBoxItem IsSelected="{Binding Model.IsFilteredFemale}">女</ListBoxItem>
+                            <ListBoxItem IsSelected="{Binding Model.IsFilteredUnknown}">未知</ListBoxItem>
+                        </ListBox>
+                        
+                        <TextBox Grid.Row="0" Grid.Column="1" MinWidth="128"
+                                 Watermark="输入要搜索的姓名..."
+                                 Text="{Binding Model.SearchText}"
+                                 KeyUp="TextBoxSearch_OnKeyUp"/>
+                        
+                        <Button Grid.Row="0" Grid.Column="2" Theme="{StaticResource TransparentButton}" ToolTip.Tip="开始搜索"
+                                Click="ButtonSearch_OnClick">
+                            <ci:FluentIcon Glyph="&#xEEF3;" />
+                        </Button>
+                        
+                        <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                                 MinHeight="128" MaxHeight="192"
+                                 SelectionMode="Single"
+                                 ItemsSource="{Binding Model.WorkerItems}"
+                                 SelectedItem="{Binding Model.SelectedWorkerItem}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="* Auto Auto" VerticalAlignment="Center" ColumnSpacing="4">
+                                        <TextBlock Grid.Column="0" VerticalAlignment="Center"
+                                                   FontSize="14" Text="{Binding Name}" />
+                                        
+                                        <TextBlock Grid.Column="1" VerticalAlignment="Center"
+                                                   FontSize="12" Foreground="Gray" Text="{Binding Id}" />
+                                        
+                                        <TextBlock Grid.Column="2" VerticalAlignment="Center"
+                                                   FontSize="12" Foreground="Gray" Text="{Binding Sex, Converter={StaticResource HumanSexToStringConverter}}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        
+                        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" Classes="accent"
+                                IsEnabled="{Binding Model.SelectedWorkerItem, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                Click="ButtonApply_OnClick">
+                            <ci:IconText Glyph="&#xE424;" Text="确定" />
+                        </Button>
+                    </Grid>
+                </Flyout>
+            </ci:AnimatedIconButton.Flyout>
+        </ci:AnimatedIconButton>
+    </Grid>
+</UserControl>

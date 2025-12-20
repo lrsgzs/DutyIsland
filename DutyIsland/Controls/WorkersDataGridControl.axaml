@@ -14,8 +14,18 @@
                   GridLinesVisibility="Horizontal"
                   ItemsSource="{Binding Workers}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="执行者" IsReadOnly="False"
-                                    Binding="{Binding Name}" />
+                <DataGridTemplateColumn Header="执行者" IsReadOnly="False" MinWidth="160">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock VerticalAlignment="Center" Margin="8 0" Text="{Binding Name}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <local:WorkerEditControl Worker="{Binding Name}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Header="操作">
                     <DataGridTemplateColumn.CellTemplate>
