@@ -5,9 +5,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using DutyIsland.ComponentModels;
 using DutyIsland.Models;
 using DutyIsland.Models.Duty;
+using DutyIsland.Models.Rolling;
 using DutyIsland.Models.Worker;
 using DutyIsland.Services;
 using DutyIsland.Shared;
+using DynamicData;
+using DynamicData.Alias;
+using DynamicData.Binding;
 
 namespace DutyIsland.ViewModels.SettingPages;
 
@@ -17,10 +21,16 @@ public partial class DutyViewModel : ObservableRecipient
     public Settings Settings { get; } = GlobalConstants.Config!.Data;
     public int AppIconClickCount { get; set; } = 0;
     
+    public RollSettings Rolling { get; }
     public SyncDictionaryList<Guid, DutyPlan> DutyPlans { get; }
     public SyncDictionaryList<Guid, DutyPlanTemplate> DutyPlanTemplates { get; }
     public ObservableCollection<WorkerItem> Workers { get; }
 
+    // 轮换
+    [ObservableProperty] private ObservableCollection<int> _rollIndexItems = [];
+    [ObservableProperty] private RollItem? _selectedRollItem = null;
+    
+    // 值日表
     [ObservableProperty] private DutyPlan? _selectedDutyPlan = null;
     [ObservableProperty] private string _importDutyPlanText = string.Empty;
     [ObservableProperty] private KeyValuePair<Guid, DutyPlanTemplate>? _dutyPlanSelectedDutyPlanTemplateKvp = null;
@@ -60,6 +70,7 @@ public partial class DutyViewModel : ObservableRecipient
         }
     }
     
+    // 值日表模板
     [ObservableProperty] private DutyPlanTemplate? _selectedDutyPlanTemplate = null;
     [ObservableProperty] private ToastMessage? _currentTemplateItemDeleteRevertToast;
     [ObservableProperty] private Guid? _selectedDutyPlanTemplateItem = null;
@@ -85,12 +96,38 @@ public partial class DutyViewModel : ObservableRecipient
         }
     }
 
+    // 人员
     [ObservableProperty] private WorkerItem? _selectedWorkerItem = null;
 
     public DutyViewModel()
     {
+        Rolling = Settings.Profile.Rolling;
         DutyPlans = new SyncDictionaryList<Guid, DutyPlan>(Settings.Profile.DutyPlans, Guid.NewGuid);
         DutyPlanTemplates = new SyncDictionaryList<Guid, DutyPlanTemplate>(Settings.Profile.DutyPlanTemplates, Guid.NewGuid);
         Workers = Settings.Profile.Workers;
+
+        Rolling.RollItems.CollectionChanged += (sender, args) =>
+        {
+            UpdateRollIndexItems();
+        };
+        
+        UpdateRollIndexItems();
+    }
+
+    private void UpdateRollIndexItems()
+    {
+        var indexCount = RollIndexItems.Count;
+        var itemsCount = Rolling.RollItems.Count;
+        
+        if (indexCount == itemsCount)
+        {
+            return;
+        }
+        
+        RollIndexItems.Clear();
+        for (var i = 0; i < itemsCount; i++)
+        {
+            RollIndexItems.Add(i);
+        }
     }
 }

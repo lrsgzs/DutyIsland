@@ -42,8 +42,67 @@ public partial class DutyPlanService : ObservableRecipient
         };
         
         RefreshDutyPlan();
+
+        if (GlobalConstants.Config!.Data.DutyPlanGetMode == DutyPlanGetMode.AutoRolling)
+        {
+            UpdateRollingIndex();
+        }
+        else
+        {
+            GlobalConstants.Config.Data.Profile.Rolling.LastChangedDate = DateOnly.FromDateTime(DateTime.Now);
+        }
     }
 
+    public void UpdateRollingIndex()
+    {
+        var settings = GlobalConstants.Config!.Data.Profile.Rolling;
+        if (settings.RollItems.Count == 0)
+        {
+            return;
+        }
+        
+        var dayDelta = DateOnly.FromDateTime(DateTime.Now).DayNumber - settings.LastChangedDate.DayNumber;
+        
+        if (settings.RollOnUnopenDay)
+        {
+            var changes = 0;
+            var curGroup = 0;
+            var curDay = settings.LastChangedDate.ToDateTime(new TimeOnly());
+
+            for (var i = 0; i <= dayDelta; i++)
+            {
+                if (settings.SkipWeekend && curDay.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
+                {
+                    continue;
+                }
+
+                curDay = curDay.AddDays(1);
+                curGroup++;
+                
+                if (curGroup >= settings.RollDays)
+                {
+                    changes++;
+                    curGroup = 0;
+                }
+            }
+
+            settings.RollIndex += changes;
+        }
+        else
+        {
+            if (!settings.SkipWeekend || DateTime.Now.DayOfWeek is not (DayOfWeek.Saturday or DayOfWeek.Sunday))
+            {
+                settings.RollIndex++;
+            }
+        }
+        
+        if (settings.RollIndex >= settings.RollItems.Count)
+        {
+            settings.RollIndex %= settings.RollItems.Count;
+        }
+        settings.LastChangedDate = DateOnly.FromDateTime(DateTime.Now);
+    }
+    
     private void LessonsServiceOnPostMainTimerTicked(object? sender, EventArgs e)
     {
         _ticks += 1;
@@ -58,13 +117,22 @@ public partial class DutyPlanService : ObservableRecipient
     public void RefreshDutyPlan()
     {
         var beforeDutyPlan = CurrentDutyPlan;
-        var attachedSettings = IAttachedSettingsHostService.GetAttachedSettingsByPriority
-            <DutyPlanAttachedSettings>(
-                Guid.Parse(GlobalConstants.DutyPlanAttachedSettingsGuid),
-                classPlan: LessonsService.CurrentClassPlan);
+        Guid? afterDutyPlanGuid;
+
+        switch (GlobalConstants.Config!.Data.DutyPlanGetMode)
+        {
+            case DutyPlanGetMode.AttachedSettings:
+                afterDutyPlanGuid = GetDutyPlanGuidByAttachedSettings();
+                break;
+            case DutyPlanGetMode.AutoRolling:
+                afterDutyPlanGuid = GetDutyPlanGuidByRollingSettings();
+                break;
+            default:
+                return;
+        }
         
-        if (attachedSettings?.DutyPlanGuid != null &&
-            GlobalConstants.Config!.Data.Profile.DutyPlans.TryGetValue(attachedSettings.DutyPlanGuid.Value, out var plan))
+        if (afterDutyPlanGuid != null &&
+            GlobalConstants.Config.Data.Profile.DutyPlans.TryGetValue(afterDutyPlanGuid.Value, out var plan))
         {
             CurrentDutyPlan = plan;
         }
@@ -81,6 +149,31 @@ public partial class DutyPlanService : ObservableRecipient
         WhenRefreshDutyPlan?.Invoke(this, EventArgs.Empty);
     }
 
+    public Guid? GetDutyPlanGuidByAttachedSettings()
+    {
+        return IAttachedSettingsHostService.GetAttachedSettingsByPriority
+            <DutyPlanAttachedSettings>(
+                Guid.Parse(GlobalConstants.DutyPlanAttachedSettingsGuid),
+                classPlan: LessonsService.CurrentClassPlan)?
+            .DutyPlanGuid;
+    }
+
+    public static Guid? GetDutyPlanGuidByRollingSettings()
+    {
+        var settings = GlobalConstants.Config!.Data.Profile.Rolling;
+        if (settings.RollItems.Count == 0)
+        {
+            return null;
+        }
+        
+        if (settings.RollIndex >= settings.RollItems.Count)
+        {
+            settings.RollIndex %= settings.RollItems.Count;
+        }
+        
+        return settings.RollItems[settings.RollIndex].DutyPlanGuid;
+    }
+    
     public void CheckDutyJobNotificationTime()
     {
         if (!GlobalConstants.Config!.Data.GlobalEnableNotification)

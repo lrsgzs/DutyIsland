@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 using DutyIsland.Enums;
 using DutyIsland.Models.Duty;
 using DutyIsland.Models.Notification;
+using DutyIsland.Models.Rolling;
 using DutyIsland.Models.Worker;
 using DutyIsland.Shared;
 using DutyIsland.ViewModels.SettingPages;
@@ -26,7 +27,6 @@ namespace DutyIsland.Views.SettingPages;
 public partial class DutySettingsPage : SettingsPageBase
 {
     private DutyViewModel ViewModel { get; } = IAppHost.GetService<DutyViewModel>();
-    private ILessonsService LessonsService { get; } = IAppHost.GetService<ILessonsService>();
     private ImportWorkersWindow? ImportWorkersWindow { get; set; }
     private string PluginVersion { get; } = GlobalConstants.PluginVersion;
     private bool _notifiedRestart = false;
@@ -57,6 +57,49 @@ public partial class DutySettingsPage : SettingsPageBase
 
     #endregion
 
+    #region Rolling
+    
+    private void ButtonAddRollItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.Rolling.RollItems.Add(new RollItem());
+    }
+
+    private void ButtonRemoveRollItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedRollItem == null) 
+            return;
+
+        var item = ViewModel.SelectedRollItem;
+        ViewModel.Rolling.RollItems.Remove(ViewModel.SelectedRollItem);
+        ViewModel.SelectedRollItem = null;
+        
+        var revertButton = new Button
+        {
+            Content = "撤销"
+        };
+
+        ViewModel.CurrentTemplateItemDeleteRevertToast?.Close();
+        var message = ViewModel.CurrentTemplateItemDeleteRevertToast = new ToastMessage
+        {
+            Message = $"已删除项目 {item}。",
+            Duration = TimeSpan.FromSeconds(10),
+            ActionContent = revertButton
+        };
+        
+        revertButton.Click += RevertButtonOnClick;
+        this.ShowToast(message);
+        
+        return;
+
+        void RevertButtonOnClick(object? o, RoutedEventArgs routedEventArgs)
+        {
+            ViewModel.Rolling.RollItems.Add(item);
+            message.Close();
+        }
+    }
+
+    #endregion
+    
     #region DutyPlan
     
     private void ButtonAddDutyPlan_OnClick(object? sender, RoutedEventArgs e)
