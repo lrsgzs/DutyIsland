@@ -3,6 +3,8 @@
 
 # DutyIsland
 
+[![wakatime](https://wakatime.com/badge/github/lrsgzs/DutyIsland.svg)](https://wakatime.com/badge/github/lrsgzs/DutyIsland)
+
 </div>
 
 > 为 ClassIsland 添加个垃圾值日表（正在编写）
@@ -11,9 +13,9 @@
 
 - [x] 值日表编辑
 
-- [ ] 值日表加载
+- [x] 值日表加载
   - [x] 从课表加载
-  - [ ] 自动轮换
+  - [x] 自动轮换
 
 - [ ] 值日表展示
   - [x] 格式化字符串

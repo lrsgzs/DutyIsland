@@ -2,17 +2,39 @@
 
 # DutyIsland
 
+[![wakatime](https://wakatime.com/badge/github/lrsgzs/DutyIsland.svg)](https://wakatime.com/badge/github/lrsgzs/DutyIsland)
+
 > 为 ClassIsland 添加个垃圾值日表（正在编写）
 
-## 功能
+## 开发计划
+
 - [x] 值日表编辑
+
+- [x] 值日表加载
+  - [x] 从课表加载
+  - [x] 自动轮换
+
 - [ ] 值日表展示
-  - [x] 只显示执行者(第一代)
-  - [ ] 格式化字符串(第二代)
+  - [x] 格式化字符串
   - [ ] 高级文本(较晚)
+
 - [ ] 值日提醒
   - [x] 通过行动提醒
-  - [ ] 自动提醒
+  - [x] 自动提醒
+  - [ ] 支持“一键”提醒所有值日者
+  - [ ] 支持从托盘提醒
+
+- [ ] 点名支持
+  - [ ] 点名功能
+  - [ ] 引荐 SecRandom
+
+- [ ] 插件联动
+  - [ ] SuperAutoIsland
+    - [x] 积木
+    - [ ] 数据提供 (等 sai 做出来)
+  - [ ] ExtraIsland 值日迁移
+  - [ ] 还未新建文件夹的 NextHoliday
+
 - [ ] ...
 
 ## 如何使用
