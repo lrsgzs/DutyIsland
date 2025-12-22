@@ -69,14 +69,14 @@ public partial class DutyPlanService : ObservableRecipient
             var curGroup = 0;
             var curDay = settings.LastChangedDate.ToDateTime(new TimeOnly());
 
-            for (var i = 0; i <= dayDelta; i++)
+            for (var i = 0; i < dayDelta; i++)
             {
+                curDay = curDay.AddDays(1);
+                
                 if (settings.SkipWeekend && curDay.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
                 {
                     continue;
                 }
-
-                curDay = curDay.AddDays(1);
                 curGroup++;
                 
                 if (curGroup >= settings.RollDays)
