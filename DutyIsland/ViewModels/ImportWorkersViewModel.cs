@@ -150,7 +150,7 @@ public partial class ImportWorkersViewModel : ObservableRecipient
         
         Workers.Clear();
 
-        for (var i = 0; i <= _sheet.Count; i++)
+        for (var i = 0; i < _sheet.Count; i++)
         {
             // 跳过表头
             if (HasSheetHeader && i == 0)
