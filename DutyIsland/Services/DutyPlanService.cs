@@ -90,7 +90,7 @@ public partial class DutyPlanService : ObservableRecipient
         }
         else
         {
-            if (!settings.SkipWeekend || DateTime.Now.DayOfWeek is not (DayOfWeek.Saturday or DayOfWeek.Sunday))
+            if (dayDelta > 0 && (!settings.SkipWeekend || DateTime.Now.DayOfWeek is not (DayOfWeek.Saturday or DayOfWeek.Sunday)))
             {
                 settings.RollIndex++;
             }
