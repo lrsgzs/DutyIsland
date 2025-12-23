@@ -14,6 +14,7 @@ using DutyIsland.Models.Duty;
 using DutyIsland.Models.Notification;
 using DutyIsland.Models.Rolling;
 using DutyIsland.Models.Worker;
+using DutyIsland.Services;
 using DutyIsland.Shared;
 using DutyIsland.ViewModels.SettingPages;
 using FluentAvalonia.UI.Controls;
@@ -26,6 +27,7 @@ namespace DutyIsland.Views.SettingPages;
 [SettingsPageInfo("duty.settings.duty","DutyIsland 值日表","\uE31E","\uE31D")]
 public partial class DutySettingsPage : SettingsPageBase
 {
+    private DutyPlanService DutyPlanService { get; } = IAppHost.GetService<DutyPlanService>();
     private DutyViewModel ViewModel { get; } = IAppHost.GetService<DutyViewModel>();
     private ImportWorkersWindow? ImportWorkersWindow { get; set; }
     private string PluginVersion { get; } = GlobalConstants.PluginVersion;
@@ -96,6 +98,16 @@ public partial class DutySettingsPage : SettingsPageBase
             ViewModel.Rolling.RollItems.Add(item);
             message.Close();
         }
+    }
+
+    private void ButtonManualUpdateRolling_OnClick(object? sender, RoutedEventArgs e)
+    {
+        DutyPlanService.UpdateRollingIndex();
+        this.ShowToast(new ToastMessage
+        {
+            Message = "已成功刷新轮换状态。",
+            Duration = TimeSpan.FromSeconds(5)
+        });
     }
 
     #endregion

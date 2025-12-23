@@ -188,6 +188,7 @@
                                     <TextBlock VerticalAlignment="Center" Text="上次轮换日期：" />
                                     <TextBlock VerticalAlignment="Center" Text="{Binding ViewModel.Rolling.LastChangedDate}" />
                                     <Button Margin="4 0 0 0" VerticalAlignment="Center"
+                                            Click="ButtonManualUpdateRolling_OnClick"
                                             ToolTip.Tip="适用于半夜不关 ci">
                                         手动触发更新
                                     </Button>
