@@ -23,43 +23,25 @@ public class DutyNotificationProvider : NotificationProviderBase
             (sender, info) => _ = OnAutoNotification(sender, info);
     }
     
+    private async Task OnAutoNotification(object? sender, AutoNotificationInfo info)
+    {
+        await ShowAutoNotification(info.GenerateNotificationRequest());
+        info.TemplateItem.IsActivated = false;
+    }
+    
     public async Task ShowActionNotification(NotificationRequest request)
     {
         await Channel(GlobalConstants.DutyActionNotificationChannelGuid).ShowNotificationAsync(request);
     }
-
-    private async Task OnAutoNotification(object? sender, AutoNotificationInfo info)
+    
+    public async Task ShowTaskBarNotification(NotificationRequest request)
     {
-        await AutoNotification(info);
+        await Channel(GlobalConstants.DutyTaskBarNotificationChannelGuid).ShowNotificationAsync(request);
     }
 
-    public async Task AutoNotification(AutoNotificationInfo info)
+    public async Task ShowAutoNotification(NotificationRequest request)
     {
-        var notificationSettings = info.NotificationSettings;
-        var workersText = DutyPlanService.GetWorkersContent(info.Guid, new FallbackSettings { Enabled = false });
-        var text = DutyPlanService.FormatString(info.NotificationSettings.Text, workersText, info.TemplateItem);
-        
-        var request = new NotificationRequest
-        {
-            MaskContent = NotificationContent.CreateTwoIconsMask(
-                notificationSettings.Title, hasRightIcon: true, rightIcon: "\uE31E",
-                factory: x =>
-                {
-                    x.Duration = TimeSpanHelper.FromSecondsSafe(notificationSettings.TitleDuration);
-                    x.IsSpeechEnabled = notificationSettings.TitleEnableSpeech;
-                }),
-            OverlayContent = string.IsNullOrEmpty(text) || notificationSettings.TextDuration <= 0
-                ? null
-                : NotificationContent.CreateSimpleTextContent(text,
-                    factory: x =>
-                    {
-                        x.Duration = TimeSpanHelper.FromSecondsSafe(notificationSettings.TextDuration);
-                        x.IsSpeechEnabled = notificationSettings.TextEnableSpeech;
-                    })
-        };
-        
         await Channel(GlobalConstants.DutyAutoNotificationChannelGuid).ShowNotificationAsync(request);
-        info.TemplateItem.IsActivated = false;
     }
 
     public async Task TestUnwelcomedChainedNotification()

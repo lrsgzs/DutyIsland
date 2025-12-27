@@ -79,13 +79,13 @@ public class DutyTaskBarMenuService
                     return;
                 }
 
-                _ = DutyNotificationProvider.AutoNotification(new AutoNotificationInfo
+                _ = DutyNotificationProvider.ShowTaskBarNotification(new AutoNotificationInfo
                 {
                     Guid = item.Value.Key,
                     Item = item.Value.Value.First,
                     TemplateItem = item.Value.Value.Second,
                     NotificationSettings = item.Value.Value.Second.NotificationSettings
-                });
+                }.GenerateNotificationRequest());
             };
 
             SubMenu.Items.Add(menuItem);
