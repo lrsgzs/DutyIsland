@@ -5,13 +5,20 @@
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:ci="http://classisland.tech/schemas/xaml/core"
                      xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
-                     xmlns:local="clr-namespace:DutyIsland.Views.SettingPages"
                      mc:Ignorable="d">
     <ScrollViewer>
         <StackPanel Classes="settings-container animated-intro" >
             <fa:SettingsExpander Header="值日表服务" IconSource="{ci:FluentIconSource &#xE31E;}">
                 <fa:SettingsExpanderItem Content="获取当前附加设置" IsClickEnabled="True"
-                                         Click="MenuItemGetAttachedSettings_OnClick"/>
+                                         Click="ExpanderItemGetAttachedSettings_OnClick"/>
+                
+                <fa:SettingsExpanderItem Content="查看当前启用的值日表" IsClickEnabled="True"
+                                         Click="ExpanderItemGetActiveDutyPlan_OnClick"/>
+            </fa:SettingsExpander>
+            
+            <fa:SettingsExpander Header="值日提醒" IconSource="{ci:FluentIconSource &#xE31E;}">
+                <fa:SettingsExpanderItem Content="测试不受欢迎的链式提醒" IsClickEnabled="True"
+                                         Click="ExpanderItemTestUnwelcomedChainedNotification_OnClick"/>
             </fa:SettingsExpander>
         </StackPanel>
     </ScrollViewer>

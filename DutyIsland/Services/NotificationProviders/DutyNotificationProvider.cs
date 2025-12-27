@@ -61,4 +61,64 @@ public class DutyNotificationProvider : NotificationProviderBase
         await Channel(GlobalConstants.DutyAutoNotificationChannelGuid).ShowNotificationAsync(request);
         info.TemplateItem.IsActivated = false;
     }
+
+    public async Task TestUnwelcomedChainedNotification()
+    {
+        await ShowChainedNotificationsAsync([
+            new NotificationRequest
+            {
+                MaskContent = NotificationContent.CreateTwoIconsMask(
+                    "Title", hasRightIcon: true, rightIcon: "\uE31E",
+                    factory: x =>
+                    {
+                        x.Duration = TimeSpanHelper.FromSecondsSafe(3);
+                    }),
+            },
+            new NotificationRequest
+            {
+                MaskContent = NotificationContent.CreateTwoIconsMask(
+                    "Content", hasRightIcon: true, rightIcon: "\uE31E",
+                    factory: x =>
+                    {
+                        x.Duration = TimeSpanHelper.FromSecondsSafe(0.0001);
+                    }),
+                OverlayContent = NotificationContent.CreateSimpleTextContent(
+                    "1",
+                    factory: x =>
+                    {
+                        x.Duration = TimeSpanHelper.FromSecondsSafe(3);
+                    })
+            },
+            new NotificationRequest
+            {
+                MaskContent = NotificationContent.CreateTwoIconsMask(
+                    "Content", hasRightIcon: true, rightIcon: "\uE31E",
+                    factory: x =>
+                    {
+                        x.Duration = TimeSpanHelper.FromSecondsSafe(0.0001);
+                    }),
+                OverlayContent = NotificationContent.CreateSimpleTextContent(
+                    "2",
+                    factory: x =>
+                    {
+                        x.Duration = TimeSpanHelper.FromSecondsSafe(3);
+                    })
+            },
+            new NotificationRequest
+            {
+                MaskContent = NotificationContent.CreateTwoIconsMask(
+                    "Content", hasRightIcon: true, rightIcon: "\uE31E",
+                    factory: x =>
+                    {
+                        x.Duration = TimeSpanHelper.FromSecondsSafe(0.0001);
+                    }),
+                OverlayContent = NotificationContent.CreateSimpleTextContent(
+                    "3",
+                    factory: x =>
+                    {
+                        x.Duration = TimeSpanHelper.FromSecondsSafe(3);
+                    })
+            }
+        ]);
+    }
 }
