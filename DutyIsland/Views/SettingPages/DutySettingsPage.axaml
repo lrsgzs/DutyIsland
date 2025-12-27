@@ -831,6 +831,13 @@
                                 <ToggleSwitch IsChecked="{Binding ViewModel.Settings.EnableSentry}"/>
                             </fa:SettingsExpander.Footer>
                         </fa:SettingsExpander>
+                        
+                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE1E9;}"
+                                             Header="启用试验性功能?" Description="控制 DutyIsland 的实验性功能启用状态，这些功能不一定稳定。目前有如下实验性功能：“一键”提醒所有值日生。">
+                            <fa:SettingsExpander.Footer>
+                                <ToggleSwitch IsChecked="{Binding ViewModel.Settings.EnableExperimentFeature}"/>
+                            </fa:SettingsExpander.Footer>
+                        </fa:SettingsExpander>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
