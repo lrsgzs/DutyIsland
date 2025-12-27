@@ -91,6 +91,7 @@ public class Plugin : PluginBase
         services.AddNotificationProvider<DutyNotificationProvider>();
         services.AddComponent<DutyComponent, DutyComponentSettingsControl>();
         services.AddAction<NotifyDutyAction, NotifyDutyActionSettingsControl>();
+        services.AddAction<NotifyAllJobAction>();
         
         // 应用启动
         AppBase.Current.AppStarted += (_, _) =>
