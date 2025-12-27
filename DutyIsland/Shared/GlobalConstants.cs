@@ -29,6 +29,7 @@ public static class GlobalConstants
     public const string DutyNotificationProviderGuid = "CA0B77B2-FBC3-449F-A14D-B6D4EAA2726C";
     public const string DutyActionNotificationChannelGuid = "881AAD3D-26FD-4FCF-B6E2-D39A996C59AC";
     public const string DutyAutoNotificationChannelGuid = "7B973AB0-98EE-41AA-BD67-464B8EB011B1";
+    public const string DutyTaskBarNotificationChannelGuid = "88C27C28-FC9E-418F-8A70-AC8D353F2D2C";
 
     public static class ImportSheetStaticTexts
     {

@@ -794,6 +794,13 @@
                         </fa:SettingsExpander>
                         
                         <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE31C;}"
+                                             Header="启用从托盘提醒?" Description="控制从托盘提醒的启用状态。">
+                            <fa:SettingsExpander.Footer>
+                                <ToggleSwitch IsChecked="{Binding ViewModel.Settings.EnableTaskBarNotificationMenu}"/>
+                            </fa:SettingsExpander.Footer>
+                        </fa:SettingsExpander>
+                        
+                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE31C;}"
                                              Header="启用自动提醒?" Description="控制全局的自动提醒启用状态。">
                             <fa:SettingsExpander.Footer>
                                 <ToggleSwitch IsChecked="{Binding ViewModel.Settings.GlobalEnableNotification}"/>

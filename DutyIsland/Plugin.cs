@@ -76,6 +76,7 @@ public class Plugin : PluginBase
         
         _logger.Info("注册服务...");
         services.AddSingleton<DutyPlanService>();
+        services.AddSingleton<DutyTaskBarMenuService>();
         
         _logger.Info("注册视图模型...");
         services.AddTransient<DutyViewModel>();
@@ -96,6 +97,7 @@ public class Plugin : PluginBase
         {
             _logger.Info("启动 DutyPlanService...");
             var dutyPlanService = IAppHost.GetService<DutyPlanService>();
+            IAppHost.GetService<DutyTaskBarMenuService>();
 
             if (IsPluginInstalled("lrs2187.sai", new Version(0, 1, 2, 4)))
             {

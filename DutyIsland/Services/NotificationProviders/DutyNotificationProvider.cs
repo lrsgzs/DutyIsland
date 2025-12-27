@@ -8,8 +8,9 @@ using DutyIsland.Shared;
 namespace DutyIsland.Services.NotificationProviders;
 
 [NotificationProviderInfo(GlobalConstants.DutyNotificationProviderGuid, "值日人员提醒", "\uE31E", "提醒值日人员打扫。")]
-[NotificationChannelInfo(GlobalConstants.DutyActionNotificationChannelGuid, "值日行动提醒", "\uE314", description:"通过行动所发出的提醒。")]
-[NotificationChannelInfo(GlobalConstants.DutyAutoNotificationChannelGuid, "值日自动提醒", "\uE31C", description:"通过值日表模板中设置的自动提醒所发出的提醒。")]
+[NotificationChannelInfo(GlobalConstants.DutyActionNotificationChannelGuid, "值日行动提醒", "\uE314", description:"通过行动发出的提醒。")]
+[NotificationChannelInfo(GlobalConstants.DutyAutoNotificationChannelGuid, "值日自动提醒", "\uE31C", description:"通过值日表模板中设置的自动提醒发出的提醒。")]
+[NotificationChannelInfo(GlobalConstants.DutyTaskBarNotificationChannelGuid, "值日托盘提醒", "\uE312", description:"通过任务栏托盘中手动触发发出的提醒。")]
 public class DutyNotificationProvider : NotificationProviderBase
 {
     private DutyPlanService DutyPlanService { get; }
@@ -27,13 +28,16 @@ public class DutyNotificationProvider : NotificationProviderBase
         await Channel(GlobalConstants.DutyActionNotificationChannelGuid).ShowNotificationAsync(request);
     }
 
-    public async Task OnAutoNotification(object? sender, AutoNotificationInfo info)
+    private async Task OnAutoNotification(object? sender, AutoNotificationInfo info)
+    {
+        await AutoNotification(info);
+    }
+
+    public async Task AutoNotification(AutoNotificationInfo info)
     {
         var notificationSettings = info.NotificationSettings;
         var workersText = DutyPlanService.GetWorkersContent(info.Guid, new FallbackSettings { Enabled = false });
-        var text = notificationSettings.Text
-            .Replace("%j", info.TemplateItem.Name)
-            .Replace("%n", workersText);
+        var text = DutyPlanService.FormatString(info.NotificationSettings.Text, workersText, info.TemplateItem);
         
         var request = new NotificationRequest
         {
