@@ -51,12 +51,13 @@ public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
             : templateItem.NotificationSettings;
         var workersText = DutyPlanService.GetWorkersContent(Settings.JobGuid, Settings.FallbackSettings);
         var text = DutyPlanService.FormatString(notificationSettings.Text, workersText, templateItem);
-        
-        await DutyNotificationProvider.ShowActionNotification(new NotificationRequest
+
+        _request = new NotificationRequest
         {
             MaskContent = NotificationContent.CreateTwoIconsMask(
                 notificationSettings.Title, hasRightIcon: true, rightIcon: "\uE31E",
-                factory: x => {
+                factory: x =>
+                {
                     x.Duration = TimeSpanHelper.FromSecondsSafe(notificationSettings.TitleDuration);
                     x.IsSpeechEnabled = notificationSettings.TitleEnableSpeech;
                 }),
@@ -68,7 +69,8 @@ public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
                         x.Duration = TimeSpanHelper.FromSecondsSafe(notificationSettings.TextDuration);
                         x.IsSpeechEnabled = notificationSettings.TextEnableSpeech;
                     })
-        });
+        };
+        await DutyNotificationProvider.ShowActionNotification(_request);
     }
     
     protected override async Task OnInterrupted()
