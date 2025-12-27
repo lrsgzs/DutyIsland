@@ -6,6 +6,7 @@ using DutyIsland.Extensions;
 using DutyIsland.Models.Notification;
 using DutyIsland.Services.NotificationProviders;
 using DutyIsland.Shared;
+using DutyIsland.Shared.Logger;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -16,6 +17,7 @@ public class DutyTaskBarMenuService
     private ITaskBarIconService TaskBarIconService { get; }
     private DutyPlanService DutyPlanService { get; }
     private DutyNotificationProvider DutyNotificationProvider { get; }
+    private Logger<DutyTaskBarMenuService> Logger { get; } = new();
 
     private NativeMenuItem MenuItem { get; } = new("提醒值日人员");
     private NativeMenuItem NotifyAllJobMenuItem { get; } = new("提醒所有值日人员");
@@ -55,6 +57,7 @@ public class DutyTaskBarMenuService
         {
             if (!GlobalConstants.Config!.Data.EnableTaskBarNotificationMenu)
             {
+                Logger.Info("移除托盘菜单");
                 TaskBarIconService.MoreOptionsMenuItems.Remove(MenuItem);
             }
             
@@ -66,6 +69,7 @@ public class DutyTaskBarMenuService
             return;
         }
         
+        Logger.Info("添加托盘菜单");
         TaskBarIconService.MoreOptionsMenuItems.Add(MenuItem);
         UpdateMenuItem();
     }
@@ -82,6 +86,7 @@ public class DutyTaskBarMenuService
             goto final;
         }
         
+        Logger.Info("刷新托盘菜单内容...");
         SubMenu.Items.Clear();
 
         if (GlobalConstants.Config!.Data.EnableExperimentFeature)
@@ -95,6 +100,8 @@ public class DutyTaskBarMenuService
             var menuItem = new NativeMenuItem(kvp.Value.Name);
             menuItem.Click += (sender, args) =>
             {
+                Logger.Info($"触发菜单「{kvp.Value.Name}」点击");
+                
                 var item = DutyPlanService.CurrentDutyPlan?.ComplexItems?.List.First(item => item.Key == kvp.Key);
                 if (item == null)
                 {
@@ -123,6 +130,8 @@ public class DutyTaskBarMenuService
 
     private async void NotifyAllJobMenuItem_OnClick(object? sender, EventArgs e)
     {
+        Logger.Info("「提醒所有值日人员」被点击");
+        
         List<AutoNotificationInfo> infos = [];
         infos.AddRange(
             (DutyPlanService.CurrentDutyPlan?.ComplexItems?.List ?? [])

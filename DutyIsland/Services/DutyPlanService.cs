@@ -21,7 +21,7 @@ public partial class DutyPlanService : ObservableRecipient
     
     private ILessonsService LessonsService { get; }
     private IExactTimeService ExactTimeService { get; }
-    private Logger<DutyPlanService> Logger { get;} = new();
+    private Logger<DutyPlanService> Logger { get; } = new();
     private byte _ticks = 0;
     
     public DutyPlanService(ILessonsService lessonService, IExactTimeService exactTimeService)
