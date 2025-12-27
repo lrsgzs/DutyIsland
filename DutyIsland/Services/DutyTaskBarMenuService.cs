@@ -18,8 +18,10 @@ public class DutyTaskBarMenuService
     private DutyNotificationProvider DutyNotificationProvider { get; }
 
     private NativeMenuItem MenuItem { get; } = new("提醒值日人员");
-    private NativeMenuItem NotifyAllJobMenuItem = new("提醒所有值日人员");
+    private NativeMenuItem NotifyAllJobMenuItem { get; } = new("提醒所有值日人员");
     private NativeMenu SubMenu { get; } = [];
+
+    private Dictionary<(Guid, string), int> _state = [];
 
     public DutyTaskBarMenuService(ITaskBarIconService taskBarIconService, DutyPlanService dutyPlanService)
     {
@@ -70,6 +72,16 @@ public class DutyTaskBarMenuService
     
     public void UpdateMenuItem()
     {
+        foreach (var kvp in DutyPlanService.CurrentDutyPlan?.Template?.WorkerTemplateDictionary ?? [])
+        {
+            _state[(kvp.Key, kvp.Value.Name)] = _state.GetValueOrDefault((kvp.Key, kvp.Value.Name), 0) + 1;
+        }
+
+        if (_state.All(kvp => kvp.Value == 2))
+        {
+            goto final;
+        }
+        
         SubMenu.Items.Clear();
 
         if (GlobalConstants.Config!.Data.EnableExperimentFeature)
@@ -99,6 +111,13 @@ public class DutyTaskBarMenuService
             };
 
             SubMenu.Items.Add(menuItem);
+        }
+        
+        final:
+        _state.Clear();
+        foreach (var kvp in DutyPlanService.CurrentDutyPlan?.Template?.WorkerTemplateDictionary ?? [])
+        {
+            _state[(kvp.Key, kvp.Value.Name)] = 1;
         }
     }
 
