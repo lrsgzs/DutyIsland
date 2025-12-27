@@ -44,6 +44,11 @@ public class DutyNotificationProvider : NotificationProviderBase
         await Channel(GlobalConstants.DutyAutoNotificationChannelGuid).ShowNotificationAsync(request);
     }
 
+    public async Task ShowTaskBarChainedNotification(NotificationRequest[] requests)
+    {
+        await Channel(GlobalConstants.DutyTaskBarNotificationChannelGuid).ShowChainedNotificationsAsync(requests);
+    }
+
     public async Task TestUnwelcomedChainedNotification()
     {
         await ShowChainedNotificationsAsync([

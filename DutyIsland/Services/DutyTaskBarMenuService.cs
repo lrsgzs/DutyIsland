@@ -1,6 +1,8 @@
 ﻿using Avalonia.Controls;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Shared;
+using ClassIsland.Shared.Models.Automation;
+using DutyIsland.Extensions;
 using DutyIsland.Models.Notification;
 using DutyIsland.Services.NotificationProviders;
 using DutyIsland.Shared;
@@ -16,6 +18,7 @@ public class DutyTaskBarMenuService
     private DutyNotificationProvider DutyNotificationProvider { get; }
 
     private NativeMenuItem MenuItem { get; } = new("提醒值日人员");
+    private NativeMenuItem NotifyAllJobMenuItem = new("提醒所有值日人员");
     private NativeMenu SubMenu { get; } = [];
 
     public DutyTaskBarMenuService(ITaskBarIconService taskBarIconService, DutyPlanService dutyPlanService)
@@ -24,6 +27,7 @@ public class DutyTaskBarMenuService
         DutyPlanService = dutyPlanService;
         DutyNotificationProvider = IAppHost.Host!.Services.GetServices<IHostedService>().OfType<DutyNotificationProvider>().First();
         
+        NotifyAllJobMenuItem.Click += NotifyAllJobMenuItem_OnClick;
         MenuItem.Menu = SubMenu;
         UpdateMenu();
 
@@ -42,7 +46,7 @@ public class DutyTaskBarMenuService
             UpdateMenuItem();
         };
     }
-    
+
     private void UpdateMenu()
     {
         if (TaskBarIconService.MoreOptionsMenuItems.Contains(MenuItem))
@@ -68,6 +72,12 @@ public class DutyTaskBarMenuService
     {
         SubMenu.Items.Clear();
 
+        if (GlobalConstants.Config!.Data.EnableExperimentFeature)
+        {
+            SubMenu.Items.Add(NotifyAllJobMenuItem);
+            SubMenu.Items.Add(new NativeMenuItemSeparator());
+        }
+        
         foreach (var kvp in DutyPlanService.CurrentDutyPlan?.Template?.WorkerTemplateDictionary ?? [])
         {
             var menuItem = new NativeMenuItem(kvp.Value.Name);
@@ -90,5 +100,21 @@ public class DutyTaskBarMenuService
 
             SubMenu.Items.Add(menuItem);
         }
+    }
+
+    private async void NotifyAllJobMenuItem_OnClick(object? sender, EventArgs e)
+    {
+        List<AutoNotificationInfo> infos = [];
+        infos.AddRange(
+            (DutyPlanService.CurrentDutyPlan?.ComplexItems?.List ?? [])
+            .Select(kvp =>
+                new AutoNotificationInfo
+                {
+                    Guid = kvp.Key,
+                    Item = kvp.Value.First,
+                    TemplateItem = kvp.Value.Second,
+                    NotificationSettings = kvp.Value.Second.NotificationSettings
+                }));
+        await DutyNotificationProvider.ShowTaskBarChainedNotification(infos.ToRequests().ToArray());
     }
 }
