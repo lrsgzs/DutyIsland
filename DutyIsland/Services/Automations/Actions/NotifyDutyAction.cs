@@ -52,26 +52,22 @@ public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
         var workersText = DutyPlanService.GetWorkersContent(Settings.JobGuid, Settings.FallbackSettings);
         var text = DutyPlanService.FormatString(notificationSettings.Text, workersText, templateItem);
         
-        await Dispatcher.UIThread.InvokeAsync(async () =>
+        await DutyNotificationProvider.ShowActionNotification(new NotificationRequest
         {
-            _request = new NotificationRequest
-            {
-                MaskContent = NotificationContent.CreateTwoIconsMask(
-                    notificationSettings.Title, hasRightIcon: true, rightIcon: "\uE31E",
-                    factory: x => {
-                        x.Duration = TimeSpanHelper.FromSecondsSafe(notificationSettings.TitleDuration);
-                        x.IsSpeechEnabled = notificationSettings.TitleEnableSpeech;
-                    }),
-                OverlayContent = string.IsNullOrEmpty(text) || notificationSettings.TextDuration <= 0
-                    ? null
-                    : NotificationContent.CreateSimpleTextContent(text,
-                        factory: x =>
-                        {
-                            x.Duration = TimeSpanHelper.FromSecondsSafe(notificationSettings.TextDuration);
-                            x.IsSpeechEnabled = notificationSettings.TextEnableSpeech;
-                        })
-            };
-            await DutyNotificationProvider.ShowActionNotification(_request);
+            MaskContent = NotificationContent.CreateTwoIconsMask(
+                notificationSettings.Title, hasRightIcon: true, rightIcon: "\uE31E",
+                factory: x => {
+                    x.Duration = TimeSpanHelper.FromSecondsSafe(notificationSettings.TitleDuration);
+                    x.IsSpeechEnabled = notificationSettings.TitleEnableSpeech;
+                }),
+            OverlayContent = string.IsNullOrEmpty(text) || notificationSettings.TextDuration <= 0
+                ? null
+                : NotificationContent.CreateSimpleTextContent(text,
+                    factory: x =>
+                    {
+                        x.Duration = TimeSpanHelper.FromSecondsSafe(notificationSettings.TextDuration);
+                        x.IsSpeechEnabled = notificationSettings.TextEnableSpeech;
+                    })
         });
     }
     
