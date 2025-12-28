@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <EnableDynamicLoading>True</EnableDynamicLoading>
         <RootNamespace>DutyIsland</RootNamespace>
-		<Version>0.2.0.2</Version>
+		<Version>0.2.1.0</Version>
 	</PropertyGroup>
     
 	<ItemGroup>
