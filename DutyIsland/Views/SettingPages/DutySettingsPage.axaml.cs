@@ -102,7 +102,7 @@ public partial class DutySettingsPage : SettingsPageBase
 
     private void ButtonManualUpdateRolling_OnClick(object? sender, RoutedEventArgs e)
     {
-        DutyPlanService.UpdateRollingIndex();
+        DutyPlanService.UpdateRollingIndex(DateOnly.FromDateTime(DateTime.Now));;
         this.ShowToast(new ToastMessage
         {
             Message = "已成功刷新轮换状态。",

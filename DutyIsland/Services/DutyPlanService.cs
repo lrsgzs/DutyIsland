@@ -45,7 +45,7 @@ public partial class DutyPlanService : ObservableRecipient
 
         if (GlobalConstants.Config!.Data.DutyPlanGetMode == DutyPlanGetMode.AutoRolling)
         {
-            UpdateRollingIndex();
+            UpdateRollingIndex(DateOnly.FromDateTime(DateTime.Now));
         }
         else
         {
@@ -53,7 +53,7 @@ public partial class DutyPlanService : ObservableRecipient
         }
     }
 
-    public void UpdateRollingIndex()
+    public void UpdateRollingIndex(DateOnly currentDate)
     {
         var settings = GlobalConstants.Config!.Data.Profile.Rolling;
         if (settings.RollItems.Count == 0)
@@ -61,11 +61,11 @@ public partial class DutyPlanService : ObservableRecipient
             return;
         }
         
-        var dayDelta = DateOnly.FromDateTime(DateTime.Now).DayNumber - settings.LastChangedDate.DayNumber;
+        var dayDelta = currentDate.DayNumber - settings.LastChangedDate.DayNumber;
+        var changes = 0;
         
         if (settings.RollOnUnopenDay)
         {
-            var changes = 0;
             var curGroup = 0;
             var curDay = settings.LastChangedDate.ToDateTime(new TimeOnly());
 
@@ -85,22 +85,26 @@ public partial class DutyPlanService : ObservableRecipient
                     curGroup = 0;
                 }
             }
-
-            settings.RollIndex += changes;
         }
         else
         {
-            if (dayDelta > 0 && (!settings.SkipWeekend || DateTime.Now.DayOfWeek is not (DayOfWeek.Saturday or DayOfWeek.Sunday)))
+            if (dayDelta > settings.RollDays && (!settings.SkipWeekend || currentDate.DayOfWeek is not (DayOfWeek.Saturday or DayOfWeek.Sunday)))
             {
-                settings.RollIndex++;
+                changes = 1;
             }
         }
         
+        Logger.Debug($"轮换 - {settings.LastChangedDate} ==> {currentDate}");
+        Logger.Debug($"轮换 - 差异为 {dayDelta} 天，应偏移 {changes} 次。");
+
+        if (changes == 0) return;
+        
+        settings.LastChangedDate = currentDate;
+        settings.RollIndex += changes;
         if (settings.RollIndex >= settings.RollItems.Count)
         {
             settings.RollIndex %= settings.RollItems.Count;
         }
-        settings.LastChangedDate = DateOnly.FromDateTime(DateTime.Now);
     }
     
     private void LessonsServiceOnPostMainTimerTicked(object? sender, EventArgs e)
