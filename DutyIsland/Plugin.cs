@@ -224,7 +224,7 @@ public class Plugin : PluginBase
 
     private static bool IsPluginInstalled(string pkgName, Version? version = null)
     {
-        return IPluginService.LoadedPlugins.Any(info => info.Manifest.Id == pkgName && new Version(info.Manifest.Version) >= version);
+        return IPluginService.LoadedPlugins.Any(info => info.Manifest.Id == pkgName && info.IsEnabled && new Version(info.Manifest.Version) >= version);
     }
 
     private static List<T> EnsureListHasItemOrDefaultListItem<T>(List<T>? data, T defaultItem)
