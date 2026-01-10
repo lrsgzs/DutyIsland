@@ -24,8 +24,9 @@ namespace DutyIsland.Views.SettingPages;
 
 [FullWidthPage]
 [HidePageTitle]
-[SettingsPageInfo("duty.settings.duty","DutyIsland 值日表","\uE31E","\uE31D")]
-public partial class DutySettingsPage : SettingsPageBase
+[Group("duty.settings")]
+[SettingsPageInfo("duty.settings.profile","档案","\uE324","\uE323")]
+public partial class DutyProfileSettingsPage : SettingsPageBase
 {
     private DutyPlanService DutyPlanService { get; } = IAppHost.GetService<DutyPlanService>();
     private DutyViewModel ViewModel { get; } = IAppHost.GetService<DutyViewModel>();
@@ -33,9 +34,11 @@ public partial class DutySettingsPage : SettingsPageBase
     private string PluginVersion { get; } = GlobalConstants.PluginVersion;
     private bool _notifiedRestart = false;
     
-    public DutySettingsPage()
+    public DutyProfileSettingsPage()
     {
+        DataContext = this;
         InitializeComponent();
+        
         ViewModel.Settings.RestartPropertyChanged += () =>
         {
             if (_notifiedRestart) return;
@@ -53,59 +56,6 @@ public partial class DutySettingsPage : SettingsPageBase
         this.ShowToast(new ToastMessage
         {
             Message = "保存成功",
-            Duration = TimeSpan.FromSeconds(5)
-        });
-    }
-
-    #endregion
-
-    #region Rolling
-    
-    private void ButtonAddRollItem_OnClick(object? sender, RoutedEventArgs e)
-    {
-        ViewModel.Rolling.RollItems.Add(new RollItem());
-    }
-
-    private void ButtonRemoveRollItem_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (ViewModel.SelectedRollItem == null) 
-            return;
-
-        var item = ViewModel.SelectedRollItem;
-        ViewModel.Rolling.RollItems.Remove(ViewModel.SelectedRollItem);
-        ViewModel.SelectedRollItem = null;
-        
-        var revertButton = new Button
-        {
-            Content = "撤销"
-        };
-
-        ViewModel.CurrentTemplateItemDeleteRevertToast?.Close();
-        var message = ViewModel.CurrentTemplateItemDeleteRevertToast = new ToastMessage
-        {
-            Message = $"已删除项目 {item}。",
-            Duration = TimeSpan.FromSeconds(10),
-            ActionContent = revertButton
-        };
-        
-        revertButton.Click += RevertButtonOnClick;
-        this.ShowToast(message);
-        
-        return;
-
-        void RevertButtonOnClick(object? o, RoutedEventArgs routedEventArgs)
-        {
-            ViewModel.Rolling.RollItems.Add(item);
-            message.Close();
-        }
-    }
-
-    private void ButtonManualUpdateRolling_OnClick(object? sender, RoutedEventArgs e)
-    {
-        DutyPlanService.UpdateRollingIndex(DateOnly.FromDateTime(DateTime.Now));;
-        this.ShowToast(new ToastMessage
-        {
-            Message = "已成功刷新轮换状态。",
             Duration = TimeSpan.FromSeconds(5)
         });
     }
@@ -426,45 +376,5 @@ public partial class DutySettingsPage : SettingsPageBase
         }
     }
     
-    #endregion
-
-    #region Settings
-
-    private async void SettingsExpanderItemShowOssLicense_OnClick(object? sender, RoutedEventArgs e)
-    {
-        var license = await File.ReadAllTextAsync(GlobalConstants.PluginFolder + "/LICENSE");
-        await new ContentDialog()
-        {
-            Title = "开放源代码许可",
-            Content = new TextBox
-            {
-                Text = license,
-                IsReadOnly = true
-            },
-            PrimaryButtonText = "关闭",
-            DefaultButton = ContentDialogButton.Primary
-        }.ShowAsync();
-    }
-    
-    private void UIElementAppInfo_OnMouseDown(object? sender, RoutedEventArgs pointerPressedEventArgs)
-    {
-        ViewModel.AppIconClickCount++;
-        if (ViewModel.AppIconClickCount >= 20)
-        {
-            TopLevel.GetTopLevel(this)?.Clipboard?.SetTextAsync("5rS+6JKZ77yM5pyA5aW955qE5LyZ5Ly077yB");
-        }
-    }
-
-    private void UriNavigationCommands_OnClick(object sender, RoutedEventArgs e)
-    {
-        var url = e.Source switch
-        {
-            SettingsExpanderItem s => s.CommandParameter?.ToString(),
-            Button s => s.CommandParameter?.ToString(),
-            _ => "classisland://app/test/"
-        };
-        IAppHost.TryGetService<IUriNavigationService>()?.NavigateWrapped(new Uri(url!));
-    }
-
     #endregion
 }

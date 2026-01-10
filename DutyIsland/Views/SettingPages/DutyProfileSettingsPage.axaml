@@ -1,4 +1,4 @@
-<ci:SettingsPageBase x:Class="DutyIsland.Views.SettingPages.DutySettingsPage"
+﻿<ci:SettingsPageBase x:Class="DutyIsland.Views.SettingPages.DutyProfileSettingsPage"
                      xmlns="https://github.com/avaloniaui"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -8,12 +8,11 @@
                      xmlns:local="clr-namespace:DutyIsland.Views.SettingPages"
                      xmlns:controls="clr-namespace:DutyIsland.Controls"
                      xmlns:converters="clr-namespace:DutyIsland.Converters"
-                     xmlns:enums="clr-namespace:DutyIsland.Enums"
-                     xmlns:system="clr-namespace:System;assembly=System.Runtime"
+                     x:DataType="local:DutyProfileSettingsPage"
+                     d:DataContext="{d:DesignInstance local:DutyProfileSettingsPage}"
                      mc:Ignorable="d">
     <ci:SettingsPageBase.Resources>
         <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
-        <system:String x:Key="NoDutyPlanString">未绑定值日表</system:String>
     </ci:SettingsPageBase.Resources>
     
     <ci:SettingsPageBase.Styles>
@@ -30,8 +29,7 @@
         </Style>
     </ci:SettingsPageBase.Styles>
 
-    
-    <Grid RowDefinitions="*, Auto" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DutySettingsPage}}">
+    <Grid RowDefinitions="*, Auto">
         <TabControl Grid.Row="0">
             <TabItem IsEnabled="False">
                 <TabItem.HeaderTemplate>
@@ -47,183 +45,6 @@
             </TabItem>
             
             <TabItem IsSelected="True">
-                <TabItem.HeaderTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <ci:FluentIcon Glyph="&#xE994;" FontSize="20" Height="20" VerticalAlignment="Center" />
-                            <TextBlock FontSize="20">主页</TextBlock>
-                        </StackPanel>
-                    </DataTemplate>
-                </TabItem.HeaderTemplate>
-                
-                <ScrollViewer>
-                    <StackPanel Classes="settings-container animated-intro" Spacing="8">
-                        <fa:InfoBar IsOpen="True" IsVisible="True" Severity="Informational">
-                            <fa:InfoBar.Message>
-                                欢迎使用 DutyIsland！找不到启用值日表的地方？看看课表的附加设置吧。
-                            </fa:InfoBar.Message>
-                        </fa:InfoBar>
-                        
-                        <fa:InfoBar IsOpen="True" IsVisible="True" Severity="Success">
-                            <fa:InfoBar.Message>
-                                自动提醒功能已推出！该功能类似于自动化工作流 cron + 提醒值日人员，但更方便。
-                            </fa:InfoBar.Message>
-                        </fa:InfoBar>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-           
-            <TabItem IsVisible="{Binding ViewModel.Settings.DutyPlanGetMode, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static enums:DutyPlanGetMode.AutoRolling}}">
-                <TabItem.HeaderTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <ci:FluentIcon Glyph="&#xE356;" FontSize="20" Height="20" VerticalAlignment="Center" />
-                            <TextBlock FontSize="20">轮换</TextBlock>
-                        </StackPanel>
-                    </DataTemplate>
-                </TabItem.HeaderTemplate>
-                
-                <Grid RowDefinitions="Auto *">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="350" MinWidth="300" MaxWidth="450" />
-                    </Grid.ColumnDefinitions>
-                    
-                    <fa:CommandBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
-                                   DefaultLabelPosition="Right" Classes="hide-popup-indicator">
-                        <fa:CommandBar.PrimaryCommands>
-                            <fa:CommandBarButton Click="ButtonAddRollItem_OnClick" 
-                                                 IconSource="{ci:FluentIconSource &#xE308;}"
-                                                 Label="添加" ToolTip.Tip="添加轮换项目。"/>
-                            
-                            <fa:CommandBarButton Click="ButtonRemoveRollItem_OnClick"
-                                                 Label="删除" ToolTip.Tip="删除选中的轮换项目。"
-                                                 IsEnabled="{Binding ViewModel.SelectedRollItem, Converter={x:Static ObjectConverters.IsNotNull}}">
-                                <fa:CommandBarButton.IconSource>
-                                    <fa:SymbolIconSource Symbol="Remove"/>
-                                </fa:CommandBarButton.IconSource>
-                            </fa:CommandBarButton>
-                        </fa:CommandBar.PrimaryCommands>
-                    </fa:CommandBar>
-                        
-                    <ScrollViewer Grid.Row="1" Grid.Column="0">
-                        <Grid ColumnDefinitions="Auto *">
-                            <ListBox Grid.Column="0"
-                                     IsEnabled="False"
-                                     ItemsSource="{Binding ViewModel.RollIndexItems}">
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <VirtualizingStackPanel Classes="animated-intro" />
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                                
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding}" />
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                            
-                            <ListBox Grid.Column="1"
-                                     Classes="drag"
-                                     SelectionMode="Single"
-                                     ItemsSource="{Binding ViewModel.Rolling.RollItems}"
-                                     SelectedItem="{Binding ViewModel.SelectedRollItem}">
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <VirtualizingStackPanel Classes="animated-intro" />
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                            
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
-                                            <ci:TouchDragThumb Margin="-12 0 0 0"
-                                                               VerticalAlignment="Center"
-                                                               Width="20" IsExplicitVisible="True" />
-                                        
-                                            <TextBlock VerticalAlignment="Center"
-                                                       Text="无值日安排"
-                                                       IsVisible="{Binding !HasDutyPlan}"/>
-                                        
-                                            <TextBlock VerticalAlignment="Center"
-                                                       Text="{Binding DutyPlan.Name, FallbackValue={StaticResource NoDutyPlanString}}"
-                                                       IsVisible="{Binding HasDutyPlan}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </Grid>
-                    </ScrollViewer>
-                    
-                    <GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-
-                    <ScrollViewer Grid.Row="1" Grid.Column="2" Margin="8">
-                        <Grid RowDefinitions="Auto, Auto, Auto">
-                            <StackPanel Grid.Row="0" Spacing="4">
-                                <TextBlock Text="轮换设置" Theme="{StaticResource SubtitleTextBlockStyle}" />
-                                
-                                <ci:Field Label="当前轮换索引">
-                                    <NumericUpDown Value="{Binding ViewModel.Rolling.RollIndex}" Increment="1" FormatString="0" />
-                                </ci:Field>
-                                
-                                <ci:Field Label="轮换间隔天数">
-                                    <NumericUpDown Value="{Binding ViewModel.Rolling.RollDays}" Increment="1" FormatString="0" />
-                                </ci:Field>
-                                
-                                <CheckBox IsChecked="{Binding ViewModel.Rolling.RollOnUnopenDay}">
-                                    未开启 ClassIsland 也轮换
-                                </CheckBox>
-                                
-                                <CheckBox IsChecked="{Binding ViewModel.Rolling.SkipWeekend}">
-                                    跳过周末
-                                </CheckBox>
-                                
-                                <CheckBox IsEnabled="False">
-                                    跳过节假日(还未新建文件夹)
-                                </CheckBox>
-                                
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" Text="上次轮换日期：" />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ViewModel.Rolling.LastChangedDate}" />
-                                    <Button Margin="4 0 0 0" VerticalAlignment="Center"
-                                            Click="ButtonManualUpdateRolling_OnClick"
-                                            ToolTip.Tip="适用于半夜不关 ci">
-                                        手动触发更新
-                                    </Button>
-                                </StackPanel>
-                            </StackPanel>
-                            
-                            <Separator Grid.Row="1" Margin="-8 16"/>
-                            
-                            <ci:Emptiable Grid.Row="2" IsDirectContentMode="True"
-                                          Data="{Binding ViewModel.SelectedRollItem}">
-                                <StackPanel Spacing="8">
-                                    <TextBlock Text="轮换项目信息" Theme="{StaticResource SubtitleTextBlockStyle}"/>
-                                    
-                                    <CheckBox IsChecked="{Binding ViewModel.SelectedRollItem.HasDutyPlan}">
-                                        有值日安排?
-                                    </CheckBox>
-                                    
-                                    <ComboBox ItemsSource="{Binding ViewModel.DutyPlans.List}"
-                                              SelectedValue="{Binding ViewModel.SelectedRollItem.DutyPlanGuid}"
-                                              SelectedValueBinding="{Binding Key}">
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Value.Name}"
-                                                           ToolTip.Tip="{Binding Key}" />
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
-                                </StackPanel>
-                            </ci:Emptiable> 
-                        </Grid>
-                    </ScrollViewer>
-                </Grid>
-            </TabItem>
-            
-            <TabItem>
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -580,7 +401,7 @@
                                                                             <DataGridTemplateColumn.CellTemplate>
                                                                                 <DataTemplate>
                                                                                     <Button ToolTip.Tip="删除这个时间。" Foreground="IndianRed" Theme="{StaticResource TransparentButton}"
-                                                                                            Command="{Binding DutyPlanTemplateRemoveNotificationTimeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutySettingsPage}}"
+                                                                                            Command="{Binding DutyPlanTemplateRemoveNotificationTimeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutyMainSettingsPage}}"
                                                                                             CommandParameter="{Binding}">
                                                                                         <ci:IconText Glyph="&#xE61D;" Text="删除" />
                                                                                     </Button>
@@ -721,126 +542,6 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            
-            <TabItem>
-                <TabItem.HeaderTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <ci:FluentIcon Glyph="&#xEF27;" FontSize="20" Height="20" VerticalAlignment="Center" />
-                            <TextBlock FontSize="20">设置</TextBlock>
-                        </StackPanel>
-                    </DataTemplate>
-                </TabItem.HeaderTemplate>
-                
-                <ScrollViewer>
-                    <StackPanel Classes="settings-container animated-intro">
-                        <fa:SettingsExpander Header="DutyIsland" IsExpanded="True">
-                            <fa:SettingsExpander.IconSource>
-                                <fa:ImageIconSource Source="/Assets/PluginIcon.png"/>
-                            </fa:SettingsExpander.IconSource>
-                            
-                            <fa:SettingsExpander.Footer>
-                                <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
-                                    <Run Text="{Binding PluginVersion}"/>
-                                    <Run Text="(Codename Paimon)"/>
-                                </TextBlock>
-                            </fa:SettingsExpander.Footer>
-                            
-                            <fa:SettingsExpanderItem Description="本项目基于 GNU General Public License v3.0 获得许可。">
-                                <fa:SettingsExpanderItem.Footer>
-                                    <WrapPanel Classes="animated-resize" ItemSpacing="4">
-                                        <HyperlinkButton Click="SettingsExpanderItemShowOssLicense_OnClick">
-                                            <TextBlock Text="开放源代码许可"/>
-                                        </HyperlinkButton>
-                                    </WrapPanel>
-                                </fa:SettingsExpanderItem.Footer>
-                                
-                                <TextBlock Background="Transparent" PointerPressed="UIElementAppInfo_OnMouseDown"
-                                           Text="Copyright (c) 2025  lrs2187/lrsgzs"/>
-                            </fa:SettingsExpanderItem>
-                            
-                            <fa:SettingsExpanderItem Content="常用链接">
-                                <fa:SettingsExpanderItem.Footer>
-                                    <WrapPanel Classes="animated-resize" ItemSpacing="4">
-                                        <HyperlinkButton Click="UriNavigationCommands_OnClick"
-                                                         CommandParameter="https://github.com/lrsgzs/DutyIsland">
-                                            <TextBlock Text="GitHub"/>
-                                        </HyperlinkButton>
-                                        
-                                        <HyperlinkButton Click="UriNavigationCommands_OnClick"
-                                                         CommandParameter="https://qm.qq.com/q/PeyliibxE4">
-                                            <TextBlock Text="加入插件交流 QQ 群"/>
-                                        </HyperlinkButton>
-                                    </WrapPanel>
-                                </fa:SettingsExpanderItem.Footer>
-                            </fa:SettingsExpanderItem>
-                        </fa:SettingsExpander>
-                        
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xF192;}" Header="值日表获取来源"
-                                             Description="控制全局的值日表获取来源，选中「附加设置」时将会从当前启用的课表中的「值日表」附加设置获取，选中「轮换」时将会从轮换设置中获取。">
-                            <fa:SettingsExpander.Footer>
-                                <Grid>
-                                    <TabStrip Classes="compact toggle" Theme="{StaticResource TabStripStyle}"
-                                              SelectedIndex="{Binding ViewModel.Settings.DutyPlanGetMode}">
-                                        <TabStripItem>
-                                            <ci:IconText Classes="display-role" Glyph="&#xE6B1;" Text="附加设置" />
-                                        </TabStripItem>
-                                        <TabStripItem>
-                                            <ci:IconText Classes="display-role" Glyph="&#xE356;" Text="轮换" />
-                                        </TabStripItem>
-                                    </TabStrip>
-                                </Grid>
-                            </fa:SettingsExpander.Footer>
-                        </fa:SettingsExpander>
-                        
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE31C;}"
-                                             Header="启用从托盘提醒?" Description="控制从托盘提醒的启用状态。">
-                            <fa:SettingsExpander.Footer>
-                                <ToggleSwitch IsChecked="{Binding ViewModel.Settings.EnableTaskBarNotificationMenu}"/>
-                            </fa:SettingsExpander.Footer>
-                        </fa:SettingsExpander>
-                        
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE31C;}"
-                                             Header="启用自动提醒?" Description="控制全局的自动提醒启用状态。">
-                            <fa:SettingsExpander.Footer>
-                                <ToggleSwitch IsChecked="{Binding ViewModel.Settings.GlobalEnableNotification}"/>
-                            </fa:SettingsExpander.Footer>
-                        </fa:SettingsExpander>
-                        
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE4C4;}"
-                                             IsVisible="{Binding ViewModel.Settings.GlobalEnableNotification}"
-                                             Header="自动提醒时间获取来源" Description="控制全局的自动提醒时间获取来源。">
-                            <fa:SettingsExpander.Footer>
-                                <Grid>
-                                    <TabStrip Classes="compact toggle" Theme="{StaticResource TabStripStyle}"
-                                              SelectedIndex="{Binding ViewModel.Settings.TimeSource}">
-                                        <TabStripItem>
-                                            <ci:IconText Classes="display-role" Glyph="&#xE47A;" Text="ClassIsland" />
-                                        </TabStripItem>
-                                        <TabStripItem>
-                                            <ci:IconText Classes="display-role" Glyph="&#xF0BD;" Text="系统" />
-                                        </TabStripItem>
-                                    </TabStrip>
-                                </Grid>
-                            </fa:SettingsExpander.Footer>
-                        </fa:SettingsExpander>
-                        
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE4E8;}"
-                                             Header="启用遥测?" Description="控制 DutyIsland 的 Sentry 遥测启用状态。本插件通过 SentrySDK 来收集本应用中的使用情况与错误信息，以改进本插件。您的信息会匿名上传，不会包含您的个人信息。您可以自行启用或禁用此功能。">
-                            <fa:SettingsExpander.Footer>
-                                <ToggleSwitch IsChecked="{Binding ViewModel.Settings.EnableSentry}"/>
-                            </fa:SettingsExpander.Footer>
-                        </fa:SettingsExpander>
-                        
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE1E9;}"
-                                             Header="启用试验性功能?" Description="控制 DutyIsland 的实验性功能启用状态，这些功能不一定稳定。目前有如下实验性功能：“一键”提醒所有值日生。">
-                            <fa:SettingsExpander.Footer>
-                                <ToggleSwitch IsChecked="{Binding ViewModel.Settings.EnableExperimentFeature}"/>
-                            </fa:SettingsExpander.Footer>
-                        </fa:SettingsExpander>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
         </TabControl>
         
         <Border Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
@@ -848,7 +549,7 @@
             <fa:CommandBar HorizontalAlignment="Right" DefaultLabelPosition="Right">
                 <fa:CommandBar.PrimaryCommands>
                     <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEEB5;}" Label="保存"
-                                         ToolTip.Tip="保存当前档案文件。"
+                                         ToolTip.Tip="保存设置文件。"
                                          Click="ButtonSave_OnClick"/>
                     <!-- <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEE2F;}" -->
                     <!--                      Label="帮助" -->

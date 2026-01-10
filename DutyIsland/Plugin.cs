@@ -83,7 +83,10 @@ public class Plugin : PluginBase
         services.AddTransient<ImportWorkersViewModel>();
         
         _logger.Info("注册页面...");
-        services.AddSettingsPage<DutySettingsPage>();
+        services.AddSettingsPageGroup("duty.settings", "\uE31E", "DutyIsland 值日表");
+        services.AddSettingsPage<DutyMainSettingsPage>();
+        services.AddSettingsPage<DutyProfileSettingsPage>();
+        services.AddSettingsPage<DutyRollingSettingsPage>();
         services.AddSettingsPage<DebugSettingsPage>();
         
         _logger.Info("注册 ClassIsland 元素...");
