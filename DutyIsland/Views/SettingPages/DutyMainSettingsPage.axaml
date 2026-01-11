@@ -137,6 +137,22 @@
                             </fa:SettingsExpander.Footer>
                         </fa:SettingsExpander>
                         
+                        <fa:SettingsExpander IconSource="{ci:LucideIconSource &#xE2C5;}"
+                                             Header="启用点名支持?" Description="控制是否启动内置的点名功能（计划移植自 IslandCaller），还未开始开发。">
+                            <fa:SettingsExpander.Footer>
+                                <ToggleSwitch IsEnabled="False" />
+                            </fa:SettingsExpander.Footer>
+                            
+                            <fa:SettingsExpanderItem Content="欢迎使用 SecRandom v2" Description="SecRandom 是一个易用的点名/抽奖软件，专为教育场景设计，让课堂点名更高效透明。">
+                                <fa:SettingsExpanderItem.Footer>
+                                    <HyperlinkButton Click="UriNavigationCommands_OnClick"
+                                                     CommandParameter="https://github.com/SECTL/SecRandom/releases/latest">
+                                        <TextBlock Text="立即下载"/>
+                                    </HyperlinkButton>
+                                </fa:SettingsExpanderItem.Footer>
+                            </fa:SettingsExpanderItem>
+                        </fa:SettingsExpander>
+                        
                         <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE4E8;}"
                                              Header="启用遥测?" Description="控制 DutyIsland 的 Sentry 遥测启用状态。本插件通过 SentrySDK 来收集本应用中的使用情况与错误信息，以改进本插件。您的信息会匿名上传，不会包含您的个人信息。您可以自行启用或禁用此功能。">
                             <fa:SettingsExpander.Footer>
