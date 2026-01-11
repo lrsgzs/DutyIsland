@@ -68,7 +68,7 @@
                     <ScrollViewer Grid.Row="1" Grid.Column="0">
                         <Grid ColumnDefinitions="Auto *">
                             <ListBox Grid.Column="0"
-                                     IsEnabled="False"
+                                     IsEnabled="False" SelectedIndex="{Binding ViewModel.Rolling.RollIndex, Mode=OneWay}"
                                      ItemsSource="{Binding ViewModel.RollIndexItems}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
