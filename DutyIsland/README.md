@@ -1,6 +1,4 @@
-﻿<img src="https://livefile.xesimg.com/programme/python_assets/2e2e0047bd2262e4341ef4c589926e31.png" width="256" alt="DutyIsland Icon">
-
-# DutyIsland
+﻿# DutyIsland
 
 [![wakatime](https://wakatime.com/badge/github/lrsgzs/DutyIsland.svg)](https://wakatime.com/badge/github/lrsgzs/DutyIsland)
 
@@ -14,15 +12,15 @@
   - [x] 自动轮换
 - [ ] 值日表展示
   - [x] 格式化字符串
-  - [ ] 高级文本(较晚)
+  - [ ] 高级文本 (较晚)
 - [x] 值日提醒
   - [x] 通过行动提醒
   - [x] 自动提醒
   - [x] 支持“一键”提醒所有值日者
   - [x] 支持从托盘提醒
 - [ ] 点名支持
-  - [ ] 点名功能
-  - [ ] 引荐 SecRandom
+  - [ ] 点名功能 (计划从 IslandCaller 移植逻辑)
+  - [x] 引荐 SecRandom
 - [ ] 插件联动
   - [ ] SuperAutoIsland
     - [x] 积木
