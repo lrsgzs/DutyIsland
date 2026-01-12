@@ -5,6 +5,8 @@
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:ci="http://classisland.tech/schemas/xaml/core"
                      xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+                     xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia"
+                     xmlns:helpers="clr-namespace:ClassIsland.Core.Helpers;assembly=ClassIsland.Core"
                      xmlns:local="clr-namespace:DutyIsland.Views.SettingPages"
                      x:DataType="local:DutyMainSettingsPage"
                      d:DataContext="{d:DesignInstance local:DutyMainSettingsPage}"
@@ -47,6 +49,15 @@
                                 自动提醒功能已推出！该功能类似于自动化工作流 cron + 提醒值日人员，但更方便。
                             </fa:InfoBar.Message>
                         </fa:InfoBar>
+                        
+                        <mdxaml:MarkdownScrollViewer
+                            Engine="{x:Static helpers:MarkdownConvertHelper.Engine}"
+                            Margin="6 4 0 0"
+                            Markdown="{Binding ViewModel.ReadmeDocument}">
+                            <mdxaml:MarkdownScrollViewer.Styles>
+                                <StyleInclude Source="avares://ClassIsland.Core/Themes/RichTextStyles.axaml"/>
+                            </mdxaml:MarkdownScrollViewer.Styles>
+                        </mdxaml:MarkdownScrollViewer>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>

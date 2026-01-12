@@ -26,6 +26,9 @@ public partial class DutyViewModel : ObservableRecipient
     public SyncDictionaryList<Guid, DutyPlanTemplate> DutyPlanTemplates { get; }
     public ObservableCollection<WorkerItem> Workers { get; }
 
+    // 主页
+    public string ReadmeDocument { get; } = GlobalConstants.ReadmeDocument;
+    
     // 轮换
     [ObservableProperty] private ObservableCollection<int> _rollIndexItems = [];
     [ObservableProperty] private RollItem? _selectedRollItem = null;

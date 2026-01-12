@@ -43,6 +43,7 @@ public class Plugin : PluginBase
         GlobalConstants.PluginFolder = Info.PluginFolderPath;
         GlobalConstants.PluginConfigFolder = PluginConfigFolder;
         GlobalConstants.Config = new ConfigHandler();
+        GlobalConstants.ReadmeDocument = File.ReadAllText(Path.Combine(Info.PluginFolderPath, "README.md"));
         
         #if DEBUG
             _logger.Info("这是开发构建，遥测将会被关闭！");

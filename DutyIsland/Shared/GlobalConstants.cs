@@ -23,6 +23,7 @@ public static class GlobalConstants
     public static ConfigHandler? Config { get; set; }
 
     public static string PluginVersion { get; set; } = "???";
+    public static string ReadmeDocument { get; set; } = string.Empty;
 
     public static readonly Guid TemplateNullGuid = Guid.Parse("8ca34af7-03cb-47ab-a630-0083dc942135");
     public const string DutyPlanAttachedSettingsGuid = "4A0B491E-F6AF-431D-8D0C-B09AA8F5C661";
