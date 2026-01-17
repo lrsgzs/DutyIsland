@@ -8,8 +8,8 @@ using ClassIsland.Core.Enums.SettingsWindow;
 using ClassIsland.Core.Helpers.UI;
 using ClassIsland.Core.Models.UI;
 using ClassIsland.Shared;
+using DutyIsland.Interface.Services;
 using DutyIsland.Models.AttachedSettings;
-using DutyIsland.Services;
 using DutyIsland.Services.NotificationProviders;
 using DutyIsland.Shared;
 using FluentAvalonia.UI.Controls;
@@ -22,7 +22,7 @@ namespace DutyIsland.Views.SettingPages;
 public partial class DebugSettingsPage : SettingsPageBase
 {
     private ILessonsService LessonsService { get; } = IAppHost.GetService<ILessonsService>();
-    private DutyPlanService DutyPlanService { get; } = IAppHost.GetService<DutyPlanService>();
+    private IDutyPlanService DutyPlanService { get; } = IAppHost.GetService<IDutyPlanService>();
     private DutyNotificationProvider DutyNotificationProvider { get; } = IAppHost.Host!.Services
         .GetServices<IHostedService>().OfType<DutyNotificationProvider>().First();
     
@@ -35,7 +35,7 @@ public partial class DebugSettingsPage : SettingsPageBase
     {
         var settings = IAttachedSettingsHostService.GetAttachedSettingsByPriority
             <DutyPlanAttachedSettings>(
-                Guid.Parse(GlobalConstants.DutyPlanAttachedSettingsGuid),
+                Guid.Parse(GlobalConstants.Guids.DutyPlanAttachedSettings),
                 classPlan: LessonsService.CurrentClassPlan);
         
         if (settings?.DutyPlanGuid == null)

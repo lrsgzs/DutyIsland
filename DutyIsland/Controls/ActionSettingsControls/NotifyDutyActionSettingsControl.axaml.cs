@@ -1,19 +1,16 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using ClassIsland.Core.Abstractions.Controls;
-using ClassIsland.Core.Helpers.UI;
-using ClassIsland.Core.Models.UI;
 using ClassIsland.Shared;
-using CommunityToolkit.Mvvm.Input;
+using DutyIsland.Interface.Models.Duty;
+using DutyIsland.Interface.Services;
 using DutyIsland.Models.ActionSettings;
-using DutyIsland.Models.Duty;
-using DutyIsland.Services;
 
 namespace DutyIsland.Controls.ActionSettingsControls;
 
 public partial class NotifyDutyActionSettingsControl : ActionSettingsControlBase<NotifyDutyActionSettings>
 {
-    private DutyPlanService DutyPlanService { get; } = IAppHost.GetService<DutyPlanService>();
+    private IDutyPlanService DutyPlanService { get; } = IAppHost.GetService<IDutyPlanService>();
     
     public NotifyDutyActionSettingsControl()
     {

@@ -2,15 +2,15 @@
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.ComponentModels;
 using ClassIsland.Core.Enums;
+using DutyIsland.Interface.Models.Duty;
 using DutyIsland.Models;
 using DutyIsland.Models.AttachedSettings;
-using DutyIsland.Models.Duty;
 using DutyIsland.Shared;
 
 namespace DutyIsland.Controls.AttachedSettingsControls;
 
 [AttachedSettingsUsage(AttachedSettingsTargets.ClassPlan)]
-[AttachedSettingsControlInfo(GlobalConstants.DutyPlanAttachedSettingsGuid, "值日表设置", "\uE31E")]
+[AttachedSettingsControlInfo(GlobalConstants.Guids.DutyPlanAttachedSettings, "值日表设置", "\uE31E")]
 public partial class DutyPlanAttachedSettingsControl : AttachedSettingsControlBase<DutyPlanAttachedSettings>
 {
     private SyncDictionaryList<Guid, DutyPlan> DutyPlans { get; set; }
@@ -18,7 +18,11 @@ public partial class DutyPlanAttachedSettingsControl : AttachedSettingsControlBa
     
     public DutyPlanAttachedSettingsControl()
     {
-        DutyPlans = new SyncDictionaryList<Guid, DutyPlan>(DutyIslandSettings.Profile.DutyPlans, Guid.NewGuid);
+        DutyPlans = new SyncDictionaryList<Guid, DutyPlan>(
+            DutyIslandSettings.Profile.DutyPlans
+                .Select(item => KeyValuePair.Create(item.Key, item.Value))
+                .ToDictionary(),
+            Guid.NewGuid);
         
         InitializeComponent();
     }

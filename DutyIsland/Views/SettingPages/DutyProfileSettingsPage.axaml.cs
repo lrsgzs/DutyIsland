@@ -2,20 +2,16 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using ClassIsland.Core.Abstractions.Controls;
-using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Helpers.UI;
 using ClassIsland.Core.Models.UI;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 using CommunityToolkit.Mvvm.Input;
-using DutyIsland.Enums;
-using DutyIsland.Models.Duty;
-using DutyIsland.Models.Notification;
-using DutyIsland.Models.Rolling;
-using DutyIsland.Models.Worker;
-using DutyIsland.Services;
-using DutyIsland.Shared;
+using DutyIsland.Interface.Enums;
+using DutyIsland.Interface.Models.Duty;
+using DutyIsland.Interface.Models.Notification;
+using DutyIsland.Interface.Models.Worker;
 using DutyIsland.ViewModels.SettingPages;
 using FluentAvalonia.UI.Controls;
 using ReactiveUI;
@@ -28,24 +24,13 @@ namespace DutyIsland.Views.SettingPages;
 [SettingsPageInfo("duty.settings.profile","档案","\uE324","\uE323")]
 public partial class DutyProfileSettingsPage : SettingsPageBase
 {
-    private DutyPlanService DutyPlanService { get; } = IAppHost.GetService<DutyPlanService>();
     private DutyViewModel ViewModel { get; } = IAppHost.GetService<DutyViewModel>();
     private ImportWorkersWindow? ImportWorkersWindow { get; set; }
-    private string PluginVersion { get; } = GlobalConstants.PluginVersion;
-    private bool _notifiedRestart = false;
     
     public DutyProfileSettingsPage()
     {
         DataContext = this;
         InitializeComponent();
-        
-        ViewModel.Settings.RestartPropertyChanged += () =>
-        {
-            if (_notifiedRestart) return;
-            
-            RequestRestart();
-            _notifiedRestart = true;
-        };
     }
 
     #region Misc

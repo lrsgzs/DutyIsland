@@ -1,9 +1,9 @@
 ﻿using Avalonia.Controls;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Shared;
-using ClassIsland.Shared.Models.Automation;
 using DutyIsland.Extensions;
-using DutyIsland.Models.Notification;
+using DutyIsland.Interface.Models.Notification;
+using DutyIsland.Interface.Services;
 using DutyIsland.Services.NotificationProviders;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
@@ -15,7 +15,7 @@ namespace DutyIsland.Services;
 public class DutyTaskBarMenuService
 {
     private ITaskBarIconService TaskBarIconService { get; }
-    private DutyPlanService DutyPlanService { get; }
+    private IDutyPlanService DutyPlanService { get; }
     private DutyNotificationProvider DutyNotificationProvider { get; }
     private Logger<DutyTaskBarMenuService> Logger { get; } = new();
 
@@ -25,7 +25,7 @@ public class DutyTaskBarMenuService
 
     private Dictionary<(Guid, string), int> _state = [];
 
-    public DutyTaskBarMenuService(ITaskBarIconService taskBarIconService, DutyPlanService dutyPlanService)
+    public DutyTaskBarMenuService(ITaskBarIconService taskBarIconService, IDutyPlanService dutyPlanService)
     {
         TaskBarIconService = taskBarIconService;
         DutyPlanService = dutyPlanService;

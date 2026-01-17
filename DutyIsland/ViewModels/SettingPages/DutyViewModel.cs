@@ -2,16 +2,13 @@
 using ClassIsland.Core.ComponentModels;
 using ClassIsland.Core.Models.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
-using DutyIsland.ComponentModels;
+using DutyIsland.Interface.ComponentModels;
+using DutyIsland.Interface.Models.Duty;
+using DutyIsland.Interface.Models.Rolling;
+using DutyIsland.Interface.Models.Worker;
 using DutyIsland.Models;
-using DutyIsland.Models.Duty;
-using DutyIsland.Models.Rolling;
-using DutyIsland.Models.Worker;
 using DutyIsland.Services;
 using DutyIsland.Shared;
-using DynamicData;
-using DynamicData.Alias;
-using DynamicData.Binding;
 
 namespace DutyIsland.ViewModels.SettingPages;
 
@@ -27,7 +24,7 @@ public partial class DutyViewModel : ObservableRecipient
     public ObservableCollection<WorkerItem> Workers { get; }
 
     // 主页
-    public string ReadmeDocument { get; } = GlobalConstants.ReadmeDocument;
+    public string ReadmeDocument { get; } = GlobalConstants.Documents.Readme;
     
     // 轮换
     [ObservableProperty] private ObservableCollection<int> _rollIndexItems = [];
@@ -105,7 +102,11 @@ public partial class DutyViewModel : ObservableRecipient
     public DutyViewModel()
     {
         Rolling = Settings.Profile.Rolling;
-        DutyPlans = new SyncDictionaryList<Guid, DutyPlan>(Settings.Profile.DutyPlans, Guid.NewGuid);
+        DutyPlans = new SyncDictionaryList<Guid, DutyPlan>(
+            Settings.Profile.DutyPlans
+                .Select(item => KeyValuePair.Create(item.Key, item.Value))
+                .ToDictionary(), 
+            Guid.NewGuid);
         DutyPlanTemplates = new SyncDictionaryList<Guid, DutyPlanTemplate>(Settings.Profile.DutyPlanTemplates, Guid.NewGuid);
         Workers = Settings.Profile.Workers;
 

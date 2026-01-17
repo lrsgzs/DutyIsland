@@ -1,4 +1,3 @@
-using Avalonia.Threading;
 using ClassIsland.Core;
 using ClassIsland.Core.Abstractions;
 using ClassIsland.Core.Abstractions.Services;
@@ -9,6 +8,7 @@ using DutyIsland.Controls.ActionSettingsControls;
 using DutyIsland.Controls.AttachedSettingsControls;
 using DutyIsland.Controls.Components;
 using DutyIsland.Controls.ComponentSettingsControls;
+using DutyIsland.Interface.Services;
 using DutyIsland.Services;
 using DutyIsland.Services.Automations.Actions;
 using DutyIsland.Services.NotificationProviders;
@@ -16,7 +16,6 @@ using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
 using DutyIsland.ViewModels;
 using DutyIsland.ViewModels.SettingPages;
-using DutyIsland.Views;
 using DutyIsland.Views.SettingPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,14 +35,15 @@ public class Plugin : PluginBase
     {
         _logger.Info("DutyIsland  Copyright (C) 2025  lrs2187/lrsgzs\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it under certain conditions.");
         _logger.Info("欢迎使用 DutyIsland！");
+        _logger.Info($"版本号 {Info.Manifest.Version} 环境 {GlobalConstants.Information.Environment}");
         _logger.Info("初期化中...");
         
         _logger.Info("加载配置...");
-        GlobalConstants.PluginVersion = Info.Manifest.Version;
-        GlobalConstants.PluginFolder = Info.PluginFolderPath;
-        GlobalConstants.PluginConfigFolder = PluginConfigFolder;
+        GlobalConstants.Information.PluginVersion = Info.Manifest.Version;
+        GlobalConstants.Information.PluginFolder = Info.PluginFolderPath;
+        GlobalConstants.Information.PluginConfigFolder = PluginConfigFolder;
         GlobalConstants.Config = new ConfigHandler();
-        GlobalConstants.ReadmeDocument = File.ReadAllText(Path.Combine(Info.PluginFolderPath, "README.md"));
+        GlobalConstants.Documents.Readme = File.ReadAllText(Path.Combine(Info.PluginFolderPath, "README.md"));
         
         #if DEBUG
             _logger.Info("这是开发构建，遥测将会被关闭！");
@@ -56,9 +56,9 @@ public class Plugin : PluginBase
                 SentrySdk.Init(options =>
                 {
                     options.Dsn = "https://c7689eb24b7f331dcca5d44960a0b974@o4510452375552000.ingest.us.sentry.io/4510452383612928";
-                    options.Release = GlobalConstants.PluginVersion;
+                    options.Release = GlobalConstants.Information.PluginVersion;
                     options.AutoSessionTracking = true;
-                    options.Environment = GlobalConstants.Environment;
+                    options.Environment = GlobalConstants.Information.Environment;
                 });
 
                 Dispatcher.UIThread.UnhandledException += (_, e) =>
@@ -76,7 +76,7 @@ public class Plugin : PluginBase
         #endif
         
         _logger.Info("注册服务...");
-        services.AddSingleton<DutyPlanService>();
+        services.AddSingleton<IDutyPlanService, DutyPlanService>();
         services.AddSingleton<DutyTaskBarMenuService>();
         
         _logger.Info("注册视图模型...");
@@ -105,7 +105,7 @@ public class Plugin : PluginBase
         AppBase.Current.AppStarted += (_, _) =>
         {
             _logger.Info("启动 DutyPlanService...");
-            var dutyPlanService = IAppHost.GetService<DutyPlanService>();
+            var dutyPlanService = IAppHost.GetService<IDutyPlanService>();
             IAppHost.GetService<DutyTaskBarMenuService>();
 
             if (IsPluginInstalled("lrs2187.sai", new Version(0, 1, 2, 4)))
@@ -132,7 +132,7 @@ public class Plugin : PluginBase
                                         dutyPlanService.CurrentDutyPlan?.Template?.WorkerTemplateDictionary
                                             .Select(e => (e.Value.Name, e.Key.ToString()))
                                             .ToList(),
-                                        new ValueTuple<string, string>("???", GlobalConstants.TemplateNullGuid.ToString()))
+                                        new ValueTuple<string, string>("???", GlobalConstants.Guids.NullTemplate.ToString()))
                                 },
                                 ["FallbackSettings.Enabled"] = new CheckboxMetaArgs
                                 {

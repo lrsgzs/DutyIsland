@@ -1,9 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using DutyIsland.Enums;
-using DutyIsland.Models.Worker;
+using DutyIsland.Interface.Enums;
+using DutyIsland.Interface.Models.Worker;
 using DutyIsland.Shared;
-using DynamicData;
 
 namespace DutyIsland.ViewModels;
 

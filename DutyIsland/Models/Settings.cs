@@ -1,11 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DutyIsland.Enums;
+using DutyIsland.Interface.Models.Profile;
 
 namespace DutyIsland.Models;
 
 public partial class Settings : ObservableObject
 {
-    [ObservableProperty] private Profile.Profile _profile = new();
+    [ObservableProperty] private Profile _profile = new();
     
     [ObservableProperty] private DutyPlanGetMode _dutyPlanGetMode = DutyPlanGetMode.AttachedSettings;
     [ObservableProperty] private bool _enableTaskBarNotificationMenu = true;

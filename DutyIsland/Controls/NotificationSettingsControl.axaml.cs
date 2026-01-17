@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
-using DutyIsland.Models.Notification;
+using DutyIsland.Interface.Models.Notification;
 
 namespace DutyIsland.Controls;
 

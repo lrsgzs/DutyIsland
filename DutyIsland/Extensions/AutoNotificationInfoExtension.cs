@@ -1,13 +1,13 @@
 ﻿using ClassIsland.Core.Models.Notification;
 using ClassIsland.Shared;
-using DutyIsland.Models.Notification;
-using DutyIsland.Models.Worker;
-using DutyIsland.Services;
-using DutyIsland.Shared;
+using DutyIsland.Interface.Models.Notification;
+using DutyIsland.Interface.Models.Worker;
+using DutyIsland.Interface.Services;
+using DutyIsland.Interface.Shared;
 
 namespace DutyIsland.Extensions;
 
-public static class AutoNotificationInfosExtension
+public static class AutoNotificationInfoExtension
 {
     public static List<NotificationRequest> ToRequests(this List<AutoNotificationInfo> infos)
     {
@@ -16,7 +16,7 @@ public static class AutoNotificationInfosExtension
             return [];
         }
 
-        var dutyPlanService = IAppHost.GetService<DutyPlanService>();
+        var dutyPlanService = IAppHost.GetService<IDutyPlanService>();
         
         var maskNotificationSettings = infos[0].NotificationSettings;
         List<NotificationRequest> requests = [
@@ -35,7 +35,7 @@ public static class AutoNotificationInfosExtension
         requests.AddRange(from info in infos
             let notificationSettings = info.NotificationSettings
             let workersText = dutyPlanService.GetWorkersContent(info.Guid, new FallbackSettings { Enabled = false })
-            let text = DutyPlanService.FormatString(info.NotificationSettings.Text, workersText, info.TemplateItem)
+            let text = IDutyPlanService.FormatString(info.NotificationSettings.Text, workersText, info.TemplateItem)
             where !string.IsNullOrEmpty(text) && !(notificationSettings.TextDuration <= 0)
             select new NotificationRequest
             {
@@ -52,5 +52,31 @@ public static class AutoNotificationInfosExtension
             });
 
         return requests;
+    }
+    
+    public static NotificationRequest GenerateNotificationRequest(this AutoNotificationInfo info)
+    {
+        var dutyPlanService = IAppHost.GetService<IDutyPlanService>();
+        var workersText = dutyPlanService.GetWorkersContent(info.Guid, new FallbackSettings { Enabled = false });
+        var text = IDutyPlanService.FormatString(info.NotificationSettings.Text, workersText, info.TemplateItem);
+        
+        return new NotificationRequest
+        {
+            MaskContent = NotificationContent.CreateTwoIconsMask(
+                info.NotificationSettings.Title, hasRightIcon: true, rightIcon: "\uE31E",
+                factory: x =>
+                {
+                    x.Duration = TimeSpanHelper.FromSecondsSafe(info.NotificationSettings.TitleDuration);
+                    x.IsSpeechEnabled = info.NotificationSettings.TitleEnableSpeech;
+                }),
+            OverlayContent = string.IsNullOrEmpty(text) || info.NotificationSettings.TextDuration <= 0
+                ? null
+                : NotificationContent.CreateSimpleTextContent(text,
+                    factory: x =>
+                    {
+                        x.Duration = TimeSpanHelper.FromSecondsSafe(info.NotificationSettings.TextDuration);
+                        x.IsSpeechEnabled = info.NotificationSettings.TextEnableSpeech;
+                    })
+        };
     }
 }

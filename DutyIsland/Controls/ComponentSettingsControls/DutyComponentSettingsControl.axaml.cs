@@ -5,15 +5,15 @@ using ClassIsland.Core.Helpers.UI;
 using ClassIsland.Core.Models.UI;
 using ClassIsland.Shared;
 using CommunityToolkit.Mvvm.Input;
+using DutyIsland.Interface.Models.Duty;
+using DutyIsland.Interface.Services;
 using DutyIsland.Models.ComponentSettings;
-using DutyIsland.Models.Duty;
-using DutyIsland.Services;
 
 namespace DutyIsland.Controls.ComponentSettingsControls;
 
 public partial class DutyComponentSettingsControl : ComponentBase<DutyComponentSettings>
 {
-    private DutyPlanService DutyPlanService { get; } = IAppHost.GetService<DutyPlanService>();
+    private IDutyPlanService DutyPlanService { get; } = IAppHost.GetService<IDutyPlanService>();
     
     public DutyComponentSettingsControl()
     {

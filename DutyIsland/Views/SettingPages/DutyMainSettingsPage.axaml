@@ -148,7 +148,7 @@
                             </fa:SettingsExpander.Footer>
                         </fa:SettingsExpander>
                         
-                        <fa:SettingsExpander IconSource="{ci:LucideIconSource &#xE2C5;}"
+                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE13B;}"
                                              Header="启用点名支持?" Description="控制是否启动内置的点名功能（计划移植自 IslandCaller），还未开始开发。">
                             <fa:SettingsExpander.Footer>
                                 <ToggleSwitch IsEnabled="False" />

@@ -4,7 +4,8 @@ using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Models.Notification;
 using ClassIsland.Shared;
 using DutyIsland.Extensions;
-using DutyIsland.Models.Notification;
+using DutyIsland.Interface.Models.Notification;
+using DutyIsland.Interface.Services;
 using DutyIsland.Services.NotificationProviders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,12 +15,12 @@ namespace DutyIsland.Services.Automations.Actions;
 [ActionInfo("duty.actions.notifyAllJob", "提醒所有值日人员", "\uE314")]
 public class NotifyAllJobAction : ActionBase
 {
-    private DutyPlanService DutyPlanService { get; }
+    private IDutyPlanService DutyPlanService { get; }
     private DutyNotificationProvider DutyNotificationProvider { get; }
     private List<NotificationRequest>? _requests;
     private bool _isStopped = false;
     
-    public NotifyAllJobAction(DutyPlanService dutyPlanService)
+    public NotifyAllJobAction(IDutyPlanService dutyPlanService)
     {
         DutyPlanService = dutyPlanService;
         DutyNotificationProvider = IAppHost.Host!.Services.GetServices<IHostedService>().OfType<DutyNotificationProvider>().First();

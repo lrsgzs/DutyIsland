@@ -2,7 +2,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
-using DutyIsland.Models.Worker;
+using DutyIsland.Interface.Models.Worker;
 using DutyIsland.Shared;
 
 namespace DutyIsland.Controls;

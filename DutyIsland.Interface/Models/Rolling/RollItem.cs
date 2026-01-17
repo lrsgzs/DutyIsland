@@ -1,15 +1,24 @@
 ﻿using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
-using DutyIsland.Models.Duty;
-using DutyIsland.Shared;
+using DutyIsland.Interface.Models.Duty;
+using DutyIsland.Interface.Services;
 
-namespace DutyIsland.Models.Rolling;
+namespace DutyIsland.Interface.Models.Rolling;
 
+/// <summary>
+/// 轮换项
+/// </summary>
 public partial class RollItem : ObservableRecipient
 {
+    /// <summary>
+    /// 是否存在值日表
+    /// </summary>
     [ObservableProperty] private bool _hasDutyPlan = true;
     private Guid _dutyPlanGuid = Guid.Empty;
     
+    /// <summary>
+    /// 值日表 Guid
+    /// </summary>
     public Guid DutyPlanGuid
     {
         get => _dutyPlanGuid;
@@ -21,8 +30,11 @@ public partial class RollItem : ObservableRecipient
         }
     }
     
+    /// <summary>
+    /// 值日表
+    /// </summary>
     [JsonIgnore]
-    public DutyPlan? DutyPlan => GlobalConstants.Config!.Data.Profile.DutyPlans.GetValueOrDefault(DutyPlanGuid);
+    public DutyPlan? DutyPlan => IDutyPlanService.GetService().Profile.DutyPlans.GetValueOrDefault(DutyPlanGuid);
 
     public override string ToString()
     {

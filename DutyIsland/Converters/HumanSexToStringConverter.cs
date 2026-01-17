@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using Avalonia.Data.Converters;
-using DutyIsland.Enums;
+using DutyIsland.Interface.Enums;
 
 namespace DutyIsland.Converters;
 

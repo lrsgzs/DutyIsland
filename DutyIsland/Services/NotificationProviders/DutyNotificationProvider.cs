@@ -1,22 +1,25 @@
 ﻿using ClassIsland.Core.Abstractions.Services.NotificationProviders;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Models.Notification;
-using DutyIsland.Models.Notification;
+using DutyIsland.Extensions;
+using DutyIsland.Interface.Models.Notification;
+using DutyIsland.Interface.Services;
+using DutyIsland.Interface.Shared;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
 
 namespace DutyIsland.Services.NotificationProviders;
 
-[NotificationProviderInfo(GlobalConstants.DutyNotificationProviderGuid, "值日人员提醒", "\uE31E", "提醒值日人员打扫。")]
-[NotificationChannelInfo(GlobalConstants.DutyActionNotificationChannelGuid, "值日行动提醒", "\uE314", description:"通过行动发出的提醒。")]
-[NotificationChannelInfo(GlobalConstants.DutyAutoNotificationChannelGuid, "值日自动提醒", "\uE31C", description:"通过值日表模板中设置的自动提醒发出的提醒。")]
-[NotificationChannelInfo(GlobalConstants.DutyTaskBarNotificationChannelGuid, "值日托盘提醒", "\uE312", description:"通过任务栏托盘中手动触发发出的提醒。")]
+[NotificationProviderInfo(GlobalConstants.Guids.DutyNotificationProvider, "值日人员提醒", "\uE31E", "提醒值日人员打扫。")]
+[NotificationChannelInfo(GlobalConstants.Guids.DutyActionNotificationChannel, "值日行动提醒", "\uE314", "通过行动发出的提醒。")]
+[NotificationChannelInfo(GlobalConstants.Guids.DutyAutoNotificationChannel, "值日自动提醒", "\uE31C", "通过值日表模板中设置的自动提醒发出的提醒。")]
+[NotificationChannelInfo(GlobalConstants.Guids.DutyTaskBarNotificationChannel, "值日托盘提醒", "\uE312", "通过任务栏托盘中手动触发发出的提醒。")]
 public class DutyNotificationProvider : NotificationProviderBase
 {
     private Logger<DutyNotificationProvider> Logger { get; } = new();
-    private DutyPlanService DutyPlanService { get; }
+    private IDutyPlanService DutyPlanService { get; }
 
-    public DutyNotificationProvider(DutyPlanService dutyPlanService)
+    public DutyNotificationProvider(IDutyPlanService dutyPlanService)
     {
         DutyPlanService = dutyPlanService;
         
@@ -32,22 +35,22 @@ public class DutyNotificationProvider : NotificationProviderBase
     
     public async Task ShowActionNotification(NotificationRequest request)
     {
-        await Channel(GlobalConstants.DutyActionNotificationChannelGuid).ShowNotificationAsync(request);
+        await Channel(GlobalConstants.Guids.DutyActionNotificationChannel).ShowNotificationAsync(request);
     }
     
     public async Task ShowTaskBarNotification(NotificationRequest request)
     {
-        await Channel(GlobalConstants.DutyTaskBarNotificationChannelGuid).ShowNotificationAsync(request);
+        await Channel(GlobalConstants.Guids.DutyTaskBarNotificationChannel).ShowNotificationAsync(request);
     }
 
     public async Task ShowAutoNotification(NotificationRequest request)
     {
-        await Channel(GlobalConstants.DutyAutoNotificationChannelGuid).ShowNotificationAsync(request);
+        await Channel(GlobalConstants.Guids.DutyAutoNotificationChannel).ShowNotificationAsync(request);
     }
 
     public async Task ShowTaskBarChainedNotification(NotificationRequest[] requests)
     {
-        await Channel(GlobalConstants.DutyTaskBarNotificationChannelGuid).ShowChainedNotificationsAsync(requests);
+        await Channel(GlobalConstants.Guids.DutyTaskBarNotificationChannel).ShowChainedNotificationsAsync(requests);
     }
 
     public async Task TestUnwelcomedChainedNotification()

@@ -8,7 +8,7 @@ namespace DutyIsland.Services;
 
 public class ConfigHandler
 {
-    public string ConfigPath = Path.Combine(GlobalConstants.PluginConfigFolder!, "Config.json");
+    public string ConfigPath = Path.Combine(GlobalConstants.Information.PluginConfigFolder, "Config.json");
     public Settings Data { get; private set; }
     private readonly Logger<ConfigHandler> _logger = new();
 

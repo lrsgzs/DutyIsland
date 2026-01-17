@@ -1,4 +1,5 @@
-﻿using DutyIsland.Services;
+﻿using System.Reflection;
+using DutyIsland.Services;
 
 namespace DutyIsland.Shared;
 
@@ -7,30 +8,35 @@ namespace DutyIsland.Shared;
 /// </summary>
 public static class GlobalConstants
 {
-    /// <summary>
-    /// 插件路径
-    /// </summary>
-    public static string? PluginFolder { get; set; }
-    
-    /// <summary>
-    /// 插件配置路径
-    /// </summary>
-    public static string? PluginConfigFolder { get; set; }
-
-    /// <summary>
-    /// 配置
-    /// </summary>
     public static ConfigHandler? Config { get; set; }
 
-    public static string PluginVersion { get; set; } = "???";
-    public static string ReadmeDocument { get; set; } = string.Empty;
+    public static class Information
+    {
+        public static string PluginFolder { get; set; } = string.Empty;
+        public static string PluginConfigFolder { get; set; } = string.Empty;
+        public static string PluginVersion { get; set; } = "???";
+    
+#if DEBUG
+        public static string Environment { get; } = "development ci-" + Assembly.GetAssembly(typeof(ClassIsland.Shared.IAppHost))?.GetName().Version;
+#else
+        public static string Environment { get; } = "production ci-" + Assembly.GetAssembly(typeof(ClassIsland.Shared.IAppHost))?.GetName().Version;
+#endif
+    }
 
-    public static readonly Guid TemplateNullGuid = Guid.Parse("8ca34af7-03cb-47ab-a630-0083dc942135");
-    public const string DutyPlanAttachedSettingsGuid = "4A0B491E-F6AF-431D-8D0C-B09AA8F5C661";
-    public const string DutyNotificationProviderGuid = "CA0B77B2-FBC3-449F-A14D-B6D4EAA2726C";
-    public const string DutyActionNotificationChannelGuid = "881AAD3D-26FD-4FCF-B6E2-D39A996C59AC";
-    public const string DutyAutoNotificationChannelGuid = "7B973AB0-98EE-41AA-BD67-464B8EB011B1";
-    public const string DutyTaskBarNotificationChannelGuid = "88C27C28-FC9E-418F-8A70-AC8D353F2D2C";
+    public static class Documents
+    {
+        public static string Readme { get; set; } = string.Empty;
+    }
+    
+    public static class Guids
+    {
+        public static readonly Guid NullTemplate = Guid.Parse("8ca34af7-03cb-47ab-a630-0083dc942135");
+        public const string DutyPlanAttachedSettings = "4A0B491E-F6AF-431D-8D0C-B09AA8F5C661";
+        public const string DutyNotificationProvider = "CA0B77B2-FBC3-449F-A14D-B6D4EAA2726C";
+        public const string DutyActionNotificationChannel = "881AAD3D-26FD-4FCF-B6E2-D39A996C59AC";
+        public const string DutyAutoNotificationChannel = "7B973AB0-98EE-41AA-BD67-464B8EB011B1";
+        public const string DutyTaskBarNotificationChannel = "88C27C28-FC9E-418F-8A70-AC8D353F2D2C";
+    }
 
     public static class ImportSheetStaticTexts
     {
@@ -44,10 +50,4 @@ public static class GlobalConstants
             public static readonly List<string> Female = ["女", "female", "girl", "woman", "0"];
         }
     }
-    
-    #if DEBUG
-        public static string Environment { get; } = "development";
-    #else
-        public static string Environment { get; } = "production";
-    #endif
 }

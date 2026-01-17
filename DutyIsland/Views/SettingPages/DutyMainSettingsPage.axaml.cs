@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
@@ -7,18 +6,9 @@ using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Helpers.UI;
 using ClassIsland.Core.Models.UI;
 using ClassIsland.Shared;
-using ClassIsland.Shared.Helpers;
-using CommunityToolkit.Mvvm.Input;
-using DutyIsland.Enums;
-using DutyIsland.Models.Duty;
-using DutyIsland.Models.Notification;
-using DutyIsland.Models.Rolling;
-using DutyIsland.Models.Worker;
-using DutyIsland.Services;
 using DutyIsland.Shared;
 using DutyIsland.ViewModels.SettingPages;
 using FluentAvalonia.UI.Controls;
-using ReactiveUI;
 
 namespace DutyIsland.Views.SettingPages;
 
@@ -28,10 +18,8 @@ namespace DutyIsland.Views.SettingPages;
 [SettingsPageInfo("duty.settings.main","主设置","\uE994","\uE993")]
 public partial class DutyMainSettingsPage : SettingsPageBase
 {
-    private DutyPlanService DutyPlanService { get; } = IAppHost.GetService<DutyPlanService>();
     private DutyViewModel ViewModel { get; } = IAppHost.GetService<DutyViewModel>();
-    private ImportWorkersWindow? ImportWorkersWindow { get; set; }
-    private string PluginVersion { get; } = GlobalConstants.PluginVersion;
+    private string PluginVersion { get; } = GlobalConstants.Information.PluginVersion;
     private bool _notifiedRestart = false;
     
     public DutyMainSettingsPage()
@@ -66,7 +54,7 @@ public partial class DutyMainSettingsPage : SettingsPageBase
 
     private async void SettingsExpanderItemShowOssLicense_OnClick(object? sender, RoutedEventArgs e)
     {
-        var license = await File.ReadAllTextAsync(GlobalConstants.PluginFolder + "/LICENSE");
+        var license = await File.ReadAllTextAsync(Path.Combine(GlobalConstants.Information.PluginFolder, "LICENSE"));
         await new ContentDialog()
         {
             Title = "开放源代码许可",

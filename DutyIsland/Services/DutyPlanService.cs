@@ -1,19 +1,32 @@
 ﻿using ClassIsland.Core.Abstractions.Services;
-using ClassIsland.Shared;
 using CommunityToolkit.Mvvm.ComponentModel;
+using dotnetCampus.Ipc.CompilerServices.GeneratedProxies;
 using DutyIsland.Enums;
+using DutyIsland.Interface.Models.Duty;
+using DutyIsland.Interface.Models.Notification;
+using DutyIsland.Interface.Models.Profile;
+using DutyIsland.Interface.Models.Worker;
+using DutyIsland.Interface.Services;
+using DutyIsland.Interface.Shared;
 using DutyIsland.Models.AttachedSettings;
-using DutyIsland.Models.Duty;
-using DutyIsland.Models.Notification;
-using DutyIsland.Models.Worker;
 using DutyIsland.Shared;
 using DutyIsland.Shared.Logger;
 
 namespace DutyIsland.Services;
 
-public partial class DutyPlanService : ObservableRecipient
+public class DutyPlanService : ObservableRecipient, IDutyPlanService
 {
-    [ObservableProperty] private DutyPlan? _currentDutyPlan = null;
+    public DutyPlan? CurrentDutyPlan
+    {
+        get => _currentDutyPlan;
+        private set
+        {
+            _currentDutyPlan = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public Profile Profile { get; } = GlobalConstants.Config!.Data.Profile;
     
     public event EventHandler? WhenRefreshDutyPlan;
     public event EventHandler? WhenDutyPlanChanged;
@@ -21,24 +34,30 @@ public partial class DutyPlanService : ObservableRecipient
     
     private ILessonsService LessonsService { get; }
     private IExactTimeService ExactTimeService { get; }
+    private IIpcService IpcService { get; }
     private Logger<DutyPlanService> Logger { get; } = new();
+    private DutyPlan? _currentDutyPlan = null;
     private byte _ticks = 0;
     
-    public DutyPlanService(ILessonsService lessonService, IExactTimeService exactTimeService)
+    public DutyPlanService(ILessonsService lessonService, IExactTimeService exactTimeService, IIpcService ipcService)
     {
         LessonsService = lessonService;
         ExactTimeService = exactTimeService;
+        IpcService = ipcService;
         
         LessonsService.PostMainTimerTicked += LessonsServiceOnPostMainTimerTicked;
-
-        WhenDutyPlanChanged += (sender, args) =>
+        IpcService.IpcProvider.CreateIpcJoint<IPublicDutyPlanService>(this);
+        
+        WhenDutyPlanChanged += async (sender, args) =>
         {
             Logger.Info($"值日表变化为「{CurrentDutyPlan?.Name}」");
+            await IpcService.BroadcastNotificationAsync(IpcRoutedNotifyIds.OnDutyPlanChanged);
         };
 
-        OnDutyJobAutoNotificationEvent += (sender, info) =>
+        OnDutyJobAutoNotificationEvent += async (sender, info) =>
         {
             Logger.Info($"触发「{info.TemplateItem.Name}」自动提醒");
+            await IpcService.BroadcastNotificationAsync(IpcRoutedNotifyIds.OnDutyJobAutoNotificationEvent, info);
         };
         
         RefreshDutyPlan();
@@ -55,7 +74,7 @@ public partial class DutyPlanService : ObservableRecipient
 
     public void UpdateRollingIndex(DateOnly currentDate)
     {
-        var settings = GlobalConstants.Config!.Data.Profile.Rolling;
+        var settings = Profile.Rolling;
         if (settings.RollItems.Count == 0)
         {
             return;
@@ -63,6 +82,11 @@ public partial class DutyPlanService : ObservableRecipient
         
         var dayDelta = currentDate.DayNumber - settings.LastChangedDate.DayNumber;
         var changes = 0;
+
+        if (dayDelta <= 0)
+        {
+            return;
+        }
         
         if (settings.RollOnUnopenDay)
         {
@@ -157,14 +181,14 @@ public partial class DutyPlanService : ObservableRecipient
     {
         return IAttachedSettingsHostService.GetAttachedSettingsByPriority
             <DutyPlanAttachedSettings>(
-                Guid.Parse(GlobalConstants.DutyPlanAttachedSettingsGuid),
+                Guid.Parse(GlobalConstants.Guids.DutyPlanAttachedSettings),
                 classPlan: LessonsService.CurrentClassPlan)?
             .DutyPlanGuid;
     }
 
-    public static Guid? GetDutyPlanGuidByRollingSettings()
+    public Guid? GetDutyPlanGuidByRollingSettings()
     {
-        var settings = GlobalConstants.Config!.Data.Profile.Rolling;
+        var settings = Profile.Rolling;
         if (settings.RollItems.Count == 0)
         {
             return null;
@@ -190,7 +214,7 @@ public partial class DutyPlanService : ObservableRecipient
             return;
         }
 
-        var now = GlobalConstants.Config!.Data.TimeSource switch
+        var now = GlobalConstants.Config.Data.TimeSource switch
         {
             TimeSource.ClassIsland => ExactTimeService.GetCurrentLocalDateTime().TimeOfDay,
             TimeSource.System => DateTime.Now.TimeOfDay,
@@ -219,31 +243,6 @@ public partial class DutyPlanService : ObservableRecipient
         {
             OnDutyJobAutoNotificationEvent?.Invoke(this, notification);
         }
-    }
-    
-    public static string WorkersToString(IEnumerable<DutyWorkerItem> workers, string connectorString)
-    {
-        var text = string.Empty;
-        foreach (var workerItem in workers)
-        {
-            if (text == string.Empty)
-            {
-                text += workerItem.Name;
-            }
-            else
-            {
-                text += $"{connectorString}{workerItem.Name}";
-            }
-        }
-
-        return text;
-    }
-
-    public static string FormatString(string text, string workersText, DutyPlanTemplateItem? dutyPlanTemplateItem)
-    {
-        return text
-            .Replace("%j", dutyPlanTemplateItem?.Name ?? "???")
-            .Replace("%n", workersText);
     }
 
     public DutyPlanTemplateItem? GetTemplateItem(Guid jobGuid, FallbackSettings fallbackSettings)
@@ -297,7 +296,7 @@ public partial class DutyPlanService : ObservableRecipient
         
         if (CurrentDutyPlan.WorkerDictionary.TryGetValue(jobGuid, out var item))
         {
-            return WorkersToString(item.Workers, connectorString);
+            return IDutyPlanService.WorkersToString(item.Workers, connectorString);
         }
         
         if (!fallbackSettings.Enabled)
@@ -314,13 +313,13 @@ public partial class DutyPlanService : ObservableRecipient
             
             if (fallbackItems != null && fallbackItems.Count != 0)
             {
-                return WorkersToString(fallbackItems[0].Value.First.Workers, connectorString);
+                return IDutyPlanService.WorkersToString(fallbackItems[0].Value.First.Workers, connectorString);
             }
         }
         
         if (fallbackSettings.Workers.Count != 0)
         {
-            return WorkersToString(fallbackSettings.Workers, connectorString);
+            return IDutyPlanService.WorkersToString(fallbackSettings.Workers, connectorString);
         }
         
         return "???";

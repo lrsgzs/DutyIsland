@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace DutyIsland.ComponentModels;
+namespace DutyIsland.Interface.ComponentModels;
 
 internal interface IValueTupleInternal : ITuple
 {
@@ -11,6 +11,9 @@ internal interface IValueTupleInternal : ITuple
     string ToStringEnd();
 }
 
+/// <summary>
+/// 可侦听的 <see cref="ValueTuple"/>
+/// </summary>
 public class ObservableValueTuple<T1, T2> : ObservableRecipient, IEquatable<ObservableValueTuple<T1, T2>>, IStructuralEquatable, IStructuralComparable, IComparable, IComparable<ObservableValueTuple<T1, T2>>, IValueTupleInternal
 {
     public T1 Item1;

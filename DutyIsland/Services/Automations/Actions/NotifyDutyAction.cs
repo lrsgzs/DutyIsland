@@ -3,6 +3,8 @@ using ClassIsland.Core.Abstractions.Automation;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Models.Notification;
 using ClassIsland.Shared;
+using DutyIsland.Interface.Services;
+using DutyIsland.Interface.Shared;
 using DutyIsland.Models.ActionSettings;
 using DutyIsland.Services.NotificationProviders;
 using DutyIsland.Shared;
@@ -14,11 +16,11 @@ namespace DutyIsland.Services.Automations.Actions;
 [ActionInfo("duty.actions.notifyDuty", "提醒值日人员", "\uE314")]
 public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
 {
-    private DutyPlanService DutyPlanService { get; }
+    private IDutyPlanService DutyPlanService { get; }
     private DutyNotificationProvider DutyNotificationProvider { get; }
     private NotificationRequest? _request;
 
-    public NotifyDutyAction(DutyPlanService dutyPlanService)
+    public NotifyDutyAction(IDutyPlanService dutyPlanService)
     {
         DutyPlanService = dutyPlanService;
         DutyNotificationProvider = IAppHost.Host!.Services.GetServices<IHostedService>().OfType<DutyNotificationProvider>().First();
@@ -28,7 +30,7 @@ public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
     {
         await base.OnInvoke();
 
-        if (Settings.JobGuid == GlobalConstants.TemplateNullGuid)
+        if (Settings.JobGuid == GlobalConstants.Guids.NullTemplate)
         {
             return;
         }
@@ -50,7 +52,7 @@ public class NotifyDutyAction : ActionBase<NotifyDutyActionSettings>
             ? Settings.CustomNotificationSettings
             : templateItem.NotificationSettings;
         var workersText = DutyPlanService.GetWorkersContent(Settings.JobGuid, Settings.FallbackSettings);
-        var text = DutyPlanService.FormatString(notificationSettings.Text, workersText, templateItem);
+        var text = IDutyPlanService.FormatString(notificationSettings.Text, workersText, templateItem);
 
         _request = new NotificationRequest
         {

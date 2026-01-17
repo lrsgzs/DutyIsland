@@ -6,7 +6,7 @@ using Avalonia.Interactivity;
 using ClassIsland.Core.Helpers.UI;
 using ClassIsland.Core.Models.UI;
 using CommunityToolkit.Mvvm.Input;
-using DutyIsland.Models.Duty;
+using DutyIsland.Interface.Models.Duty;
 
 namespace DutyIsland.Controls;
 

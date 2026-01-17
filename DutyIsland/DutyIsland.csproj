@@ -16,6 +16,7 @@
 		<PackageReference Include="DotNetCommon.PinYin" Version="8.0.0" />
 		<PackageReference Include="Sentry" Version="6.0.0" />
 		<PackageReference Include="SuperAutoIsland.Interface" Version="0.1.2.4" />
+		<ProjectReference Include="..\DutyIsland.Interface\DutyIsland.Interface.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

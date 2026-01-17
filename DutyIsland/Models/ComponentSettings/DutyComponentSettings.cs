@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using DutyIsland.Models.Worker;
+using DutyIsland.Interface.Models.Worker;
 
 namespace DutyIsland.Models.ComponentSettings;
 
