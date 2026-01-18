@@ -1,0 +1,73 @@
+﻿name: Build & Publish
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: '发布标签'
+        required: true
+        type: string
+      is_test_mode:
+        description: '是否处于测试发布模式'
+        required: false
+        type: boolean
+
+jobs:
+  build:
+    runs-on: 'windows-2022'
+    name: Build Plugin
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          ref: ${{ github.event_name != 'workflow_dispatch' && github.ref || github.event.inputs.release_tag }}
+
+      - name: List files
+        run: ls
+
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+      
+      - name: Build
+        run: 'pwsh -ep bypass ./DutyIsland/Scripts/build.ps1'
+        
+      - name: Upload Plugin to Artifacts
+        id: upload-unsigned-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'DutyIsland'
+          path: |
+            ./out/*.cipx
+
+  publish:
+    runs-on: windows-2022
+    if: ${{ always() && success('build') && github.event.inputs.release_tag && github.event_name != 'pull_request' }}
+    needs: [ build ]
+    concurrency:
+      group: "publish-public"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          ref: ${{ github.event_name != 'workflow_dispatch' && github.ref || github.event.inputs.release_tag }}
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./out_artifacts
+
+      - name: Upload APP to release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./out/*.zip,./out/*.appx,./out/*.deb,./out/*.pkg"
+          draft: true
+          bodyFile: ./changelog/${{ github.event.inputs.release_tag }}.md
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.event_name != 'workflow_dispatch' && github.ref || github.event.inputs.release_tag }}
