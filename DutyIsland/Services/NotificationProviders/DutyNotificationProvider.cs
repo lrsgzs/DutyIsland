@@ -6,7 +6,7 @@ using DutyIsland.Interface.Models.Notification;
 using DutyIsland.Interface.Services;
 using DutyIsland.Interface.Shared;
 using DutyIsland.Shared;
-using DutyIsland.Shared.Logger;
+using Microsoft.Extensions.Logging;
 
 namespace DutyIsland.Services.NotificationProviders;
 
@@ -16,11 +16,12 @@ namespace DutyIsland.Services.NotificationProviders;
 [NotificationChannelInfo(GlobalConstants.Guids.DutyTaskBarNotificationChannel, "值日托盘提醒", "\uE312", "通过任务栏托盘中手动触发发出的提醒。")]
 public class DutyNotificationProvider : NotificationProviderBase
 {
-    private Logger<DutyNotificationProvider> Logger { get; } = new();
+    private ILogger<DutyNotificationProvider> Logger { get; }
     private IDutyPlanService DutyPlanService { get; }
 
-    public DutyNotificationProvider(IDutyPlanService dutyPlanService)
+    public DutyNotificationProvider(ILogger<DutyNotificationProvider> logger, IDutyPlanService dutyPlanService)
     {
+        Logger = logger;
         DutyPlanService = dutyPlanService;
         
         DutyPlanService.OnDutyJobAutoNotificationEvent +=
@@ -55,7 +56,7 @@ public class DutyNotificationProvider : NotificationProviderBase
 
     public async Task TestUnwelcomedChainedNotification()
     {
-        Logger.Debug("触发「测试不受欢迎的链式提醒」");
+        Logger.LogDebug("触发「测试不受欢迎的链式提醒」");
         
         await ShowChainedNotificationsAsync([
             new NotificationRequest

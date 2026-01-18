@@ -6,9 +6,9 @@ using DutyIsland.Interface.Models.Notification;
 using DutyIsland.Interface.Services;
 using DutyIsland.Services.NotificationProviders;
 using DutyIsland.Shared;
-using DutyIsland.Shared.Logger;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace DutyIsland.Services;
 
@@ -17,7 +17,7 @@ public class DutyTaskBarMenuService
     private ITaskBarIconService TaskBarIconService { get; }
     private IDutyPlanService DutyPlanService { get; }
     private DutyNotificationProvider DutyNotificationProvider { get; }
-    private Logger<DutyTaskBarMenuService> Logger { get; } = new();
+    private ILogger<DutyTaskBarMenuService> Logger { get; }
 
     private NativeMenuItem MenuItem { get; } = new("提醒值日人员");
     private NativeMenuItem NotifyAllJobMenuItem { get; } = new("提醒所有值日人员");
@@ -25,8 +25,9 @@ public class DutyTaskBarMenuService
 
     private Dictionary<(Guid, string), int> _state = [];
 
-    public DutyTaskBarMenuService(ITaskBarIconService taskBarIconService, IDutyPlanService dutyPlanService)
+    public DutyTaskBarMenuService(ILogger<DutyTaskBarMenuService> logger, ITaskBarIconService taskBarIconService, IDutyPlanService dutyPlanService)
     {
+        Logger = logger;
         TaskBarIconService = taskBarIconService;
         DutyPlanService = dutyPlanService;
         DutyNotificationProvider = IAppHost.Host!.Services.GetServices<IHostedService>().OfType<DutyNotificationProvider>().First();
@@ -57,7 +58,7 @@ public class DutyTaskBarMenuService
         {
             if (!GlobalConstants.Config!.Data.EnableTaskBarNotificationMenu)
             {
-                Logger.Info("移除托盘菜单");
+                Logger.LogInformation("移除托盘菜单");
                 TaskBarIconService.MoreOptionsMenuItems.Remove(MenuItem);
             }
             
@@ -69,7 +70,7 @@ public class DutyTaskBarMenuService
             return;
         }
         
-        Logger.Info("添加托盘菜单");
+        Logger.LogInformation("添加托盘菜单");
         TaskBarIconService.MoreOptionsMenuItems.Add(MenuItem);
         UpdateMenuItem();
     }
@@ -86,7 +87,7 @@ public class DutyTaskBarMenuService
             goto final;
         }
         
-        Logger.Info("刷新托盘菜单内容...");
+        Logger.LogInformation("刷新托盘菜单内容...");
         SubMenu.Items.Clear();
 
         if (GlobalConstants.Config!.Data.EnableExperimentFeature)
@@ -100,7 +101,7 @@ public class DutyTaskBarMenuService
             var menuItem = new NativeMenuItem(kvp.Value.Name);
             menuItem.Click += (sender, args) =>
             {
-                Logger.Info($"触发菜单「{kvp.Value.Name}」点击");
+                Logger.LogInformation("触发菜单「{Name}」点击", kvp.Value.Name);
                 
                 var item = DutyPlanService.CurrentDutyPlan?.ComplexItems?.List.First(item => item.Key == kvp.Key);
                 if (item == null)
@@ -130,7 +131,7 @@ public class DutyTaskBarMenuService
 
     private async void NotifyAllJobMenuItem_OnClick(object? sender, EventArgs e)
     {
-        Logger.Info("「提醒所有值日人员」被点击");
+        Logger.LogInformation("「提醒所有值日人员」被点击");
         
         List<AutoNotificationInfo> infos = [];
         infos.AddRange(

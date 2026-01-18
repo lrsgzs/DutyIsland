@@ -10,7 +10,7 @@ using DutyIsland.Interface.Services;
 using DutyIsland.Interface.Shared;
 using DutyIsland.Models.AttachedSettings;
 using DutyIsland.Shared;
-using DutyIsland.Shared.Logger;
+using Microsoft.Extensions.Logging;
 
 namespace DutyIsland.Services;
 
@@ -35,12 +35,13 @@ public class DutyPlanService : ObservableRecipient, IDutyPlanService
     private ILessonsService LessonsService { get; }
     private IExactTimeService ExactTimeService { get; }
     private IIpcService IpcService { get; }
-    private Logger<DutyPlanService> Logger { get; } = new();
+    private ILogger<DutyPlanService> Logger { get; }
     private DutyPlan? _currentDutyPlan = null;
     private byte _ticks = 0;
     
-    public DutyPlanService(ILessonsService lessonService, IExactTimeService exactTimeService, IIpcService ipcService)
+    public DutyPlanService(ILogger<DutyPlanService> logger, ILessonsService lessonService, IExactTimeService exactTimeService, IIpcService ipcService)
     {
+        Logger = logger;
         LessonsService = lessonService;
         ExactTimeService = exactTimeService;
         IpcService = ipcService;
@@ -50,13 +51,13 @@ public class DutyPlanService : ObservableRecipient, IDutyPlanService
         
         WhenDutyPlanChanged += async (sender, args) =>
         {
-            Logger.Info($"值日表变化为「{CurrentDutyPlan?.Name}」");
+            Logger.LogInformation("值日表变化为「{Name}」", CurrentDutyPlan?.Name);
             await IpcService.BroadcastNotificationAsync(IpcRoutedNotifyIds.OnDutyPlanChanged);
         };
 
         OnDutyJobAutoNotificationEvent += async (sender, info) =>
         {
-            Logger.Info($"触发「{info.TemplateItem.Name}」自动提醒");
+            Logger.LogInformation("触发「{Name}」自动提醒", info.TemplateItem.Name);
             await IpcService.BroadcastNotificationAsync(IpcRoutedNotifyIds.OnDutyJobAutoNotificationEvent, info);
         };
         
@@ -118,8 +119,8 @@ public class DutyPlanService : ObservableRecipient, IDutyPlanService
             }
         }
         
-        Logger.Debug($"轮换 - {settings.LastChangedDate} ==> {currentDate}");
-        Logger.Debug($"轮换 - 差异为 {dayDelta} 天，应偏移 {changes} 次。");
+        Logger.LogDebug("轮换 - {Before} ==> {After}", settings.LastChangedDate, currentDate);
+        Logger.LogDebug("轮换 - 差异为 {DayDelta} 天，应偏移 {Changes} 次。", dayDelta, changes);
 
         if (changes == 0) return;
         

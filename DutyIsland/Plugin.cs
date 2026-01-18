@@ -1,8 +1,13 @@
+// ReSharper disable once RedundantUsingDirective
+using Avalonia.Threading;
+using System.Reflection;
 using ClassIsland.Core;
 using ClassIsland.Core.Abstractions;
 using ClassIsland.Core.Abstractions.Services;
+using ClassIsland.Core.Abstractions.Services.Logging;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Extensions.Registry;
+using ClassIsland.Core.Models.Logging;
 using ClassIsland.Shared;
 using DutyIsland.Controls.ActionSettingsControls;
 using DutyIsland.Controls.AttachedSettingsControls;
@@ -11,14 +16,16 @@ using DutyIsland.Controls.ComponentSettingsControls;
 using DutyIsland.Interface.Services;
 using DutyIsland.Services;
 using DutyIsland.Services.Automations.Actions;
+using DutyIsland.Services.Logging;
 using DutyIsland.Services.NotificationProviders;
 using DutyIsland.Shared;
-using DutyIsland.Shared.Logger;
 using DutyIsland.ViewModels;
 using DutyIsland.ViewModels.SettingPages;
 using DutyIsland.Views.SettingPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using SuperAutoIsland.Interface;
 using SuperAutoIsland.Interface.MetaData;
 using SuperAutoIsland.Interface.MetaData.ArgsType;
@@ -29,16 +36,82 @@ namespace DutyIsland;
 [PluginEntrance]
 public class Plugin : PluginBase
 {
-    private readonly Logger _logger = new("DutyIsland");
+    private ILogger<Plugin> _logger = GlobalConstants.LoggingFactory.CreateLogger<Plugin>();
+
+    // 获取 AppLoggerProvider 逻辑，暂时不用
+    // private static ILoggerProvider GetAppLoggerProvider(IServiceCollection services)
+    // {
+    //     var serviceDescriptorType = typeof(ServiceDescriptor);
+    //     var implementationInstanceField = 
+    //         serviceDescriptorType
+    //             .GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+    //             .First(field => field.Name == "_implementationInstance");
+    //     
+    //     IAppLogService? appLogService = null;
+    //     ILoggerProvider? appLoggerProvider = null;
+    //     
+    //     foreach (var service in services)
+    //     {
+    //         if (service.ServiceType.ToString().Contains("AppLogService"))
+    //         {
+    //             if (service.ImplementationInstance != null)
+    //             {
+    //                 appLogService = (IAppLogService)service.ImplementationInstance;
+    //                 continue;
+    //             }
+    //             
+    //             appLogService = (IAppLogService)Activator.CreateInstance(service.ServiceType)!;
+    //             implementationInstanceField.SetValue(service, appLogService);
+    //         }
+    //         else if (service.ServiceType == typeof(ILoggerProvider) && 
+    //                  (service.ImplementationType?.ToString().Contains("AppLoggerProvider") ?? false))
+    //         {
+    //             if (service.ImplementationInstance != null)
+    //             {
+    //                 appLoggerProvider = (ILoggerProvider)service.ImplementationInstance;
+    //                 continue;
+    //             }
+    //             
+    //             appLoggerProvider = (ILoggerProvider)Activator.CreateInstance(service.ImplementationType, appLogService!)!;
+    //             implementationInstanceField.SetValue(service, appLoggerProvider);
+    //         }
+    //     }
+    //
+    //     return appLoggerProvider!;
+    // }
     
     public override void Initialize(HostBuilderContext context, IServiceCollection services)
     {
-        _logger.Info("DutyIsland  Copyright (C) 2025  lrs2187/lrsgzs\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it under certain conditions.");
-        _logger.Info("欢迎使用 DutyIsland！");
-        _logger.Info($"版本号 {Info.Manifest.Version} 环境 {GlobalConstants.Information.Environment}");
-        _logger.Info("初期化中...");
+        // try
+        // {
+        //     var appLoggerProvider = GetAppLoggerProvider(services);
+        //     GlobalConstants.LoggingFactory = LoggerFactory.Create(builder =>
+        //     {
+        //         builder.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
+        //         builder.AddConsole(console => { console.FormatterName = "classisland"; });
+        //         builder.AddProvider(appLoggerProvider);
+        //         builder.SetMinimumLevel(LogLevel.Trace);
+        //     });
+        //     
+        //     _logger = GlobalConstants.LoggingFactory.CreateLogger<Plugin>();
+        // }
+        // catch (Exception e)
+        // {
+        //     GlobalConstants.LoggingFactory = LoggerFactory.Create(builder =>
+        //     {
+        //         builder.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
+        //         builder.AddConsole(console => { console.FormatterName = "classisland"; });
+        //         builder.SetMinimumLevel(LogLevel.Trace);
+        //     });
+        //     
+        //     _logger = GlobalConstants.LoggingFactory.CreateLogger<Plugin>();
+        //     _logger.LogError(e, "获取 AppLoggerProvider 时出现错误");
+        // }
         
-        _logger.Info("加载配置...");
+        _logger.LogInformation("欢迎使用 DutyIsland！初期化中...");
+        _logger.LogInformation("版本号 {Version} 环境 {Environment}", Info.Manifest.Version, GlobalConstants.Information.Environment);
+        
+        _logger.LogInformation("加载配置...");
         GlobalConstants.Information.PluginVersion = Info.Manifest.Version;
         GlobalConstants.Information.PluginFolder = Info.PluginFolderPath;
         GlobalConstants.Information.PluginConfigFolder = PluginConfigFolder;
@@ -46,51 +119,56 @@ public class Plugin : PluginBase
         GlobalConstants.Documents.Readme = File.ReadAllText(Path.Combine(Info.PluginFolderPath, "README.md"));
         
         #if DEBUG
-            _logger.Info("这是开发构建，遥测将会被关闭！");
+            _logger.LogInformation("这是开发构建，遥测将会被关闭！");
         #else
             if (GlobalConstants.Config.Data.EnableSentry)
             {
-                _logger.Info("遥测已启用! 感谢您的帮助~");
-                _logger.Info("初始化 Sentry...");
+                _logger.LogInformation("遥测已启用! 感谢您的帮助~");
+                _logger.LogInformation("初始化 Sentry...");
 
                 SentrySdk.Init(options =>
                 {
                     options.Dsn = "https://c7689eb24b7f331dcca5d44960a0b974@o4510452375552000.ingest.us.sentry.io/4510452383612928";
                     options.Release = GlobalConstants.Information.PluginVersion;
                     options.AutoSessionTracking = true;
+                    options.SendClientReports = false;
+                    options.IsGlobalModeEnabled = true;
                     options.Environment = GlobalConstants.Information.Environment;
+                    options.TracesSampleRate = 0.05;
                 });
 
                 Dispatcher.UIThread.UnhandledException += (_, e) =>
                 {
                     if (!IsDutyIslandException(e.Exception)) return;
                     
-                    _logger.Error("出错了吗...交给 Sentry 吧！");
+                    _logger.LogError("出错了吗...交给 Sentry 吧！");
                     SentrySdk.CaptureException(e.Exception);
                 };
             }
             else
             {
-                _logger.Info("没开遥测吗...可惜了。");
+                _logger.LogInformation("没开遥测吗...可惜了。");
             }
         #endif
         
-        _logger.Info("注册服务...");
+        _logger.LogInformation("注册服务...");
         services.AddSingleton<IDutyPlanService, DutyPlanService>();
         services.AddSingleton<DutyTaskBarMenuService>();
         
-        _logger.Info("注册视图模型...");
+        _logger.LogInformation("注册视图模型...");
         services.AddTransient<DutyViewModel>();
         services.AddTransient<ImportWorkersViewModel>();
         
-        _logger.Info("注册页面...");
+        _logger.LogInformation("注册 ClassIsland 元素...");
+        
+        // SettingsPage
         services.AddSettingsPageGroup("duty.settings", "\uE31E", "DutyIsland 值日表");
         services.AddSettingsPage<DutyMainSettingsPage>();
         services.AddSettingsPage<DutyProfileSettingsPage>();
         services.AddSettingsPage<DutyRollingSettingsPage>();
         services.AddSettingsPage<DebugSettingsPage>();
         
-        _logger.Info("注册 ClassIsland 元素...");
+        // Others
         services.AddAttachedSettingsControl<DutyPlanAttachedSettingsControl>();
         services.AddNotificationProvider<DutyNotificationProvider>();
         services.AddComponent<DutyComponent, DutyComponentSettingsControl>();
@@ -104,15 +182,20 @@ public class Plugin : PluginBase
         // 应用启动
         AppBase.Current.AppStarted += (_, _) =>
         {
-            _logger.Info("启动 DutyPlanService...");
+            _logger = IAppHost.GetService<ILogger<Plugin>>();
+            
+            _logger.LogInformation("DutyIsland 晚加载...");
+            GlobalConstants.Config.Logger = IAppHost.GetService<ILogger<ConfigHandler>>();
+            
+            _logger.LogInformation("启动服务...");
             var dutyPlanService = IAppHost.GetService<IDutyPlanService>();
             IAppHost.GetService<DutyTaskBarMenuService>();
 
-            if (IsPluginInstalled("lrs2187.sai", new Version(0, 1, 2, 4)))
+            if (IsPluginInstalled("lrs2187.sai", new Version("0.1.2.4")))
             {
                 var saiServerService = IAppHost.GetService<ISaiServer>();
 
-                _logger.Info("注册 SuperAutoIsland 元素...");
+                _logger.LogInformation("注册 SuperAutoIsland 元素...");
                 saiServerService.RegisterBlocks("DutyIsland", new RegisterData
                 {
                     Actions =
@@ -211,11 +294,12 @@ public class Plugin : PluginBase
         // 应用退出
         AppBase.Current.AppStopping += (_,_) =>
         {
-            _logger.Info("兜底：保存全部配置...");
+            _logger.LogInformation("兜底：保存全部配置...");
             GlobalConstants.Config.Save();
         };
     }
 
+    // ReSharper disable once UnusedMember.Local
     private static bool IsDutyIslandException(Exception e)
     {
         if (e.StackTrace?.Contains("dutyisland", StringComparison.CurrentCultureIgnoreCase) ?? false)

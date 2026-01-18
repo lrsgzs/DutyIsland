@@ -2,7 +2,7 @@
 using ClassIsland.Shared.Helpers;
 using DutyIsland.Models;
 using DutyIsland.Shared;
-using DutyIsland.Shared.Logger;
+using Microsoft.Extensions.Logging;
 
 namespace DutyIsland.Services;
 
@@ -10,7 +10,7 @@ public class ConfigHandler
 {
     public string ConfigPath = Path.Combine(GlobalConstants.Information.PluginConfigFolder, "Config.json");
     public Settings Data { get; private set; }
-    private readonly Logger<ConfigHandler> _logger = new();
+    public ILogger<ConfigHandler> Logger = GlobalConstants.LoggingFactory!.CreateLogger<ConfigHandler>();
 
     /// <summary>
     /// 初始化数据对象并订阅属性更改事件。
@@ -45,8 +45,7 @@ public class ConfigHandler
         }
         catch (Exception ex)
         {
-            _logger.Error("加载配置文件失败");
-            _logger.FormatException(ex);
+            Logger.LogError(ex, "加载配置文件失败");
             File.Delete(ConfigPath);
             Save();
         }
@@ -67,15 +66,14 @@ public class ConfigHandler
     /// </summary>
     public void Save()
     {
-        _logger.Info("保存配置中...");
+        Logger.LogInformation("保存配置中...");
         try
         {
             ConfigureFileHelper.SaveConfig(ConfigPath,Data);
         }
         catch (Exception ex)
         {
-            _logger.Error("写入配置文件失败");
-            _logger.FormatException(ex);
+            Logger.LogError(ex, "写入配置文件失败");
             throw;
         }
     }

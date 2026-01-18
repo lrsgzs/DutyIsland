@@ -1,5 +1,8 @@
 ﻿using System.Reflection;
 using DutyIsland.Services;
+using DutyIsland.Services.Logging;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace DutyIsland.Shared;
 
@@ -9,7 +12,14 @@ namespace DutyIsland.Shared;
 public static class GlobalConstants
 {
     public static ConfigHandler? Config { get; set; }
-
+    
+    public static ILoggerFactory LoggingFactory { get; } = LoggerFactory.Create(builder =>
+    {
+        builder.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
+        builder.AddConsole(console => { console.FormatterName = "classisland"; });
+        builder.SetMinimumLevel(LogLevel.Trace);
+    });
+    
     public static class Information
     {
         public static string PluginFolder { get; set; } = string.Empty;
