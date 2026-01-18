@@ -42,7 +42,8 @@ jobs:
         with:
           name: 'DutyIsland'
           path: |
-            ./out/*.cipx
+            ./DutyIsland/cipx/*.cipx
+            ./DutyIsland/cipx/*.md
 
   publish:
     runs-on: windows-2022
@@ -66,7 +67,7 @@ jobs:
       - name: Upload APP to release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "./out/*.zip,./out/*.appx,./out/*.deb,./out/*.pkg"
+          artifacts: "./out_artifacts/*.cipx,./out_artifacts/*.md"
           draft: true
           bodyFile: ./changelog/${{ github.event.inputs.release_tag }}.md
           token: ${{ secrets.GITHUB_TOKEN }}
