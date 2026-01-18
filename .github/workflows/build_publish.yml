@@ -8,10 +8,6 @@ on:
         description: '发布标签'
         required: true
         type: string
-      is_test_mode:
-        description: '是否处于测试发布模式'
-        required: false
-        type: boolean
 
 jobs:
   build:
