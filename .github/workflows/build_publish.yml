@@ -67,6 +67,9 @@ jobs:
         with:
           path: ./out_artifacts
 
+      - name: Combine Artifacts
+        run: pwsh -ep bypass ./tools/release-gen/combine-artifacts.ps1
+
       - name: Generate Release Note
         env:
           tagName: ${{ github.event.inputs.release_tag }}
