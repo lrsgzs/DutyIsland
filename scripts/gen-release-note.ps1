@@ -20,7 +20,7 @@ Write-Host "MD5 Summary:" -ForegroundColor Gray
 Write-Host $md5Summary -ForegroundColor Gray
 Write-Host "----------" -ForegroundColor Gray
 
-$changelog = Get-Content "./changelog/${$env:tagName}.md"
+$changelog = Get-Content "./changelog/${env:tagName}.md"
 $fullContent = $changelog + $md5Summary
 
 Write-Output $fullContent > "release-note.md"
