@@ -13,7 +13,7 @@ namespace DutyIsland.Views.SettingPages;
 
 [FullWidthPage]
 [HidePageTitle]
-[Group("duty.settings")]
+// [Group("duty.settings")]
 [SettingsPageInfo("duty.settings.rolling","轮换","\uE356","\uE355")]
 public partial class DutyRollingSettingsPage : SettingsPageBase
 {

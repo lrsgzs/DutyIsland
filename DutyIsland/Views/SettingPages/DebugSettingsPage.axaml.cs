@@ -18,7 +18,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace DutyIsland.Views.SettingPages;
 
-[SettingsPageInfo("duty.settings.debug","DutyIsland 调试","\uE2C2","\uE2C1", SettingsPageCategory.Debug)]
+[SettingsPageInfo("duty.debug","DutyIsland 调试","\uE2C2","\uE2C1", SettingsPageCategory.Debug)]
 public partial class DebugSettingsPage : SettingsPageBase
 {
     private ILessonsService LessonsService { get; } = IAppHost.GetService<ILessonsService>();

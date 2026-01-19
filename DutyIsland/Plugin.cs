@@ -1,13 +1,11 @@
 // ReSharper disable once RedundantUsingDirective
 using Avalonia.Threading;
-using System.Reflection;
 using ClassIsland.Core;
 using ClassIsland.Core.Abstractions;
 using ClassIsland.Core.Abstractions.Services;
-using ClassIsland.Core.Abstractions.Services.Logging;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Extensions.Registry;
-using ClassIsland.Core.Models.Logging;
+using ClassIsland.Core.Services.Registry;
 using ClassIsland.Shared;
 using DutyIsland.Controls.ActionSettingsControls;
 using DutyIsland.Controls.AttachedSettingsControls;
@@ -16,7 +14,6 @@ using DutyIsland.Controls.ComponentSettingsControls;
 using DutyIsland.Interface.Services;
 using DutyIsland.Services;
 using DutyIsland.Services.Automations.Actions;
-using DutyIsland.Services.Logging;
 using DutyIsland.Services.NotificationProviders;
 using DutyIsland.Shared;
 using DutyIsland.ViewModels;
@@ -25,7 +22,6 @@ using DutyIsland.Views.SettingPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using SuperAutoIsland.Interface;
 using SuperAutoIsland.Interface.MetaData;
 using SuperAutoIsland.Interface.MetaData.ArgsType;
@@ -37,54 +33,13 @@ namespace DutyIsland;
 public class Plugin : PluginBase
 {
     private ILogger<Plugin> _logger = GlobalConstants.LoggingFactory.CreateLogger<Plugin>();
-
-    // 获取 AppLoggerProvider 逻辑，暂时不用
-    // private static ILoggerProvider GetAppLoggerProvider(IServiceCollection services)
-    // {
-    //     var serviceDescriptorType = typeof(ServiceDescriptor);
-    //     var implementationInstanceField = 
-    //         serviceDescriptorType
-    //             .GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
-    //             .First(field => field.Name == "_implementationInstance");
-    //     
-    //     IAppLogService? appLogService = null;
-    //     ILoggerProvider? appLoggerProvider = null;
-    //     
-    //     foreach (var service in services)
-    //     {
-    //         if (service.ServiceType.ToString().Contains("AppLogService"))
-    //         {
-    //             if (service.ImplementationInstance != null)
-    //             {
-    //                 appLogService = (IAppLogService)service.ImplementationInstance;
-    //                 continue;
-    //             }
-    //             
-    //             appLogService = (IAppLogService)Activator.CreateInstance(service.ServiceType)!;
-    //             implementationInstanceField.SetValue(service, appLogService);
-    //         }
-    //         else if (service.ServiceType == typeof(ILoggerProvider) && 
-    //                  (service.ImplementationType?.ToString().Contains("AppLoggerProvider") ?? false))
-    //         {
-    //             if (service.ImplementationInstance != null)
-    //             {
-    //                 appLoggerProvider = (ILoggerProvider)service.ImplementationInstance;
-    //                 continue;
-    //             }
-    //             
-    //             appLoggerProvider = (ILoggerProvider)Activator.CreateInstance(service.ImplementationType, appLogService!)!;
-    //             implementationInstanceField.SetValue(service, appLoggerProvider);
-    //         }
-    //     }
-    //
-    //     return appLoggerProvider!;
-    // }
     
     public override void Initialize(HostBuilderContext context, IServiceCollection services)
     {
+        // 动态加载 AppLoggerProvider 以实现在主机启动前记录日志
         // try
         // {
-        //     var appLoggerProvider = GetAppLoggerProvider(services);
+        //     var appLoggerProvider = InjectServices.GetAppLoggerProvider(services);
         //     GlobalConstants.LoggingFactory = LoggerFactory.Create(builder =>
         //     {
         //         builder.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
@@ -162,11 +117,31 @@ public class Plugin : PluginBase
         _logger.LogInformation("注册 ClassIsland 元素...");
         
         // SettingsPage
-        services.AddSettingsPageGroup("duty.settings", "\uE31E", "DutyIsland 值日表");
+        // services.AddSettingsPageGroup("duty.settings", "\uE31E", "DutyIsland 值日表");
         services.AddSettingsPage<DutyMainSettingsPage>();
         services.AddSettingsPage<DutyProfileSettingsPage>();
         services.AddSettingsPage<DutyRollingSettingsPage>();
         services.AddSettingsPage<DebugSettingsPage>();
+        
+        // 动态注入，实现在低 PluginSdk 上修改高版本功能
+        if (InjectServices.TryGetAddSettingsPageGroupMethod(out var addSettingsPageGroupMethod))
+        {
+            addSettingsPageGroupMethod.Invoke(typeof(SettingsWindowRegistryExtensions), [services, "duty.settings", "\uE31E", "DutyIsland 值日表"]);
+            
+            var groupIdProperty = InjectServices.GetSettingsPageInfoGroupIdProperty();
+            foreach (var info in SettingsWindowRegistryService.Registered.Where(info => info.Id.StartsWith("duty.settings")))
+            {
+                groupIdProperty?.SetValue(info, "duty.settings");
+            }
+        }
+        else
+        {
+            var nameField = InjectServices.GetSettingsPageInfoNameField();
+            foreach (var info in SettingsWindowRegistryService.Registered.Where(info => info.Id.StartsWith("duty.settings")))
+            {
+                nameField.SetValue(info, "DutyIsland" + (string)nameField.GetValue(info)!);
+            }
+        }
         
         // Others
         services.AddAttachedSettingsControl<DutyPlanAttachedSettingsControl>();

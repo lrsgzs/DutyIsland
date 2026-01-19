@@ -20,7 +20,7 @@ namespace DutyIsland.Views.SettingPages;
 
 [FullWidthPage]
 [HidePageTitle]
-[Group("duty.settings")]
+// [Group("duty.settings")]
 [SettingsPageInfo("duty.settings.profile","档案","\uE324","\uE323")]
 public partial class DutyProfileSettingsPage : SettingsPageBase
 {
