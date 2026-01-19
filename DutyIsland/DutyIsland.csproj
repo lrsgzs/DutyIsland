@@ -1,12 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
         <TargetFramework>net8.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <EnableDynamicLoading>True</EnableDynamicLoading>
         <RootNamespace>DutyIsland</RootNamespace>
-		<Version>0.2.2.0</Version>
+		<Version>0.2.3.0</Version>
 	</PropertyGroup>
     
 	<ItemGroup>
