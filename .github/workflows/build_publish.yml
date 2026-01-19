@@ -30,16 +30,24 @@ jobs:
           dotnet-version: 8.0.x
       
       - name: Build
-        run: 'pwsh -ep bypass ./DutyIsland/Scripts/build.ps1'
+        run: 'pwsh -ep bypass ./scripts/build.ps1'
         
       - name: Upload Plugin to Artifacts
         id: upload-unsigned-artifact
         uses: actions/upload-artifact@v4
         with:
-          name: 'DutyIsland'
+          name: 'DutyIsland_Plugin'
           path: |
             ./DutyIsland/cipx/*.cipx
             ./DutyIsland/cipx/*.md
+
+      - name: Upload NuPkg to Artifacts
+        id: upload-unsigned-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'DutyIsland_NuPkg'
+          path: |
+            ./**/bin/Release/*.nupkg
 
   publish:
     runs-on: windows-2022
@@ -60,11 +68,16 @@ jobs:
         with:
           path: ./out_artifacts
 
-      - name: Upload APP to release
+      - name: Generate Release Note
+        env:
+          tagName: ${{ github.event.inputs.release_tag }}
+        run: 'pwsh -ep bypass ./scripts/gen-release-note.ps1'
+
+      - name: Upload Plugin to release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "./out_artifacts/*.cipx,./out_artifacts/*.md"
+          artifacts: "./out/*.cipx,./out/*.md,./out/*.nupkg"
           draft: true
-          bodyFile: ./changelog/${{ github.event.inputs.release_tag }}.md
+          bodyFile: ./release-note.md
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.event_name != 'workflow_dispatch' && github.ref || github.event.inputs.release_tag }}
