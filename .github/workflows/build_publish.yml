@@ -78,7 +78,7 @@ jobs:
       - name: Upload Plugin to release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "./out/*.cipx,./out/*.md,./out/*.nupkg"
+          artifacts: "./out/*.cipx,./out/*.md"
           draft: true
           bodyFile: ./release-note.md
           token: ${{ secrets.GITHUB_TOKEN }}
