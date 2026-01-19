@@ -16,11 +16,10 @@ $hashes.Add("DutyIsland.cipx", $hashString)
 $json = ConvertTo-Json $hashes -Compress
 
 $md5Summary +=  "`n<!-- CLASSISLAND_PKG_MD5 ${json} -->"
-Write-Host "MD5 Summary:" -ForegroundColor Gray
-Write-Host $md5Summary -ForegroundColor Gray
-Write-Host "----------" -ForegroundColor Gray
-
 $changelog = Get-Content "./changelog/${env:tagName}.md"
 $fullContent = $changelog + $md5Summary
 
 Write-Output $fullContent > "release-note.md"
+
+Write-Host "Release Note" -ForegroundColor Gray
+Write-Host $fullContent -ForegroundColor Gray

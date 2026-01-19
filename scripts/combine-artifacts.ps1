@@ -4,11 +4,11 @@ if ($(Test-Path ./out) -eq $false) {
     mkdir out
 }
 
-Write-Host "Coping"
+Write-Host "Coping" -ForegroundColor Gray
 foreach ($artifact in $artifacts) {
     Get-ChildItem -Path ./out_artifacts/$($artifact.Name)
     Copy-Item ./out_artifacts/$($artifact.Name)/* -Destination ./out/ -Recurse -Force
 }
 
-Write-Host "Copy Result"
+Write-Host "Copy Result" -ForegroundColor Gray
 Get-ChildItem -Path ./out/
