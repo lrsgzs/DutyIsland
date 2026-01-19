@@ -42,7 +42,6 @@ jobs:
             ./DutyIsland/cipx/*.md
 
       - name: Upload NuPkg to Artifacts
-        id: upload-unsigned-artifact
         uses: actions/upload-artifact@v4
         with:
           name: 'DutyIsland_NuPkg'
