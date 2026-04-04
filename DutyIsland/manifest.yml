@@ -14,4 +14,4 @@ dependencies:
   - id: lrs2187.sai
     isRequired: false
   - id: lrs2187.LibPinyin
-    isRequired: true
+    isRequired: false
