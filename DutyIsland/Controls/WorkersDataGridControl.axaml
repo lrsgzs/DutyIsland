@@ -5,9 +5,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:DutyIsland.Controls"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
+             xmlns:fa="using:FluentAvalonia.UI.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              d:DataContext="{d:DesignInstance local:WorkersDataGridControl}">
     <StackPanel Spacing="4" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:WorkersDataGridControl}}">
+        <fa:InfoBar Severity="Warning" Message="未安装拼音支持库 LibPinyin，使用受限。"
+                    IsOpen="True" IsClosable="False" IsVisible="{Binding !IsPinyinAvailable}">
+            <fa:InfoBar.ActionButton>
+                <Button Classes="accent" Click="InstallLibPinyinButton_OnClick">立即安装</Button>
+            </fa:InfoBar.ActionButton>
+        </fa:InfoBar>
+        
         <DataGrid AutoGenerateColumns="False"
                   CanUserSortColumns="False"
                   IsReadOnly="False"
