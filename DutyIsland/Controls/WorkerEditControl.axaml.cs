@@ -2,8 +2,10 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using ClassIsland.Shared;
 using DutyIsland.Interface.Models.Worker;
 using DutyIsland.Shared;
+using LibPinyin4CI.Shared.Services;
 
 namespace DutyIsland.Controls;
 
@@ -33,12 +35,20 @@ public partial class WorkerEditControl : UserControl
         {
             return false;
         }
+
+        if (!Plugin.IsPinyinAvailable)
+        {
+            return worker.Name.Contains(search ?? "", StringComparison.CurrentCultureIgnoreCase)
+                   || worker.Id.Contains(search ?? "", StringComparison.CurrentCultureIgnoreCase);
+        }
+        
+        var service = IAppHost.GetService<IPinyinService>();
         
         return worker.Name.Contains(search ?? "", StringComparison.CurrentCultureIgnoreCase)
                || worker.Id.Contains(search ?? "", StringComparison.CurrentCultureIgnoreCase)
-               || PinyinHelper.GetFullPinyinList(worker.Name)
+               || service.GetFullPinyinList(worker.Name)
                    .Any(pinyin => pinyin.StartsWith(search ?? "", StringComparison.CurrentCultureIgnoreCase))
-               || PinyinHelper.GetFirstPinyinList(worker.Name)
+               || service.GetFirstPinyinList(worker.Name)
                    .Any(pinyin => pinyin.StartsWith(search ?? "", StringComparison.CurrentCultureIgnoreCase));
     }
 }

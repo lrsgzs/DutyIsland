@@ -32,6 +32,7 @@ namespace DutyIsland;
 [PluginEntrance]
 public class Plugin : PluginBase
 {
+    public static bool IsPinyinAvailable = false;
     private ILogger<Plugin> _logger = GlobalConstants.LoggingFactory.CreateLogger<Plugin>();
     
     public override void Initialize(HostBuilderContext context, IServiceCollection services)
@@ -264,6 +265,8 @@ public class Plugin : PluginBase
                     Rules = []
                 });
             }
+
+            IsPinyinAvailable = IsPluginInstalled("lrs2187.LibPinyin");
         };
         
         // 应用退出

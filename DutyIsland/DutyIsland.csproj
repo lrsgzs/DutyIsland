@@ -12,7 +12,7 @@
 		<PackageReference Include="ClassIsland.PluginSdk" Version="2.0.0.2">
 			<ExcludeAssets>runtime; native</ExcludeAssets>
 		</PackageReference>
-		<PackageReference Include="DotNetCommon.PinYin" Version="8.0.0" />
+		<PackageReference Include="LibPinyin4CI.Shared" Version="0.1.0" />
 		<PackageReference Include="Pastel" Version="4.2.0" />
 		<PackageReference Include="Sentry" Version="6.1.0-alpha.1" />
 		<PackageReference Include="SuperAutoIsland.Interface" Version="0.1.2.4" />
