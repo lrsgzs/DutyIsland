@@ -10,7 +10,8 @@
                      xmlns:local="clr-namespace:DutyIsland.Views.SettingPages"
                      x:DataType="local:DutyMainSettingsPage"
                      d:DataContext="{d:DesignInstance local:DutyMainSettingsPage}"
-                     mc:Ignorable="d">
+                     mc:Ignorable="d"
+                     x:CompileBindings="False">
     <Grid RowDefinitions="*, Auto">
         <TabControl Grid.Row="0">
             <TabItem IsEnabled="False">
@@ -38,17 +39,17 @@
                 
                 <ScrollViewer>
                     <StackPanel Classes="settings-container animated-intro" Spacing="8">
-                        <fa:InfoBar IsOpen="True" IsVisible="True" Severity="Informational">
-                            <fa:InfoBar.Message>
+                        <fa:FAInfoBar IsOpen="True" IsVisible="True" Severity="Informational">
+                            <fa:FAInfoBar.Message>
                                 欢迎使用 DutyIsland！找不到启用值日表的地方？看看课表的附加设置吧。
-                            </fa:InfoBar.Message>
-                        </fa:InfoBar>
+                            </fa:FAInfoBar.Message>
+                        </fa:FAInfoBar>
                         
-                        <fa:InfoBar IsOpen="True" IsVisible="True" Severity="Success">
-                            <fa:InfoBar.Message>
+                        <fa:FAInfoBar IsOpen="True" IsVisible="True" Severity="Success">
+                            <fa:FAInfoBar.Message>
                                 自动提醒功能已推出！该功能类似于自动化工作流 cron + 提醒值日人员，但更方便。
-                            </fa:InfoBar.Message>
-                        </fa:InfoBar>
+                            </fa:FAInfoBar.Message>
+                        </fa:FAInfoBar>
                         
                         <mdxaml:MarkdownScrollViewer
                             Engine="{x:Static helpers:MarkdownConvertHelper.Engine}"
@@ -74,33 +75,33 @@
                 
                 <ScrollViewer>
                     <StackPanel Classes="settings-container animated-intro">
-                        <fa:SettingsExpander Header="DutyIsland" IsExpanded="True">
-                            <fa:SettingsExpander.IconSource>
-                                <fa:ImageIconSource Source="/Assets/PluginIcon.png"/>
-                            </fa:SettingsExpander.IconSource>
+                        <fa:FASettingsExpander Header="DutyIsland" IsExpanded="True">
+                            <fa:FASettingsExpander.IconSource>
+                                <fa:FAImageIconSource Source="/Assets/PluginIcon.png"/>
+                            </fa:FASettingsExpander.IconSource>
                             
-                            <fa:SettingsExpander.Footer>
+                            <fa:FASettingsExpander.Footer>
                                 <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
                                     <Run Text="{Binding PluginVersion}"/>
                                     <Run Text="(Codename Paimon)"/>
                                 </TextBlock>
-                            </fa:SettingsExpander.Footer>
+                            </fa:FASettingsExpander.Footer>
                             
-                            <fa:SettingsExpanderItem Description="本项目基于 GNU General Public License v3.0 获得许可。">
-                                <fa:SettingsExpanderItem.Footer>
+                            <fa:FASettingsExpanderItem Description="本项目基于 GNU General Public License v3.0 获得许可。">
+                                <fa:FASettingsExpanderItem.Footer>
                                     <WrapPanel Classes="animated-resize" ItemSpacing="4">
                                         <HyperlinkButton Click="SettingsExpanderItemShowOssLicense_OnClick">
                                             <TextBlock Text="开放源代码许可"/>
                                         </HyperlinkButton>
                                     </WrapPanel>
-                                </fa:SettingsExpanderItem.Footer>
+                                </fa:FASettingsExpanderItem.Footer>
                                 
                                 <TextBlock Background="Transparent" PointerPressed="UIElementAppInfo_OnMouseDown"
                                            Text="Copyright (c) 2025  lrs2187/lrsgzs"/>
-                            </fa:SettingsExpanderItem>
+                            </fa:FASettingsExpanderItem>
                             
-                            <fa:SettingsExpanderItem Content="常用链接">
-                                <fa:SettingsExpanderItem.Footer>
+                            <fa:FASettingsExpanderItem Content="常用链接">
+                                <fa:FASettingsExpanderItem.Footer>
                                     <WrapPanel Classes="animated-resize" ItemSpacing="4">
                                         <HyperlinkButton Click="UriNavigationCommands_OnClick"
                                                          CommandParameter="https://github.com/lrsgzs/DutyIsland">
@@ -112,28 +113,28 @@
                                             <TextBlock Text="加入插件交流 QQ 群"/>
                                         </HyperlinkButton>
                                     </WrapPanel>
-                                </fa:SettingsExpanderItem.Footer>
-                            </fa:SettingsExpanderItem>
-                        </fa:SettingsExpander>
+                                </fa:FASettingsExpanderItem.Footer>
+                            </fa:FASettingsExpanderItem>
+                        </fa:FASettingsExpander>
                         
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE31C;}"
+                        <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xE31C;}"
                                              Header="启用从托盘提醒?" Description="控制从托盘提醒的启用状态。">
-                            <fa:SettingsExpander.Footer>
+                            <fa:FASettingsExpander.Footer>
                                 <ToggleSwitch IsChecked="{Binding ViewModel.Settings.EnableTaskBarNotificationMenu}"/>
-                            </fa:SettingsExpander.Footer>
-                        </fa:SettingsExpander>
+                            </fa:FASettingsExpander.Footer>
+                        </fa:FASettingsExpander>
                         
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE31C;}"
+                        <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xE31C;}"
                                              Header="启用自动提醒?" Description="控制全局的自动提醒启用状态。">
-                            <fa:SettingsExpander.Footer>
+                            <fa:FASettingsExpander.Footer>
                                 <ToggleSwitch IsChecked="{Binding ViewModel.Settings.GlobalEnableNotification}"/>
-                            </fa:SettingsExpander.Footer>
-                        </fa:SettingsExpander>
+                            </fa:FASettingsExpander.Footer>
+                        </fa:FASettingsExpander>
                         
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE4C4;}"
+                        <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xE4C4;}"
                                              IsVisible="{Binding ViewModel.Settings.GlobalEnableNotification}"
                                              Header="自动提醒时间获取来源" Description="控制全局的自动提醒时间获取来源。">
-                            <fa:SettingsExpander.Footer>
+                            <fa:FASettingsExpander.Footer>
                                 <Grid>
                                     <TabStrip Classes="compact toggle" Theme="{StaticResource TabStripStyle}"
                                               SelectedIndex="{Binding ViewModel.Settings.TimeSource}">
@@ -145,38 +146,22 @@
                                         </TabStripItem>
                                     </TabStrip>
                                 </Grid>
-                            </fa:SettingsExpander.Footer>
-                        </fa:SettingsExpander>
+                            </fa:FASettingsExpander.Footer>
+                        </fa:FASettingsExpander>
                         
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE13B;}"
-                                             Header="启用点名支持?" Description="控制是否启动内置的点名功能（计划移植自 IslandCaller），还未开始开发。">
-                            <fa:SettingsExpander.Footer>
-                                <ToggleSwitch IsEnabled="False" />
-                            </fa:SettingsExpander.Footer>
-                            
-                            <fa:SettingsExpanderItem Content="欢迎使用 SecRandom v2" Description="SecRandom 是一个易用的点名/抽奖软件，专为教育场景设计，让课堂点名更高效透明。">
-                                <fa:SettingsExpanderItem.Footer>
-                                    <HyperlinkButton Click="UriNavigationCommands_OnClick"
-                                                     CommandParameter="https://github.com/SECTL/SecRandom/releases/latest">
-                                        <TextBlock Text="立即下载"/>
-                                    </HyperlinkButton>
-                                </fa:SettingsExpanderItem.Footer>
-                            </fa:SettingsExpanderItem>
-                        </fa:SettingsExpander>
-                        
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE4E8;}"
+                        <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xE4E8;}"
                                              Header="启用遥测?" Description="控制 DutyIsland 的 Sentry 遥测启用状态。本插件通过 SentrySDK 来收集本应用中的使用情况与错误信息，以改进本插件。您的信息会匿名上传，不会包含您的个人信息。您可以自行启用或禁用此功能。">
-                            <fa:SettingsExpander.Footer>
+                            <fa:FASettingsExpander.Footer>
                                 <ToggleSwitch IsChecked="{Binding ViewModel.Settings.EnableSentry}"/>
-                            </fa:SettingsExpander.Footer>
-                        </fa:SettingsExpander>
+                            </fa:FASettingsExpander.Footer>
+                        </fa:FASettingsExpander>
                         
-                        <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE1E9;}"
+                        <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xE1E9;}"
                                              Header="启用试验性功能?" Description="控制 DutyIsland 的实验性功能启用状态，这些功能不一定稳定。目前有如下实验性功能：“一键”提醒所有值日生。">
-                            <fa:SettingsExpander.Footer>
+                            <fa:FASettingsExpander.Footer>
                                 <ToggleSwitch IsChecked="{Binding ViewModel.Settings.EnableExperimentFeature}"/>
-                            </fa:SettingsExpander.Footer>
-                        </fa:SettingsExpander>
+                            </fa:FASettingsExpander.Footer>
+                        </fa:FASettingsExpander>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -184,9 +169,9 @@
         
         <Border Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                 Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
-            <fa:CommandBar HorizontalAlignment="Right" DefaultLabelPosition="Right">
-                <fa:CommandBar.PrimaryCommands>
-                    <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEEB5;}" Label="保存"
+            <fa:FACommandBar HorizontalAlignment="Right" DefaultLabelPosition="Right">
+                <fa:FACommandBar.PrimaryCommands>
+                    <fa:FACommandBarButton IconSource="{ci:FluentIconSource &#xEEB5;}" Label="保存"
                                          ToolTip.Tip="保存当前档案文件。"
                                          Click="ButtonSave_OnClick"/>
                     <!-- <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEE2F;}" -->
@@ -194,8 +179,8 @@
                     <!--                      Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}" -->
                     <!--                      CommandParameter="https://docs.classisland.tech/app/profile/" -->
                     <!--                      ToolTip.Tip="查看值日表编辑器帮助"/> -->
-                </fa:CommandBar.PrimaryCommands>
-            </fa:CommandBar>
+                </fa:FACommandBar.PrimaryCommands>
+            </fa:FACommandBar>
         </Border>
     </Grid>
 </ci:SettingsPageBase>

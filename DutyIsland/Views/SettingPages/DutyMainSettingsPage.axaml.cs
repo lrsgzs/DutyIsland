@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
@@ -55,7 +56,7 @@ public partial class DutyMainSettingsPage : SettingsPageBase
     private async void SettingsExpanderItemShowOssLicense_OnClick(object? sender, RoutedEventArgs e)
     {
         var license = await File.ReadAllTextAsync(Path.Combine(GlobalConstants.Information.PluginFolder, "LICENSE"));
-        await new ContentDialog()
+        await new FAContentDialog()
         {
             Title = "开放源代码许可",
             Content = new TextBox
@@ -64,7 +65,7 @@ public partial class DutyMainSettingsPage : SettingsPageBase
                 IsReadOnly = true
             },
             PrimaryButtonText = "关闭",
-            DefaultButton = ContentDialogButton.Primary
+            DefaultButton = FAContentDialogButton.Primary
         }.ShowAsync();
     }
     
@@ -81,7 +82,7 @@ public partial class DutyMainSettingsPage : SettingsPageBase
     {
         var url = e.Source switch
         {
-            SettingsExpanderItem s => s.CommandParameter?.ToString(),
+            FASettingsExpanderItem s => s.CommandParameter?.ToString(),
             Button s => s.CommandParameter?.ToString(),
             _ => "classisland://app/test/"
         };

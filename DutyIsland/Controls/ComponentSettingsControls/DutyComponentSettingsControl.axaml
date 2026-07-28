@@ -13,9 +13,9 @@
     <ScrollViewer>
         <StackPanel Classes="settings-container animated-intro" Margin="0"
                     DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutyComponentSettingsControl}}">
-            <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE933;}"
+            <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xE933;}"
                                  Header="任务" Description="要显示的任务执行者。">
-                <fa:SettingsExpander.Footer>
+                <fa:FASettingsExpander.Footer>
                     <ComboBox ItemsSource="{Binding DutyPlanService.CurrentDutyPlan.ComplexItems.List}"
                               SelectedValue="{Binding Settings.JobGuid}"
                               SelectedValueBinding="{Binding Key}">
@@ -26,11 +26,11 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
             
-            <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xE777;}" Header="格式化文本" Description="用于显示的格式化文本。">
-                <fa:SettingsExpander.Footer>
+            <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xE777;}" Header="格式化文本" Description="用于显示的格式化文本。">
+                <fa:FASettingsExpander.Footer>
                     <Grid ColumnDefinitions="*, Auto">
                         <TextBox Grid.Column="0" MinWidth="128" Text="{Binding Settings.FormatString}" />
                 
@@ -52,26 +52,26 @@
                             </Button.Flyout>
                         </Button>
                     </Grid>
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
             
-            <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xEDC7;}" Header="连接符" Description="两个执行者之间的连接符。">
-                <fa:SettingsExpander.Footer>
+            <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xEDC7;}" Header="连接符" Description="两个执行者之间的连接符。">
+                <fa:FASettingsExpander.Footer>
                     <TextBox MinWidth="128"
                              Text="{Binding Settings.ConnectorString}" />
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
             
-            <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xECF3;}"
-                                 Header="回滚?" Description="在找不到目标任务 Guid 时自动回滚。">
-                <fa:SettingsExpander.Footer>
+            <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xECF3;}"
+                                   Header="回滚?" Description="在找不到目标任务 Guid 时自动回滚。">
+                <fa:FASettingsExpander.Footer>
                     <ToggleSwitch IsChecked="{Binding Settings.FallbackSettings.Enabled, Mode=TwoWay}" />
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
                 
-            <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xECCF;}" Header="名称回滚" Description="回滚为右侧任务名称"
-                                 IsVisible="{Binding Settings.FallbackSettings.Enabled}">
-                <fa:SettingsExpander.Footer>
+            <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xECCF;}" Header="名称回滚" Description="回滚为右侧任务名称"
+                                   IsVisible="{Binding Settings.FallbackSettings.Enabled}">
+                <fa:FASettingsExpander.Footer>
                     <StackPanel Orientation="Horizontal">
                         <TextBox MinWidth="128"
                                  Text="{Binding Settings.FallbackSettings.JobName}" />
@@ -81,15 +81,15 @@
                                                Click="UseCurrentValueButton_OnClick"
                                                ToolTip.Tip="填入当前值" />
                     </StackPanel>
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
                 
-            <fa:SettingsExpander IconSource="{ci:FluentIconSource &#xECD9;}" Header="执行者回滚" Description="回滚为下方执行者列表"
-                                 IsVisible="{Binding Settings.FallbackSettings.Enabled}">
-                <fa:SettingsExpanderItem>
+            <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xECD9;}" Header="执行者回滚" Description="回滚为下方执行者列表"
+                                   IsVisible="{Binding Settings.FallbackSettings.Enabled}">
+                <fa:FASettingsExpanderItem>
                     <controls:WorkersDataGridControl Workers="{Binding Settings.FallbackSettings.Workers}" />
-                </fa:SettingsExpanderItem>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpanderItem>
+            </fa:FASettingsExpander>
             
             <TextBlock Foreground="Gray" TextAlignment="Center" FontStyle="Italic" TextWrapping="Wrap"
                        IsVisible="{Binding Settings.FallbackSettings.Enabled}">

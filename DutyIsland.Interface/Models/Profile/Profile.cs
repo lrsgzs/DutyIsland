@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using ClassIsland.Shared.ComponentModels;
 using CommunityToolkit.Mvvm.ComponentModel;
+using DutyIsland.Interface.ComponentModels;
 using DutyIsland.Interface.Models.Duty;
 using DutyIsland.Interface.Models.Rolling;
 using DutyIsland.Interface.Models.Worker;
@@ -15,12 +16,12 @@ public partial class Profile : ObservableObject
     /// <summary>
     /// 值日表
     /// </summary>
-    [ObservableProperty] private ObservableDictionary<Guid, DutyPlan> _dutyPlans = [];
+    [ObservableProperty] private ObservableOrderedDictionary<Guid, DutyPlan> _dutyPlans = [];
     
     /// <summary>
     /// 值日表模板
     /// </summary>
-    [ObservableProperty] private ObservableDictionary<Guid, DutyPlanTemplate> _dutyPlanTemplates = [];
+    [ObservableProperty] private ObservableOrderedDictionary<Guid, DutyPlanTemplate> _dutyPlanTemplates = [];
     
     /// <summary>
     /// 执行者列表

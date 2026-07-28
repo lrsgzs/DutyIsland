@@ -5,6 +5,7 @@ using ClassIsland.Core.Abstractions;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Extensions.Registry;
+using ClassIsland.Core.Icons;
 using ClassIsland.Core.Services.Registry;
 using ClassIsland.Shared;
 using DutyIsland.Controls.ActionSettingsControls;
@@ -127,7 +128,7 @@ public class Plugin : PluginBase
         // 动态注入，实现在低 PluginSdk 上修改高版本功能
         if (InjectServices.TryGetAddSettingsPageGroupMethod(out var addSettingsPageGroupMethod))
         {
-            addSettingsPageGroupMethod.Invoke(typeof(SettingsWindowRegistryExtensions), [services, "duty.settings", "\uE31E", "DutyIsland 值日表"]);
+            addSettingsPageGroupMethod.Invoke(typeof(SettingsWindowRegistryExtensions), [services, "duty.settings", FluentIcons.BroomRegular, "DutyIsland 值日表"]);
             
             var groupIdProperty = InjectServices.GetSettingsPageInfoGroupIdProperty();
             foreach (var info in SettingsWindowRegistryService.Registered.Where(info => info.Id.StartsWith("duty.settings")))
@@ -262,7 +263,8 @@ public class Plugin : PluginBase
                             IsRule = false
                         }
                     ],
-                    Rules = []
+                    Rules = [],
+                    Data = []
                 });
             }
 

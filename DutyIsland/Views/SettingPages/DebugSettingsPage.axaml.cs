@@ -42,7 +42,7 @@ public partial class DebugSettingsPage : SettingsPageBase
         {
             this.ShowToast(new ToastMessage("未获取到附加设置。")
             {
-                Severity = InfoBarSeverity.Warning,
+                Severity = FAInfoBarSeverity.Warning,
                 Duration = TimeSpan.FromSeconds(10)
             });
             
@@ -70,7 +70,7 @@ public partial class DebugSettingsPage : SettingsPageBase
         {
             this.ShowToast(new ToastMessage("未获取到启用的值日表。")
             {
-                Severity = InfoBarSeverity.Warning,
+                Severity = FAInfoBarSeverity.Warning,
                 Duration = TimeSpan.FromSeconds(10)
             });
             

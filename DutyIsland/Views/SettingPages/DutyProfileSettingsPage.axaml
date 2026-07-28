@@ -10,11 +10,13 @@
                      xmlns:converters="clr-namespace:DutyIsland.Converters"
                      x:DataType="local:DutyProfileSettingsPage"
                      d:DataContext="{d:DesignInstance local:DutyProfileSettingsPage}"
-                     mc:Ignorable="d">
+                     x:Name="PageRoot"
+                     mc:Ignorable="d"
+                     x:CompileBindings="False">
     <ci:SettingsPageBase.Resources>
         <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
     </ci:SettingsPageBase.Resources>
-    
+
     <ci:SettingsPageBase.Styles>
         <Style Selector="ListBox.drag ListBoxItem">
             <Setter Property="Interaction.Behaviors">
@@ -39,11 +41,11 @@
                         </StackPanel>
                     </DataTemplate>
                 </TabItem.HeaderTemplate>
-                
+
                 <ci:Empty Text="你真厉害，居然来到这里了。"
-                          Icon="{ci:FluentIconSource &#xE059;, FontSize=48}"/>
+                          Icon="{ci:FluentIconSource &#xE059;, FontSize=48}" />
             </TabItem>
-            
+
             <TabItem IsSelected="True">
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
@@ -53,28 +55,28 @@
                         </StackPanel>
                     </DataTemplate>
                 </TabItem.HeaderTemplate>
-                
+
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250" MinWidth="250" MaxWidth="400"/>
-                        <ColumnDefinition Width="5"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="250" MinWidth="250" MaxWidth="400" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    
+
                     <Grid Grid.Column="0" RowDefinitions="Auto, *">
-                        <fa:CommandBar Grid.Row="0"
-                                       DefaultLabelPosition="Right">
-                            <fa:CommandBar.PrimaryCommands>
-                                <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE00D;}"
-                                                     Label="添加" ToolTip.Tip="新建一个值日表。"
-                                                     Click="ButtonAddDutyPlan_OnClick"/>
-                                <fa:CommandBarSeparator />
-                                <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE58D;}" 
-                                                     Label="复制" ToolTip.Tip="复制一个当前选中的值日表的副本。"
-                                                     Click="ButtonDuplicateDutyPlan_OnClick"/>
-                            </fa:CommandBar.PrimaryCommands>
-                        </fa:CommandBar>
-                        
+                        <fa:FACommandBar Grid.Row="0"
+                                         DefaultLabelPosition="Right">
+                            <fa:FACommandBar.PrimaryCommands>
+                                <fa:FACommandBarButton IconSource="{ci:FluentIconSource &#xE00D;}"
+                                                       Label="添加" ToolTip.Tip="新建一个值日表。"
+                                                       Click="ButtonAddDutyPlan_OnClick" />
+                                <fa:FACommandBarSeparator />
+                                <fa:FACommandBarButton IconSource="{ci:FluentIconSource &#xE58D;}"
+                                                       Label="复制" ToolTip.Tip="复制一个当前选中的值日表的副本。"
+                                                       Click="ButtonDuplicateDutyPlan_OnClick" />
+                            </fa:FACommandBar.PrimaryCommands>
+                        </fa:FACommandBar>
+
                         <ListBox Grid.Row="1"
                                  ItemsSource="{Binding ViewModel.DutyPlans.List}"
                                  SelectedValue="{Binding ViewModel.SelectedDutyPlan}"
@@ -86,34 +88,36 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </Grid>
-                    
+
                     <GridSplitter Grid.Column="1" Margin="2 0" />
-                    
+
                     <ci:Emptiable Grid.Column="2" IsDirectContentMode="True"
                                   Data="{Binding ViewModel.SelectedDutyPlan}">
                         <Grid RowDefinitions="Auto *">
-                            <fa:CommandBar Grid.Row="0" DefaultLabelPosition="Right" Classes="hide-popup-indicator">
-                                <fa:CommandBar.PrimaryCommands>
-                                    <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEFDD;}"
-                                                         Label="导入" ToolTip.Tip="从文本快速导入值日执行者。">
-                                        <fa:CommandBarButton.Flyout>
+                            <fa:FACommandBar Grid.Row="0" DefaultLabelPosition="Right" Classes="hide-popup-indicator">
+                                <fa:FACommandBar.PrimaryCommands>
+                                    <fa:FACommandBarButton IconSource="{ci:FluentIconSource &#xEFDD;}"
+                                                           Label="导入" ToolTip.Tip="从文本快速导入值日执行者。">
+                                        <fa:FACommandBarButton.Flyout>
                                             <Flyout>
                                                 <StackPanel Spacing="8">
                                                     <TextBlock Text="在下方粘贴值日名单，一行一个执行者。" />
                                                     <TextBlock Text="导入时将会按值日项的「标准人数」自动填充。" />
-                                                    <TextBox Height="64" AcceptsReturn="True" Text="{Binding ViewModel.ImportDutyPlanText}" />
+                                                    <TextBox Height="64" AcceptsReturn="True"
+                                                             Text="{Binding ViewModel.ImportDutyPlanText}" />
                                                     <TextBlock Text="导入后将会覆盖已有执行者信息！此操作无法撤销。" />
-                                                    <Button Content="导入" Classes="accent" Click="ButtonImportDutyPlan_OnClick"/>
+                                                    <Button Content="导入" Classes="accent"
+                                                            Click="ButtonImportDutyPlan_OnClick" />
                                                 </StackPanel>
                                             </Flyout>
-                                        </fa:CommandBarButton.Flyout>
-                                    </fa:CommandBarButton>
-                                    
-                                    <fa:CommandBarSeparator/>
-                                    
-                                    <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE61D;}"
-                                                         Label="删除值日表" ToolTip.Tip="删除该值日表。">
-                                        <fa:CommandBarButton.Flyout>
+                                        </fa:FACommandBarButton.Flyout>
+                                    </fa:FACommandBarButton>
+
+                                    <fa:FACommandBarSeparator />
+
+                                    <fa:FACommandBarButton IconSource="{ci:FluentIconSource &#xE61D;}"
+                                                           Label="删除值日表" ToolTip.Tip="删除该值日表。">
+                                        <fa:FACommandBarButton.Flyout>
                                             <Flyout>
                                                 <StackPanel Spacing="8">
                                                     <TextBlock FontWeight="Bold">
@@ -122,21 +126,22 @@
                                                         <Run Text="」吗？" />
                                                     </TextBlock>
                                                     <TextBlock Text="使用了该值日表的附加设置将会失效！且此操作无法撤销。" />
-                                                    <Button Content="删除" Classes="accent" Click="ButtonDeleteSelectedDutyPlan_OnClick"/>
+                                                    <Button Content="删除" Classes="accent"
+                                                            Click="ButtonDeleteSelectedDutyPlan_OnClick" />
                                                 </StackPanel>
                                             </Flyout>
-                                        </fa:CommandBarButton.Flyout>
-                                    </fa:CommandBarButton>
-                                </fa:CommandBar.PrimaryCommands>
-                            </fa:CommandBar>
-                            
+                                        </fa:FACommandBarButton.Flyout>
+                                    </fa:FACommandBarButton>
+                                </fa:FACommandBar.PrimaryCommands>
+                            </fa:FACommandBar>
+
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="5" />
                                     <ColumnDefinition Width="350" MinWidth="300" MaxWidth="450" />
                                 </Grid.ColumnDefinitions>
-                                
+
                                 <ListBox Grid.Column="0" Margin="0 0 4 0"
                                          ItemsSource="{Binding ViewModel.SelectedDutyPlan.ComplexItems.List, UpdateSourceTrigger=PropertyChanged}"
                                          SelectedItem="{Binding ViewModel.SelectedDutyPlanItemKvp}">
@@ -144,8 +149,9 @@
                                         <DataTemplate>
                                             <Grid ColumnDefinitions="Auto, *">
                                                 <TextBlock Grid.Column="0" FontSize="13"
-                                                           Text="{Binding Value.Second.Name}" VerticalAlignment="Center" />
-                                                
+                                                           Text="{Binding Value.Second.Name}"
+                                                           VerticalAlignment="Center" />
+
                                                 <ItemsControl Grid.Column="1" HorizontalAlignment="Right" FontSize="11"
                                                               ItemsSource="{Binding Value.First.Workers.Items}">
                                                     <ItemsControl.ItemsPanel>
@@ -153,7 +159,7 @@
                                                             <WrapPanel Orientation="Horizontal" ItemSpacing="4" />
                                                         </ItemsPanelTemplate>
                                                     </ItemsControl.ItemsPanel>
-                                                    
+
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
                                                             <TextBlock Foreground="Gray">
@@ -173,11 +179,11 @@
                                     <Grid RowDefinitions="Auto, Auto, Auto">
                                         <StackPanel Grid.Row="0" Spacing="8">
                                             <TextBlock Text="值日表信息" Theme="{StaticResource SubtitleTextBlockStyle}" />
-                                            
+
                                             <ci:Field Label="名称">
-                                                <TextBox Text="{Binding ViewModel.SelectedDutyPlan.Name}"/>
+                                                <TextBox Text="{Binding ViewModel.SelectedDutyPlan.Name}" />
                                             </ci:Field>
-                                            
+
                                             <ci:Field Label="模板">
                                                 <ComboBox ItemsSource="{Binding ViewModel.DutyPlanTemplates.List}"
                                                           SelectedItem="{Binding ViewModel.DutyPlanSelectedDutyPlanTemplateKvp}"
@@ -192,25 +198,26 @@
                                                 </ComboBox>
                                             </ci:Field>
                                         </StackPanel>
-                                        
-                                        <Separator Grid.Row="1" Margin="-8 16"/>
-                                        
+
+                                        <Separator Grid.Row="1" Margin="-8 16" />
+
                                         <ci:Emptiable Grid.Row="2" IsDirectContentMode="True"
                                                       Data="{Binding ViewModel.SelectedDutyPlanItemKvp}">
-                                            <StackPanel Spacing="8">
-                                                <TextBlock Text="任务信息" Theme="{StaticResource SubtitleTextBlockStyle}"/>
+                                            <StackPanel Spacing="8"
+                                                        DataContext="{Binding ViewModel.SelectedDutyPlanItemKvp.Value}">
+                                                <TextBlock Text="任务信息" Theme="{StaticResource SubtitleTextBlockStyle}" />
                                                 <TextBlock>
                                                     <Run Text="任务名称:" />
-                                                    <Run Text="{Binding ViewModel.SelectedDutyPlanItemKvp.Value.Second.Name}" />
+                                                    <Run Text="{Binding Second.Name}" />
                                                 </TextBlock>
                                                 <TextBlock>
                                                     <Run Text="标准人数:" />
-                                                    <Run Text="{Binding ViewModel.SelectedDutyPlanItemKvp.Value.Second.WorkerCount}" />
+                                                    <Run Text="{Binding Second.WorkerCount}" />
                                                 </TextBlock>
-                                                
-                                                <controls:WorkersDataGridControl Workers="{Binding ViewModel.SelectedDutyPlanItemKvp.Value.First.Workers}" />
+
+                                                <controls:WorkersDataGridControl Workers="{Binding First.Workers}" />
                                             </StackPanel>
-                                        </ci:Emptiable> 
+                                        </ci:Emptiable>
                                     </Grid>
                                 </ScrollViewer>
                             </Grid>
@@ -218,7 +225,7 @@
                     </ci:Emptiable>
                 </Grid>
             </TabItem>
-            
+
             <TabItem>
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
@@ -228,28 +235,28 @@
                         </StackPanel>
                     </DataTemplate>
                 </TabItem.HeaderTemplate>
-                
+
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250" MinWidth="250" MaxWidth="400"/>
-                        <ColumnDefinition Width="5"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="250" MinWidth="250" MaxWidth="400" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    
+
                     <Grid Grid.Column="0" RowDefinitions="Auto, *">
-                        <fa:CommandBar Grid.Row="0"
-                                       DefaultLabelPosition="Right">
-                            <fa:CommandBar.PrimaryCommands>
-                                <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE00D;}"
-                                                     Label="添加" ToolTip.Tip="新建一个值日表模板。"
-                                                     Click="ButtonAddDutyPlanTemplate_OnClick"/>
-                                <fa:CommandBarSeparator />
-                                <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE58D;}" 
-                                                     Label="复制" ToolTip.Tip="复制一个当前选中的值日表模板的副本。"
-                                                     Click="ButtonDuplicateDutyPlanTemplate_OnClick"/>
-                            </fa:CommandBar.PrimaryCommands>
-                        </fa:CommandBar>
-                        
+                        <fa:FACommandBar Grid.Row="0"
+                                         DefaultLabelPosition="Right">
+                            <fa:FACommandBar.PrimaryCommands>
+                                <fa:FACommandBarButton IconSource="{ci:FluentIconSource &#xE00D;}"
+                                                       Label="添加" ToolTip.Tip="新建一个值日表模板。"
+                                                       Click="ButtonAddDutyPlanTemplate_OnClick" />
+                                <fa:FACommandBarSeparator />
+                                <fa:FACommandBarButton IconSource="{ci:FluentIconSource &#xE58D;}"
+                                                       Label="复制" ToolTip.Tip="复制一个当前选中的值日表模板的副本。"
+                                                       Click="ButtonDuplicateDutyPlanTemplate_OnClick" />
+                            </fa:FACommandBar.PrimaryCommands>
+                        </fa:FACommandBar>
+
                         <ListBox Grid.Row="1"
                                  ItemsSource="{Binding ViewModel.DutyPlanTemplates.List}"
                                  SelectedValue="{Binding ViewModel.SelectedDutyPlanTemplate}"
@@ -261,47 +268,49 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </Grid>
-                    
+
                     <GridSplitter Grid.Column="1" Margin="2 0" />
-                    
+
                     <ci:Emptiable Grid.Column="2" IsDirectContentMode="True"
                                   Data="{Binding ViewModel.SelectedDutyPlanTemplate}">
                         <Grid RowDefinitions="Auto *">
-                            <fa:CommandBar Grid.Row="0" DefaultLabelPosition="Right" Classes="hide-popup-indicator">
-                                <fa:CommandBar.PrimaryCommands>
-                                    <fa:CommandBarButton Click="ButtonAddDutyPlanTemplateItem_OnClick" 
-                                                         IconSource="{ci:FluentIconSource &#xF198;}"
-                                                         Label="添加任务" ToolTip.Tip="添加值日任务。"/>
-                                    
-                                    <fa:CommandBarButton Click="ButtonRemoveDutyPlanTemplateItem_OnClick"
-                                                         Label="删除" ToolTip.Tip="删除选中的值日任务。"
-                                                         IsEnabled="{Binding ViewModel.SelectedDutyPlanTemplateItem, Converter={x:Static ObjectConverters.IsNotNull}}">
-                                        <fa:CommandBarButton.IconSource>
-                                            <fa:SymbolIconSource Symbol="Remove"/>
-                                        </fa:CommandBarButton.IconSource>
-                                    </fa:CommandBarButton>
-                                    
-                                    <fa:CommandBarSeparator/>
-                                    
-                                    <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xE61D;}"
-                                                         Label="删除模板" ToolTip.Tip="删除该值日表模板。">
-                                        <fa:CommandBarButton.Flyout>
+                            <fa:FACommandBar Grid.Row="0" DefaultLabelPosition="Right" Classes="hide-popup-indicator">
+                                <fa:FACommandBar.PrimaryCommands>
+                                    <fa:FACommandBarButton Click="ButtonAddDutyPlanTemplateItem_OnClick"
+                                                           IconSource="{ci:FluentIconSource &#xF198;}"
+                                                           Label="添加任务" ToolTip.Tip="添加值日任务。" />
+
+                                    <fa:FACommandBarButton Click="ButtonRemoveDutyPlanTemplateItem_OnClick"
+                                                           Label="删除" ToolTip.Tip="删除选中的值日任务。"
+                                                           IsEnabled="{Binding ViewModel.SelectedDutyPlanTemplateItem, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                        <fa:FACommandBarButton.IconSource>
+                                            <fa:FASymbolIconSource Symbol="Remove" />
+                                        </fa:FACommandBarButton.IconSource>
+                                    </fa:FACommandBarButton>
+
+                                    <fa:FACommandBarSeparator />
+
+                                    <fa:FACommandBarButton IconSource="{ci:FluentIconSource &#xE61D;}"
+                                                           Label="删除模板" ToolTip.Tip="删除该值日表模板。">
+                                        <fa:FACommandBarButton.Flyout>
                                             <Flyout>
                                                 <StackPanel Spacing="8">
                                                     <TextBlock FontWeight="Bold">
                                                         <Run Text="要删除值日表模板「" />
-                                                        <Run Text="{Binding ViewModel.SelectedDutyPlanTemplate.TemplateName}" />
+                                                        <Run
+                                                            Text="{Binding ViewModel.SelectedDutyPlanTemplate.TemplateName}" />
                                                         <Run Text="」吗？" />
                                                     </TextBlock>
                                                     <TextBlock Text="此操作无法撤销。" />
-                                                    <Button Content="删除" Classes="accent" Click="ButtonDeleteSelectedDutyPlanTemplate_OnClick"/>
+                                                    <Button Content="删除" Classes="accent"
+                                                            Click="ButtonDeleteSelectedDutyPlanTemplate_OnClick" />
                                                 </StackPanel>
                                             </Flyout>
-                                        </fa:CommandBarButton.Flyout>
-                                    </fa:CommandBarButton>
-                                </fa:CommandBar.PrimaryCommands>
-                            </fa:CommandBar>
-                            
+                                        </fa:FACommandBarButton.Flyout>
+                                    </fa:FACommandBarButton>
+                                </fa:FACommandBar.PrimaryCommands>
+                            </fa:FACommandBar>
+
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -320,24 +329,25 @@
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Value.Name, Mode=TwoWay}"
                                                             Header="任务名称" IsReadOnly="False" />
-                                        
+
                                         <DataGridTemplateColumn Header="标准人数" MinWidth="100" IsReadOnly="False">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Text="{Binding Value.WorkerCount}"
-                                                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                               VerticalAlignment="Center" HorizontalAlignment="Center" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                             <DataGridTemplateColumn.CellEditingTemplate>
                                                 <DataTemplate>
                                                     <NumericUpDown Value="{Binding Value.WorkerCount}"
-                                                                   FormatString="0"/>
+                                                                   FormatString="0" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellEditingTemplate>
                                         </DataGridTemplateColumn>
-                                        
-                                        <DataGridCheckBoxColumn Binding="{Binding Value.NotificationTimes.Enable, Mode=TwoWay}"
-                                                                Header="启用提醒?" IsReadOnly="False" />
+
+                                        <DataGridCheckBoxColumn
+                                            Binding="{Binding Value.NotificationTimes.Enable, Mode=TwoWay}"
+                                            Header="启用提醒?" IsReadOnly="False" />
                                     </DataGrid.Columns>
                                 </DataGrid>
 
@@ -348,38 +358,42 @@
                                         <StackPanel Grid.Row="0" Spacing="8"
                                                     DataContext="{Binding ViewModel.SelectedDutyPlanTemplate}">
                                             <TextBlock Text="值日表模板信息" Theme="{StaticResource SubtitleTextBlockStyle}" />
-                                            
+
                                             <ci:Field Label="名称">
-                                                <TextBox Text="{Binding TemplateName}"/>
+                                                <TextBox Text="{Binding TemplateName}" />
                                             </ci:Field>
                                         </StackPanel>
-                                        
-                                        <Separator Grid.Row="1" Margin="-8 16"/>
-                                        
+
+                                        <Separator Grid.Row="1" Margin="-8 16" />
+
                                         <ci:Emptiable Grid.Row="2" IsDirectContentMode="True"
                                                       Data="{Binding ViewModel.SelectedDutyPlanTemplateItemKvp}">
-                                            <StackPanel Spacing="8" DataContext="{Binding ViewModel.SelectedDutyPlanTemplateItemKvp.Value}">
-                                                <TextBlock Text="任务信息" Theme="{StaticResource SubtitleTextBlockStyle}"/>
-                                                
+                                            <StackPanel Spacing="8"
+                                                        DataContext="{Binding ViewModel.SelectedDutyPlanTemplateItemKvp.Value}">
+                                                <TextBlock Text="任务信息" Theme="{StaticResource SubtitleTextBlockStyle}" />
+
                                                 <ci:Field Label="任务名称">
-                                                    <TextBox Text="{Binding Name}"/>
+                                                    <TextBox Text="{Binding Name}" />
                                                 </ci:Field>
-                                                
+
                                                 <ci:Field Label="标准人数">
-                                                    <NumericUpDown Text="{Binding WorkerCount}" FormatString="0"/>
+                                                    <NumericUpDown Text="{Binding WorkerCount}" FormatString="0" />
                                                 </ci:Field>
-                                                
-                                                <Expander Classes="compact stretch-header" IsExpanded="{Binding NotificationTimes.Enable, Mode=OneWay}">
+
+                                                <Expander Classes="compact stretch-header"
+                                                          IsExpanded="{Binding NotificationTimes.Enable, Mode=OneWay}">
                                                     <Expander.Header>
                                                         <Grid ColumnDefinitions="*, Auto">
                                                             <ci:IconText Grid.Column="0" Glyph="&#xE02B;" Text="自动提醒设置" />
-                                                            
-                                                            <ToggleSwitch Grid.Column="1" Margin="0,-8,0,-4" VerticalAlignment="Center"
-                                                                          OnContent="" OffContent="" ToolTip.Tip="是否启用提醒设置"
-                                                                          IsChecked="{Binding NotificationTimes.Enable}"/>
+
+                                                            <ToggleSwitch Grid.Column="1" Margin="0,-8,0,-4"
+                                                                          VerticalAlignment="Center"
+                                                                          OnContent="" OffContent=""
+                                                                          ToolTip.Tip="是否启用提醒设置"
+                                                                          IsChecked="{Binding NotificationTimes.Enable}" />
                                                         </Grid>
                                                     </Expander.Header>
-                                                    
+
                                                     <StackPanel Spacing="8">
                                                         <ci:Field Label="提醒时间">
                                                             <StackPanel>
@@ -392,25 +406,30 @@
                                                                         <DataGridTemplateColumn Header="时间">
                                                                             <DataGridTemplateColumn.CellTemplate>
                                                                                 <DataTemplate>
-                                                                                    <TimePicker SelectedTime="{Binding Time}" UseSeconds="True" />
+                                                                                    <TimePicker
+                                                                                        SelectedTime="{Binding Time}"
+                                                                                        UseSeconds="True" />
                                                                                 </DataTemplate>
                                                                             </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
-                            
+
                                                                         <DataGridTemplateColumn Header="操作">
                                                                             <DataGridTemplateColumn.CellTemplate>
                                                                                 <DataTemplate>
-                                                                                    <Button ToolTip.Tip="删除这个时间。" Foreground="IndianRed" Theme="{StaticResource TransparentButton}"
-                                                                                            Command="{Binding DutyPlanTemplateRemoveNotificationTimeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:DutyMainSettingsPage}}"
-                                                                                            CommandParameter="{Binding}">
-                                                                                        <ci:IconText Glyph="&#xE61D;" Text="删除" />
+                                                                                    <Button ToolTip.Tip="删除这个时间。"
+                                                                                        Foreground="IndianRed"
+                                                                                        Theme="{StaticResource TransparentButton}"
+                                                                                        Command="{Binding #PageRoot.DutyPlanTemplateRemoveNotificationTimeCommand}"
+                                                                                        CommandParameter="{Binding}">
+                                                                                        <ci:IconText Glyph="&#xE61D;"
+                                                                                            Text="删除" />
                                                                                     </Button>
                                                                                 </DataTemplate>
                                                                             </DataGridTemplateColumn.CellTemplate>
                                                                         </DataGridTemplateColumn>
                                                                     </DataGrid.Columns>
                                                                 </DataGrid>
-                    
+
                                                                 <Button ToolTip.Tip="添加一个时间。" Margin="0 4 0 0"
                                                                         Click="DutyPlanTemplateAddNotificationTimeButton_OnClick">
                                                                     <ci:IconText Glyph="&#xE00D;" Text="添加" />
@@ -419,13 +438,14 @@
                                                         </ci:Field>
                                                     </StackPanel>
                                                 </Expander>
-                                                
+
                                                 <Expander Classes="compact stretch-header" IsExpanded="True">
                                                     <Expander.Header>
                                                         <ci:IconText Grid.Column="0" Glyph="&#xE025;" Text="提醒设置" />
                                                     </Expander.Header>
-                                                    
-                                                    <controls:NotificationSettingsControl Settings="{Binding NotificationSettings}" />
+
+                                                    <controls:NotificationSettingsControl
+                                                        Settings="{Binding NotificationSettings}" />
                                                 </Expander>
                                             </StackPanel>
                                         </ci:Emptiable>
@@ -436,7 +456,7 @@
                     </ci:Emptiable>
                 </Grid>
             </TabItem>
-            
+
             <TabItem>
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
@@ -446,30 +466,30 @@
                         </StackPanel>
                     </DataTemplate>
                 </TabItem.HeaderTemplate>
-                
+
                 <Grid RowDefinitions="Auto *">
-                    <fa:CommandBar Grid.Row="0" DefaultLabelPosition="Right" Classes="hide-popup-indicator">
-                        <fa:CommandBar.PrimaryCommands>
-                            <fa:CommandBarButton Click="ButtonAddWorker_OnClick" 
-                                                 IconSource="{ci:FluentIconSource &#xF198;}"
-                                                 Label="添加人员" ToolTip.Tip="添加一位人员。"/>
-                            
-                            <fa:CommandBarButton Click="ButtonRemoveWorker_OnClick"
-                                                 Label="删除" ToolTip.Tip="删除选中的人员。"
-                                                 IsEnabled="{Binding ViewModel.SelectedWorkerItem, Converter={x:Static ObjectConverters.IsNotNull}}">
-                                <fa:CommandBarButton.IconSource>
-                                    <fa:SymbolIconSource Symbol="Remove"/>
-                                </fa:CommandBarButton.IconSource>
-                            </fa:CommandBarButton>
-                            
-                            <fa:CommandBarSeparator />
-                            
-                            <fa:CommandBarButton Click="ButtonImportWorkers_OnClick"
-                                                 IconSource="{ci:FluentIconSource &#xEFDD;}"
-                                                 Label="导入" ToolTip.Tip="导入人员" />
-                        </fa:CommandBar.PrimaryCommands>
-                    </fa:CommandBar>
-                    
+                    <fa:FACommandBar Grid.Row="0" DefaultLabelPosition="Right" Classes="hide-popup-indicator">
+                        <fa:FACommandBar.PrimaryCommands>
+                            <fa:FACommandBarButton Click="ButtonAddWorker_OnClick"
+                                                   IconSource="{ci:FluentIconSource &#xF198;}"
+                                                   Label="添加人员" ToolTip.Tip="添加一位人员。" />
+
+                            <fa:FACommandBarButton Click="ButtonRemoveWorker_OnClick"
+                                                   Label="删除" ToolTip.Tip="删除选中的人员。"
+                                                   IsEnabled="{Binding ViewModel.SelectedWorkerItem, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <fa:FACommandBarButton.IconSource>
+                                    <fa:FASymbolIconSource Symbol="Remove" />
+                                </fa:FACommandBarButton.IconSource>
+                            </fa:FACommandBarButton>
+
+                            <fa:FACommandBarSeparator />
+
+                            <fa:FACommandBarButton Click="ButtonImportWorkers_OnClick"
+                                                   IconSource="{ci:FluentIconSource &#xEFDD;}"
+                                                   Label="导入" ToolTip.Tip="导入人员" />
+                        </fa:FACommandBar.PrimaryCommands>
+                    </fa:FACommandBar>
+
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -488,10 +508,10 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}"
                                                     Header="姓名" IsReadOnly="False" />
-                                
+
                                 <DataGridTextColumn Binding="{Binding Id, Mode=TwoWay}"
                                                     Header="编号" IsReadOnly="False" />
-                                
+
                                 <DataGridTemplateColumn Header="性别" IsReadOnly="False">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -518,16 +538,16 @@
                                       Data="{Binding ViewModel.SelectedWorkerItem}">
                             <ScrollViewer Margin="8">
                                 <StackPanel Spacing="8" DataContext="{Binding ViewModel.SelectedWorkerItem}">
-                                    <TextBlock Text="人员信息" Theme="{StaticResource SubtitleTextBlockStyle}"/>
-                                    
+                                    <TextBlock Text="人员信息" Theme="{StaticResource SubtitleTextBlockStyle}" />
+
                                     <ci:Field Label="姓名">
-                                        <TextBox Text="{Binding Name}"/>
+                                        <TextBox Text="{Binding Name}" />
                                     </ci:Field>
-                                    
+
                                     <ci:Field Label="编号">
-                                        <TextBox Text="{Binding Id}"/>
+                                        <TextBox Text="{Binding Id}" />
                                     </ci:Field>
-                                    
+
                                     <ci:Field Label="性别">
                                         <ListBox Theme="{StaticResource ChipListBoxTheme}" HorizontalAlignment="Left"
                                                  SelectionMode="Single" SelectedIndex="{Binding Sex}">
@@ -543,21 +563,21 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        
+
         <Border Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                 Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}">
-            <fa:CommandBar HorizontalAlignment="Right" DefaultLabelPosition="Right">
-                <fa:CommandBar.PrimaryCommands>
-                    <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEEB5;}" Label="保存"
-                                         ToolTip.Tip="保存设置文件。"
-                                         Click="ButtonSave_OnClick"/>
+            <fa:FACommandBar HorizontalAlignment="Right" DefaultLabelPosition="Right">
+                <fa:FACommandBar.PrimaryCommands>
+                    <fa:FACommandBarButton IconSource="{ci:FluentIconSource &#xEEB5;}" Label="保存"
+                                           ToolTip.Tip="保存设置文件。"
+                                           Click="ButtonSave_OnClick" />
                     <!-- <fa:CommandBarButton IconSource="{ci:FluentIconSource &#xEE2F;}" -->
                     <!--                      Label="帮助" -->
                     <!--                      Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}" -->
                     <!--                      CommandParameter="https://docs.classisland.tech/app/profile/" -->
                     <!--                      ToolTip.Tip="查看值日表编辑器帮助"/> -->
-                </fa:CommandBar.PrimaryCommands>
-            </fa:CommandBar>
+                </fa:FACommandBar.PrimaryCommands>
+            </fa:FACommandBar>
         </Border>
     </Grid>
 </ci:SettingsPageBase>

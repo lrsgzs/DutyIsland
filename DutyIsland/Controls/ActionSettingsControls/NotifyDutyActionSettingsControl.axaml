@@ -10,7 +10,8 @@
                               xmlns:controls="clr-namespace:DutyIsland.Controls">
     
     <ci:ActionSettingsControlBase.Resources>
-        <ScrollViewer x:Key="NotificationSettingsDrawer" x:Shared="False" Width="400"
+        <ScrollViewer x:Key="NotificationSettingsDrawer" Width="400"
+                      x:DataType="local:NotifyDutyActionSettingsControl"
                       d:DataContext="{d:DesignInstance local:NotifyDutyActionSettingsControl}">
             <StackPanel Classes="animated-intro" Spacing="8">
                 <CheckBox Content="启用回滚?" ToolTip.Tip="在找不到目标任务 Guid 时自动回滚。"

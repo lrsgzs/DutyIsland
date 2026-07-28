@@ -103,7 +103,7 @@ public partial class DutyProfileSettingsPage : SettingsPageBase
             this.ShowToast(new ToastMessage("注意到值日表模板为空，无法导入喵")
             {
                 Duration = TimeSpan.FromSeconds(10),
-                Severity = InfoBarSeverity.Warning
+                Severity = FAInfoBarSeverity.Warning
             });
             return;
         }
@@ -113,7 +113,7 @@ public partial class DutyProfileSettingsPage : SettingsPageBase
             this.ShowToast(new ToastMessage("注意到导入文本为空，不建议哦")
             {
                 Duration = TimeSpan.FromSeconds(10),
-                Severity = InfoBarSeverity.Warning
+                Severity = FAInfoBarSeverity.Warning
             });
             return;
         }
@@ -129,7 +129,7 @@ public partial class DutyProfileSettingsPage : SettingsPageBase
             this.ShowToast(new ToastMessage("注意到导入文本没有有效人员")
             {
                 Duration = TimeSpan.FromSeconds(10),
-                Severity = InfoBarSeverity.Warning
+                Severity = FAInfoBarSeverity.Warning
             });
             return;
         }
