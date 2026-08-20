@@ -9,6 +9,7 @@
                   xmlns:local="clr-namespace:DutyIsland.Controls.ComponentSettingsControls"
                   xmlns:componentSettings="clr-namespace:DutyIsland.Models.ComponentSettings"
                   xmlns:controls="clr-namespace:DutyIsland.Controls"
+                  x:CompileBindings="False"
                   mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
     <ScrollViewer>
         <StackPanel Classes="settings-container animated-intro" Margin="0"
@@ -44,7 +45,7 @@
                                         </TextBlock>
                                 
                                         <SelectableTextBlock Grid.Row="1" Grid.Column="0" Margin="0 0 4 0">
-                                            <Run Text="%n - 履行该任务的成员，以 '、' 为分隔符"/><LineBreak/>
+                                            <Run Text="%n - 履行该任务的成员"/><LineBreak/>
                                             <Run Text="%j - 该任务名称"/><LineBreak/>
                                         </SelectableTextBlock>
                                     </Grid>
