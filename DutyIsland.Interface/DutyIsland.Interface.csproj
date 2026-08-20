@@ -17,7 +17,7 @@
         <PackageProjectUrl>https://github.com/lrs2187/DutyIsland</PackageProjectUrl>
         <RepositoryUrl>https://github.com/lrs2187/DutyIsland</RepositoryUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <Copyright>Copyright (c) 2025 lrs2187</Copyright>
+        <Copyright>Copyright (c) 2025-2026 lrs2187/lrsgzs</Copyright>
         <RepositoryType>git</RepositoryType>
         <PackageTags>classisland;plugin;addin;</PackageTags>
         <Description>拉取 DutyIsland 信息。</Description>

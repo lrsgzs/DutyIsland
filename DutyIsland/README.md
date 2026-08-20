@@ -6,26 +6,8 @@
 
 ## 开发计划
 
-- [x] 值日表编辑
-- [x] 值日表加载
-- [ ] 值日表展示
-  - [x] 格式化字符串
-  - [ ] 高级文本 (较晚)
-- [x] 值日提醒
-- [ ] 点名支持
-  - [ ] 点名功能 (计划从 IslandCaller 移植逻辑)
-  - [x] 引荐 SecRandom
-- [ ] 插件联动
-  - [ ] SuperAutoIsland
-    - [x] 积木
-    - [ ] 数据提供 (等 sai 做出来)
-  - [ ] ExtraIsland 值日迁移
-  - [ ] 还未新建文件夹的 NextHoliday
-- [ ] 核心
-  - [ ] 继续优化 DutyIsland.Interface，使之只引用 ClassIsland.Shared
-- [ ] 垃圾事务
-  - [ ] 换一个图标
-- [ ] ...
+- 值日表展示-高级文本 (较晚)
+- 跳过节假日、更精细化的周末跳过
 
 ## 如何使用
 
@@ -55,14 +37,11 @@
 
 1. 设置组件、自动化等元素，因为这些元素的下拉框内容是从当前活动的值日表读取的。
 
-### Mermaid 版本
-
-ClassIsland 的 Markdown 渲染器不支持，故移除。
-
 ## 开放源代码许可协议
-```
+
+```text
 DutyIsland - add a duty plan feature to ClassIsland
-Copyright (C) 2025  lrs2187/lrsgzs
+Copyright (C) 2025-2026 lrs2187/lrsgzs
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
