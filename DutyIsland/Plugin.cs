@@ -15,6 +15,7 @@ using DutyIsland.Controls.Components;
 using DutyIsland.Controls.ComponentSettingsControls;
 using DutyIsland.Interface.Services;
 using DutyIsland.Services;
+using DutyIsland.Services.Automations;
 using DutyIsland.Services.Automations.Actions;
 using DutyIsland.Services.NotificationProviders;
 using DutyIsland.Shared;
@@ -128,106 +129,13 @@ public class Plugin : PluginBase
             GlobalConstants.Config.Logger = IAppHost.GetService<ILogger<ConfigHandler>>();
             
             _logger.LogInformation("启动服务...");
-            var dutyPlanService = IAppHost.GetService<IDutyPlanService>();
+            IAppHost.GetService<IDutyPlanService>();
             IAppHost.GetService<DutyTaskBarMenuService>();
 
             if (IsPluginInstalled("lrs2187.sai", new Version("0.1.2.4")))
             {
-                var saiServerService = IAppHost.GetService<ISaiServer>();
-
                 _logger.LogInformation("注册 SuperAutoIsland 元素...");
-                saiServerService.RegisterBlocks("DutyIsland", new RegisterData
-                {
-                    Actions =
-                    [
-                        new BlockMetadata
-                        {
-                            Id = "duty.actions.notifyDuty",
-                            Name = "提醒值日人员",
-                            Icon = ("日历助手", "\uE314"),
-                            Args = new Dictionary<string, MetaArgsBase>
-                            {
-                                ["JobGuid"] = new DropDownMetaArgs
-                                {
-                                    Name = "",
-                                    Type = MetaType.dropdown,
-                                    Options = EnsureListHasItemOrDefaultListItem(
-                                        dutyPlanService.CurrentDutyPlan?.Template?.WorkerTemplateDictionary
-                                            .Select(e => (e.Value.Name, e.Key.ToString()))
-                                            .ToList(),
-                                        new ValueTuple<string, string>("???", GlobalConstants.Guids.NullTemplate.ToString()))
-                                },
-                                ["FallbackSettings.Enabled"] = new CheckboxMetaArgs
-                                {
-                                    Name = "启用回滚?",
-                                    Type = MetaType.checkbox,
-                                    DefaultValue = false
-                                },
-                                ["FallbackSettings.JobName"] = new CommonMetaArgs
-                                {
-                                    Name = "回滚任务名称",
-                                    Type = MetaType.text
-                                },
-                                ["UseCustomNotificationSettings"] = new CheckboxMetaArgs
-                                {
-                                    Name = "启用自定义提醒设置?",
-                                    Type = MetaType.checkbox,
-                                    DefaultValue = false
-                                },
-                                ["CustomNotificationSettings.Title"] = new CommonMetaArgs
-                                {
-                                    Name = "遮罩内容",
-                                    Type = MetaType.text
-                                },
-                                ["CustomNotificationSettings.TitleDuration"] = new CommonMetaArgs
-                                {
-                                    Name = "遮罩时长",
-                                    Type = MetaType.number
-                                },
-                                ["CustomNotificationSettings.TitleEnableSpeech"] = new CommonMetaArgs
-                                {
-                                    Name = "启用遮罩语音?",
-                                    Type = MetaType.boolean
-                                },
-                                ["CustomNotificationSettings.Text"] = new CommonMetaArgs
-                                {
-                                    Name = "正文内容",
-                                    Type = MetaType.text
-                                },
-                                ["_string0"] = new CommonMetaArgs
-                                {
-                                    Name = "说明:",
-                                    Type = MetaType.dummy
-                                },
-                                ["_string1"] = new CommonMetaArgs
-                                {
-                                    Name = "%n - 履行该任务的成员",
-                                    Type = MetaType.dummy
-                                },
-                                ["_string2"] = new CommonMetaArgs
-                                {
-                                    Name = "%j - 该任务名称",
-                                    Type = MetaType.dummy
-                                },
-                                ["CustomNotificationSettings.TextDuration"] = new CommonMetaArgs
-                                {
-                                    Name = "正文时长",
-                                    Type = MetaType.number
-                                },
-                                ["CustomNotificationSettings.TextEnableSpeech"] = new CommonMetaArgs
-                                {
-                                    Name = "启用正文语音?",
-                                    Type = MetaType.boolean
-                                }
-                            },
-                            DropdownUseNumbers = false,
-                            InlineField = false,
-                            InlineBlock = false
-                        }
-                    ],
-                    Rules = [],
-                    Data = []
-                });
+                AutomationsRegister.RegisterSai();
             }
 
             IsPinyinAvailable = IsPluginInstalled("lrs2187.LibPinyin");
@@ -244,11 +152,6 @@ public class Plugin : PluginBase
     private static readonly Assembly DutyIslandAssembly = typeof(Plugin).Assembly;
     private static readonly Assembly DutyIslandInterfaceAssembly = typeof(IDutyPlanService).Assembly;
 
-    /// <summary>
-    /// 判断异常是否与 DutyIsland 相关：沿异常链检查栈帧，命中 DutyIsland /
-    /// DutyIsland.Interface 程序集即视为相关。比按字符串匹配 "dutyisland" 更可靠
-    /// （不依赖命名、大小写和堆栈文本，也不会被非 DI 代码中恰好出现的同名文本误判）。
-    /// </summary>
     private static bool IsDutyIslandException(Exception e)
     {
         if (HasDutyIslandFrame(e))
@@ -284,7 +187,7 @@ public class Plugin : PluginBase
         return IPluginService.LoadedPlugins.Any(info => info.Manifest.Id == pkgName && info.IsEnabled && new Version(info.Manifest.Version) >= version);
     }
 
-    private static List<T> EnsureListHasItemOrDefaultListItem<T>(List<T>? data, T defaultItem)
+    internal static List<T> EnsureListHasItemOrDefaultListItem<T>(List<T>? data, T defaultItem)
     {
         return data?.Count > 0 ? data : [defaultItem];
     }
