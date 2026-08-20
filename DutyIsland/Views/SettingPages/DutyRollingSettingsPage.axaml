@@ -16,6 +16,20 @@
         <system:String x:Key="NoDutyPlanString">未绑定值日表</system:String>
     </ci:SettingsPageBase.Resources>
 
+    <ci:SettingsPageBase.Styles>
+        <Style Selector="ListBox.drag ListBoxItem">
+            <Setter Property="Interaction.Behaviors">
+                <BehaviorCollectionTemplate>
+                    <BehaviorCollection>
+                        <ci:AdvancedItemDragBehavior HorizontalDragThreshold="21879066"
+                                                     Orientation="Vertical"
+                                                     VerticalDragThreshold="3" />
+                    </BehaviorCollection>
+                </BehaviorCollectionTemplate>
+            </Setter>
+        </Style>
+    </ci:SettingsPageBase.Styles>
+
     <Grid RowDefinitions="*, Auto">
         <TabControl Grid.Row="0">
             <TabItem IsEnabled="False">

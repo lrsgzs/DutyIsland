@@ -58,6 +58,10 @@ public partial class DutyViewModel : ObservableRecipient
                     var newDutyPlanItem = new DutyPlanItem();
                     SelectedDutyPlanItem = newDutyPlanItem;
                     SelectedDutyPlan.WorkerDictionary[value.Value.Key] = newDutyPlanItem;
+
+                    // 让 ComplexItems 中已有的元组指向真正写入字典的 DutyPlanItem，
+                    // 否则右侧编辑会写到临时对象上，最终不会保存。
+                    value.Value.Value.First = newDutyPlanItem;
                 }
             }
             else
@@ -103,9 +107,7 @@ public partial class DutyViewModel : ObservableRecipient
     {
         Rolling = Settings.Profile.Rolling;
         DutyPlans = new SyncDictionaryList<Guid, DutyPlan>(
-            Settings.Profile.DutyPlans
-                .Select(item => KeyValuePair.Create(item.Key, item.Value))
-                .ToDictionary(), 
+            Settings.Profile.DutyPlans,
             Guid.NewGuid);
         DutyPlanTemplates = new SyncDictionaryList<Guid, DutyPlanTemplate>(Settings.Profile.DutyPlanTemplates, Guid.NewGuid);
         Workers = Settings.Profile.Workers;

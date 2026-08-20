@@ -119,31 +119,11 @@ public class Plugin : PluginBase
         _logger.LogInformation("注册 ClassIsland 元素...");
         
         // SettingsPage
-        // services.AddSettingsPageGroup("duty.settings", "\uE31E", "DutyIsland 值日表");
+        services.AddSettingsPageGroup("duty.settings", FluentIcons.BroomRegular, "DutyIsland 值日表");
         services.AddSettingsPage<DutyMainSettingsPage>();
         services.AddSettingsPage<DutyProfileSettingsPage>();
         services.AddSettingsPage<DutyRollingSettingsPage>();
         services.AddSettingsPage<DebugSettingsPage>();
-        
-        // 动态注入，实现在低 PluginSdk 上修改高版本功能
-        if (InjectServices.TryGetAddSettingsPageGroupMethod(out var addSettingsPageGroupMethod))
-        {
-            addSettingsPageGroupMethod.Invoke(typeof(SettingsWindowRegistryExtensions), [services, "duty.settings", FluentIcons.BroomRegular, "DutyIsland 值日表"]);
-            
-            var groupIdProperty = InjectServices.GetSettingsPageInfoGroupIdProperty();
-            foreach (var info in SettingsWindowRegistryService.Registered.Where(info => info.Id.StartsWith("duty.settings")))
-            {
-                groupIdProperty?.SetValue(info, "duty.settings");
-            }
-        }
-        else
-        {
-            var nameField = InjectServices.GetSettingsPageInfoNameField();
-            foreach (var info in SettingsWindowRegistryService.Registered.Where(info => info.Id.StartsWith("duty.settings")))
-            {
-                nameField.SetValue(info, "DutyIsland" + (string)nameField.GetValue(info)!);
-            }
-        }
         
         // Others
         services.AddAttachedSettingsControl<DutyPlanAttachedSettingsControl>();
@@ -259,8 +239,7 @@ public class Plugin : PluginBase
                             },
                             DropdownUseNumbers = false,
                             InlineField = false,
-                            InlineBlock = false,
-                            IsRule = false
+                            InlineBlock = false
                         }
                     ],
                     Rules = [],

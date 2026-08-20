@@ -86,7 +86,7 @@
                                     <Run Text="(Codename Paimon)"/>
                                 </TextBlock>
                             </fa:FASettingsExpander.Footer>
-                            
+
                             <fa:FASettingsExpanderItem Description="本项目基于 GNU General Public License v3.0 获得许可。">
                                 <fa:FASettingsExpanderItem.Footer>
                                     <WrapPanel Classes="animated-resize" ItemSpacing="4">
@@ -125,17 +125,14 @@
                         </fa:FASettingsExpander>
                         
                         <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xE31C;}"
-                                             Header="启用自动提醒?" Description="控制全局的自动提醒启用状态。">
+                                               Header="启用自动提醒?" Description="控制全局的自动提醒启用状态。"
+                                               IsExpanded="{Binding ViewModel.Settings.GlobalEnableNotification, Mode=OneWay}">
                             <fa:FASettingsExpander.Footer>
                                 <ToggleSwitch IsChecked="{Binding ViewModel.Settings.GlobalEnableNotification}"/>
                             </fa:FASettingsExpander.Footer>
-                        </fa:FASettingsExpander>
-                        
-                        <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xE4C4;}"
-                                             IsVisible="{Binding ViewModel.Settings.GlobalEnableNotification}"
-                                             Header="自动提醒时间获取来源" Description="控制全局的自动提醒时间获取来源。">
-                            <fa:FASettingsExpander.Footer>
-                                <Grid>
+
+                            <fa:FASettingsExpanderItem Content="自动提醒时间获取来源" Description="控制全局的自动提醒时间获取来源。">
+                                <fa:FASettingsExpanderItem.Footer>
                                     <TabStrip Classes="compact toggle" Theme="{StaticResource TabStripStyle}"
                                               SelectedIndex="{Binding ViewModel.Settings.TimeSource}">
                                         <TabStripItem>
@@ -145,8 +142,8 @@
                                             <ci:IconText Classes="display-role" Glyph="&#xF0BD;" Text="系统" />
                                         </TabStripItem>
                                     </TabStrip>
-                                </Grid>
-                            </fa:FASettingsExpander.Footer>
+                                </fa:FASettingsExpanderItem.Footer>
+                            </fa:FASettingsExpanderItem>
                         </fa:FASettingsExpander>
                         
                         <fa:FASettingsExpander IconSource="{ci:FluentIconSource &#xE4E8;}"

@@ -19,9 +19,7 @@ public partial class DutyPlanAttachedSettingsControl : AttachedSettingsControlBa
     public DutyPlanAttachedSettingsControl()
     {
         DutyPlans = new SyncDictionaryList<Guid, DutyPlan>(
-            DutyIslandSettings.Profile.DutyPlans
-                .Select(item => KeyValuePair.Create(item.Key, item.Value))
-                .ToDictionary(),
+            DutyIslandSettings.Profile.DutyPlans,
             Guid.NewGuid);
         
         InitializeComponent();

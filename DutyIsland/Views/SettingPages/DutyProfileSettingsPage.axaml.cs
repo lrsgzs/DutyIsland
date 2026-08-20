@@ -20,7 +20,7 @@ namespace DutyIsland.Views.SettingPages;
 
 [FullWidthPage]
 [HidePageTitle]
-// [Group("duty.settings")]
+[Group("duty.settings")]
 [SettingsPageInfo("duty.settings.profile","档案","\uE324","\uE323")]
 public partial class DutyProfileSettingsPage : SettingsPageBase
 {
@@ -52,6 +52,11 @@ public partial class DutyProfileSettingsPage : SettingsPageBase
     private void ButtonAddDutyPlan_OnClick(object? sender, RoutedEventArgs e)
     {
         CreateDutyPlan();
+    }
+
+    private void SelectedDutyPlan_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        ViewModel.SelectedDutyPlanItemKvp = null;
     }
 
     private void ButtonDuplicateDutyPlan_OnClick(object? sender, RoutedEventArgs e)

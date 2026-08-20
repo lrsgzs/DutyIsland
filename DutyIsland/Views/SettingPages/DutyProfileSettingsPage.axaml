@@ -1,4 +1,4 @@
-﻿<ci:SettingsPageBase x:Class="DutyIsland.Views.SettingPages.DutyProfileSettingsPage"
+<ci:SettingsPageBase x:Class="DutyIsland.Views.SettingPages.DutyProfileSettingsPage"
                      xmlns="https://github.com/avaloniaui"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -78,12 +78,19 @@
                         </fa:FACommandBar>
 
                         <ListBox Grid.Row="1"
+                                 Classes="drag"
                                  ItemsSource="{Binding ViewModel.DutyPlans.List}"
                                  SelectedValue="{Binding ViewModel.SelectedDutyPlan}"
-                                 SelectedValueBinding="{Binding Value}">
+                                 SelectedValueBinding="{Binding Value}"
+                                 SelectionChanged="SelectedDutyPlan_OnSelectionChanged">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Value.Name}" VerticalAlignment="Center" />
+                                    <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                                        <ci:TouchDragThumb Margin="-12 0 0 0"
+                                                           VerticalAlignment="Center"
+                                                           Width="20" IsExplicitVisible="True" />
+                                        <TextBlock Text="{Binding Value.Name}" VerticalAlignment="Center" />
+                                    </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -153,7 +160,7 @@
                                                            VerticalAlignment="Center" />
 
                                                 <ItemsControl Grid.Column="1" HorizontalAlignment="Right" FontSize="11"
-                                                              ItemsSource="{Binding Value.First.Workers.Items}">
+                                                              ItemsSource="{Binding Value.First.Workers}">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <WrapPanel Orientation="Horizontal" ItemSpacing="4" />
@@ -258,12 +265,18 @@
                         </fa:FACommandBar>
 
                         <ListBox Grid.Row="1"
+                                 Classes="drag"
                                  ItemsSource="{Binding ViewModel.DutyPlanTemplates.List}"
                                  SelectedValue="{Binding ViewModel.SelectedDutyPlanTemplate}"
                                  SelectedValueBinding="{Binding Value}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Value.TemplateName}" VerticalAlignment="Center" />
+                                    <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                                        <ci:TouchDragThumb Margin="-12 0 0 0"
+                                                           VerticalAlignment="Center"
+                                                           Width="20" IsExplicitVisible="True" />
+                                        <TextBlock Text="{Binding Value.TemplateName}" VerticalAlignment="Center" />
+                                    </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -318,7 +331,7 @@
                                     <ColumnDefinition Width="350" MinWidth="300" MaxWidth="450" />
                                 </Grid.ColumnDefinitions>
 
-                                <DataGrid Grid.Column="0" Margin="0 0 4 0"
+                                <DataGrid Grid.Column="0"
                                           AutoGenerateColumns="False"
                                           CanUserSortColumns="False"
                                           RowHeaderWidth="150"
@@ -347,7 +360,7 @@
 
                                         <DataGridCheckBoxColumn
                                             Binding="{Binding Value.NotificationTimes.Enable, Mode=TwoWay}"
-                                            Header="启用提醒?" IsReadOnly="False" />
+                                            Header="启用自动提醒?" IsReadOnly="False" />
                                     </DataGrid.Columns>
                                 </DataGrid>
 
@@ -403,7 +416,7 @@
                                                                           GridLinesVisibility="Horizontal"
                                                                           ItemsSource="{Binding NotificationTimes.Times}">
                                                                     <DataGrid.Columns>
-                                                                        <DataGridTemplateColumn Header="时间">
+                                                                        <DataGridTemplateColumn Width="*" Header="时间">
                                                                             <DataGridTemplateColumn.CellTemplate>
                                                                                 <DataTemplate>
                                                                                     <TimePicker
@@ -512,22 +525,13 @@
                                 <DataGridTextColumn Binding="{Binding Id, Mode=TwoWay}"
                                                     Header="编号" IsReadOnly="False" />
 
-                                <DataGridTemplateColumn Header="性别" IsReadOnly="False">
+                                <DataGridTemplateColumn Header="性别" IsReadOnly="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                                                        Text="{Binding Sex, Converter={StaticResource HumanSexToStringConverter}}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
-                                    <DataGridTemplateColumn.CellEditingTemplate>
-                                        <DataTemplate>
-                                            <fa:FAComboBox SelectedIndex="{Binding Sex}">
-                                                <fa:FAComboBoxItem>男</fa:FAComboBoxItem>
-                                                <fa:FAComboBoxItem>女</fa:FAComboBoxItem>
-                                                <fa:FAComboBoxItem>未知</fa:FAComboBoxItem>
-                                            </fa:FAComboBox>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellEditingTemplate>
                                 </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
