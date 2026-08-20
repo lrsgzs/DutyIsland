@@ -40,7 +40,8 @@ public partial class ImportWorkersWindow
         return excel
             .Select(row => (IDictionary<string, object?>)row)
             .Select(dict => dict
-                .OrderBy(kv => kv.Key)
+                .OrderBy(kv => kv.Key.Length)
+                .ThenBy(kv => kv.Key)
                 .Select(kv => kv.Value?.ToString() ?? "")
                 .ToList())
             .ToList();

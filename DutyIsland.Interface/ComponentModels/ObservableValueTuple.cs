@@ -74,7 +74,7 @@ public class ObservableValueTuple<T1, T2> : ObservableRecipient, IEquatable<Obse
 
     public int CompareTo(ObservableValueTuple<T1, T2>? other)
     {
-        if (other == null) return -1;
+        if (other == null) return 1;
         var c = Comparer<T1>.Default.Compare(Item1, other.Item1);
         return c != 0 ? c : Comparer<T2>.Default.Compare(Item2, other.Item2);
 

@@ -11,7 +11,7 @@ public static class AutoNotificationInfoExtension
 {
     public static List<NotificationRequest> ToRequests(this List<AutoNotificationInfo> infos)
     {
-        if (infos.Count < 0)
+        if (infos.Count == 0)
         {
             return [];
         }

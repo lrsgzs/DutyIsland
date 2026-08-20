@@ -70,10 +70,11 @@ public partial class WorkersDataGridControl : UserControl
             
             var pluginInfo =
                 pluginMarketService.MergedPlugins.FirstOrOptional(info => info.Value.Manifest.Id == libPinyinPluginId);
-            if (!pluginInfo.HasValue)
+            if (pluginInfo.HasValue)
             {
                 pluginInfo.Value.Value.IsEnabled = true;
                 this.ShowToast("已启用 LibPinyin 插件");
+                return;
             }
             
             while (pluginMarketService.MergedPlugins

@@ -1,4 +1,5 @@
 // ReSharper disable once RedundantUsingDirective
+using System.Reflection;
 using Avalonia.Threading;
 using ClassIsland.Core;
 using ClassIsland.Core.Abstractions;
@@ -38,33 +39,6 @@ public class Plugin : PluginBase
     
     public override void Initialize(HostBuilderContext context, IServiceCollection services)
     {
-        // 动态加载 AppLoggerProvider 以实现在主机启动前记录日志
-        // try
-        // {
-        //     var appLoggerProvider = InjectServices.GetAppLoggerProvider(services);
-        //     GlobalConstants.LoggingFactory = LoggerFactory.Create(builder =>
-        //     {
-        //         builder.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
-        //         builder.AddConsole(console => { console.FormatterName = "classisland"; });
-        //         builder.AddProvider(appLoggerProvider);
-        //         builder.SetMinimumLevel(LogLevel.Trace);
-        //     });
-        //     
-        //     _logger = GlobalConstants.LoggingFactory.CreateLogger<Plugin>();
-        // }
-        // catch (Exception e)
-        // {
-        //     GlobalConstants.LoggingFactory = LoggerFactory.Create(builder =>
-        //     {
-        //         builder.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
-        //         builder.AddConsole(console => { console.FormatterName = "classisland"; });
-        //         builder.SetMinimumLevel(LogLevel.Trace);
-        //     });
-        //     
-        //     _logger = GlobalConstants.LoggingFactory.CreateLogger<Plugin>();
-        //     _logger.LogError(e, "获取 AppLoggerProvider 时出现错误");
-        // }
-        
         _logger.LogInformation("欢迎使用 DutyIsland！初期化中...");
         _logger.LogInformation("版本号 {Version} 环境 {Environment}", Info.Manifest.Version, GlobalConstants.Information.Environment);
         
@@ -92,6 +66,15 @@ public class Plugin : PluginBase
                     options.IsGlobalModeEnabled = true;
                     options.Environment = GlobalConstants.Information.Environment;
                     options.TracesSampleRate = 0.05;
+                    options.SetBeforeSend(sentryEvent =>
+                    {
+                        if (sentryEvent.Exception is { } exception && !IsDutyIslandException(exception))
+                        {
+                            return null;
+                        }
+
+                        return sentryEvent;
+                    });
                 });
 
                 Dispatcher.UIThread.UnhandledException += (_, e) =>
@@ -258,15 +241,42 @@ public class Plugin : PluginBase
         };
     }
 
-    // ReSharper disable once UnusedMember.Local
+    private static readonly Assembly DutyIslandAssembly = typeof(Plugin).Assembly;
+    private static readonly Assembly DutyIslandInterfaceAssembly = typeof(IDutyPlanService).Assembly;
+
+    /// <summary>
+    /// 判断异常是否与 DutyIsland 相关：沿异常链检查栈帧，命中 DutyIsland /
+    /// DutyIsland.Interface 程序集即视为相关。比按字符串匹配 "dutyisland" 更可靠
+    /// （不依赖命名、大小写和堆栈文本，也不会被非 DI 代码中恰好出现的同名文本误判）。
+    /// </summary>
     private static bool IsDutyIslandException(Exception e)
     {
-        if (e.StackTrace?.Contains("dutyisland", StringComparison.CurrentCultureIgnoreCase) ?? false)
+        if (HasDutyIslandFrame(e))
         {
             return true;
         }
 
         return e.InnerException != null && IsDutyIslandException(e.InnerException);
+    }
+
+    private static bool HasDutyIslandFrame(Exception e)
+    {
+        if (string.IsNullOrEmpty(e.StackTrace))
+        {
+            return false;
+        }
+
+        var stackTrace = new System.Diagnostics.StackTrace(e);
+        foreach (var frame in stackTrace.GetFrames() ?? [])
+        {
+            var assembly = frame.GetMethod()?.DeclaringType?.Assembly;
+            if (assembly == DutyIslandAssembly || assembly == DutyIslandInterfaceAssembly)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static bool IsPluginInstalled(string pkgName, Version? version = null)

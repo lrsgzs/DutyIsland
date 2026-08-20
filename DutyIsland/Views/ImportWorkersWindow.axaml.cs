@@ -56,6 +56,10 @@ public partial class ImportWorkersWindow : ViewBase
             {
                 ViewModel.PreProcessText();
             }
+            else if (ViewModel.Sheet.Count == 0)
+            {
+                ViewModel.Sheet.Add([]);
+            }
             ViewModel.PreProcessWorkers();
             ViewModel.ProcessWorkers();
         }

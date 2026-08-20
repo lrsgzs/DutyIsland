@@ -74,7 +74,6 @@ public class ConfigHandler
         catch (Exception ex)
         {
             Logger.LogError(ex, "写入配置文件失败");
-            throw;
         }
     }
 }

@@ -167,7 +167,7 @@ public partial class ImportWorkersViewModel : ObservableRecipient
             var line = Sheet[i];
             if (line.Count == 0 || line is [""])
             {
-                return;
+                continue;
             }
 
             // 识别字段
