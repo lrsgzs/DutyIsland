@@ -16,7 +16,8 @@
                          Text="{Binding Worker}"
                          ItemsSource="{Binding WorkerItems}"
                          FilterMode="Custom"
-                         ItemFilter="{Binding FilterWorker}">
+                         ItemFilter="{Binding FilterWorker}"
+                         MaxDropDownHeight="360">
             <AutoCompleteBox.ItemTemplate>
                 <DataTemplate x:DataType="worker:WorkerItem">
                     <Grid ColumnDefinitions="* Auto Auto" VerticalAlignment="Center" ColumnSpacing="4">

@@ -21,7 +21,7 @@ public partial class WorkerEditControl : UserControl
         set => SetValue(WorkerProperty, value);
     }
 
-    private ObservableCollection<WorkerItem> WorkerItems { get; } = GlobalConstants.Config!.Data.Profile.Workers;
+    public ObservableCollection<WorkerItem> WorkerItems { get; } = GlobalConstants.Config!.Data.Profile.Workers;
     public AutoCompleteFilterPredicate<object> FilterWorker { get; } = _FilterWorker;
 
     public WorkerEditControl()
