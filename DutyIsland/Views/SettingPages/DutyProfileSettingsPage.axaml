@@ -510,7 +510,7 @@
                             <ColumnDefinition Width="350" MinWidth="300" MaxWidth="450" />
                         </Grid.ColumnDefinitions>
 
-                        <DataGrid Grid.Column="0" Margin="0 0 4 0"
+                        <DataGrid Grid.Column="0"
                                   AutoGenerateColumns="False"
                                   CanUserSortColumns="False"
                                   RowHeaderWidth="150"

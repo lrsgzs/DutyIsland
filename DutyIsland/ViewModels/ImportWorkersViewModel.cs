@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using DutyIsland.Enums;
 using DutyIsland.Interface.Enums;
 using DutyIsland.Interface.Models.Worker;
 using DutyIsland.Shared;
@@ -22,28 +23,29 @@ public partial class ImportWorkersViewModel : ObservableRecipient
         public string HeaderText { get; init; } = string.Empty;
         public string IndexText { get; init; } = string.Empty;
     }
-    
+
     // 视图状态
     [ObservableProperty] private int _slideIndex = 0;
-    
+
     // 数据
+    [ObservableProperty] private ImportMode _importMode = ImportMode.File;
     [ObservableProperty] private string _importSheetText = string.Empty;
     [ObservableProperty] private ObservableCollection<HeaderItem> _sheetHeaders = [];
-    private List<List<string>> _sheet = [];
-    
+    [ObservableProperty] private List<List<string>> _sheet = [];
+
     [ObservableProperty] private bool _hasSheetHeader = false;
     [ObservableProperty] private bool _hasNameColumn = false;
     [ObservableProperty] private bool _hasIdColumn = false;
     [ObservableProperty] private bool _hasSexColumn = false;
-    
+
     [ObservableProperty] private ColumnInfo _nameColumnInfo = new();
     [ObservableProperty] private ColumnInfo _idColumnInfo = new();
     [ObservableProperty] private ColumnInfo _sexColumnInfo = new();
-    
+
     // 结果
     [ObservableProperty] private ObservableCollection<WorkerItem> _workers = [];
-    
-    private void Cleanup()
+
+    public void Cleanup()
     {
         HasSheetHeader = false;
         HasNameColumn = false;
@@ -53,18 +55,14 @@ public partial class ImportWorkersViewModel : ObservableRecipient
         NameColumnInfo = new ColumnInfo();
         IdColumnInfo = new ColumnInfo();
         SexColumnInfo = new ColumnInfo();
-        
-        _sheet.Clear();
+
         SheetHeaders.Clear();
         Workers.Clear();
     }
-    
-    /// <summary>
-    /// 预处理
-    /// </summary>
-    public void PreProcessWorkers()
+
+    public void PreProcessText()
     {
-        Cleanup();
+        Sheet.Clear();
         
         // 查询是否有内容
         var sheetLines = ImportSheetText.Split("\n").ToList();
@@ -72,7 +70,19 @@ public partial class ImportWorkersViewModel : ObservableRecipient
         {
             return;
         }
-        
+
+        // 填表
+        foreach (var line in sheetLines)
+        {
+            Sheet.Add(line.Split("\t").Select(item => item.Trim()).ToList());
+        }
+    }
+
+    /// <summary>
+    /// 预处理
+    /// </summary>
+    public void PreProcessWorkers()
+    {
         // 判断是否含有表头
         List<List<string>> headerChoices =
         [
@@ -82,24 +92,18 @@ public partial class ImportWorkersViewModel : ObservableRecipient
         ];
         foreach (var choice in from list in headerChoices from choice in list select choice)
         {
-            if (!sheetLines[0].Contains(choice)) continue;
-            
+            if (!Sheet[0].Any(item => item.Contains(choice))) continue;
+
             HasSheetHeader = true;
             break;
         }
 
-        // 填表
-        foreach (var line in sheetLines)
-        {
-            _sheet.Add(line.Split("\t").Select(item => item.Trim()).ToList());
-        }
-
         // 表头
-        for (var i = 0; i < _sheet[0].Count; i++)
+        for (var i = 0; i < Sheet[0].Count; i++)
         {
             SheetHeaders.Add(new HeaderItem
             {
-                HeaderText = _sheet[0][i],
+                HeaderText = Sheet[0][i],
                 IndexText = $"第 {i} 列"
             });
         }
@@ -107,22 +111,23 @@ public partial class ImportWorkersViewModel : ObservableRecipient
         if (!HasSheetHeader)
         {
             // 晚会再做自动识别列内容
-            
             return;
         }
-        
+
         // 识别列标题
-        for (var i = 0; i < _sheet[0].Count; i++)
+        for (var i = 0; i < Sheet[0].Count; i++)
         {
-            foreach (var choice in GlobalConstants.ImportSheetStaticTexts.NameHeaderTexts.Where(choice => _sheet[0][i] == choice))
+            foreach (var choice in GlobalConstants.ImportSheetStaticTexts.NameHeaderTexts.Where(choice =>
+                         Sheet[0][i] == choice))
             {
                 HasNameColumn = true;
                 NameColumnInfo.Header = choice;
                 NameColumnInfo.Index = i;
                 break;
             }
-            
-            foreach (var choice in GlobalConstants.ImportSheetStaticTexts.IdHeaderTexts.Where(choice => _sheet[0][i] == choice))
+
+            foreach (var choice in GlobalConstants.ImportSheetStaticTexts.IdHeaderTexts.Where(choice =>
+                         Sheet[0][i] == choice))
             {
                 HasIdColumn = true;
                 IdColumnInfo.Header = choice;
@@ -130,7 +135,8 @@ public partial class ImportWorkersViewModel : ObservableRecipient
                 break;
             }
 
-            foreach (var choice in GlobalConstants.ImportSheetStaticTexts.SexHeaderTexts.Where(choice => _sheet[0][i] == choice))
+            foreach (var choice in GlobalConstants.ImportSheetStaticTexts.SexHeaderTexts.Where(choice =>
+                         Sheet[0][i] == choice))
             {
                 HasSexColumn = true;
                 SexColumnInfo.Header = choice;
@@ -139,36 +145,36 @@ public partial class ImportWorkersViewModel : ObservableRecipient
             }
         }
     }
-    
+
     public void ProcessWorkers()
     {
         if (!HasNameColumn && !HasIdColumn)
         {
             return;
         }
-        
+
         Workers.Clear();
 
-        for (var i = 0; i < _sheet.Count; i++)
+        for (var i = 0; i < Sheet.Count; i++)
         {
             // 跳过表头
             if (HasSheetHeader && i == 0)
             {
                 continue;
             }
-            
+
             // 跳过空行
-            var line = _sheet[i];
+            var line = Sheet[i];
             if (line.Count == 0 || line is [""])
             {
                 return;
             }
-            
+
             // 识别字段
             var name = string.Empty;
             var id = string.Empty;
             var sex = HumanSex.Unknown;
-            
+
             if (HasNameColumn)
             {
                 name = line[NameColumnInfo.Index];
@@ -181,16 +187,18 @@ public partial class ImportWorkersViewModel : ObservableRecipient
 
             if (HasSexColumn)
             {
-                if (GlobalConstants.ImportSheetStaticTexts.SexTexts.Male.Any(choice => line[SexColumnInfo.Index] == choice))
+                if (GlobalConstants.ImportSheetStaticTexts.SexTexts.Male.Any(choice =>
+                        line[SexColumnInfo.Index] == choice))
                 {
                     sex = HumanSex.Male;
                 }
-                else if (GlobalConstants.ImportSheetStaticTexts.SexTexts.Female.Any(choice => line[SexColumnInfo.Index] == choice))
+                else if (GlobalConstants.ImportSheetStaticTexts.SexTexts.Female.Any(choice =>
+                             line[SexColumnInfo.Index] == choice))
                 {
                     sex = HumanSex.Female;
                 }
             }
-            
+
             // 添加
             Workers.Add(new WorkerItem
             {

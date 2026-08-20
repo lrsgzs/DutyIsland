@@ -360,10 +360,7 @@ public partial class DutyProfileSettingsPage : SettingsPageBase
     [RelayCommand]
     private void WorkerItemSetSex(HumanSex sex)
     {
-        if (ViewModel.SelectedWorkerItem != null)
-        {
-            ViewModel.SelectedWorkerItem.Sex = sex;
-        }
+        ViewModel.SelectedWorkerItem?.Sex = sex;
     }
     
     #endregion

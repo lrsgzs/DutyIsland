@@ -1,4 +1,4 @@
-﻿<ci:MyWindow x:Class="DutyIsland.Views.ImportWorkersWindow"
+﻿<ci:ViewBase x:Class="DutyIsland.Views.ImportWorkersWindow"
              x:Name="RootWindow"
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -12,14 +12,12 @@
              x:DataType="local:ImportWorkersWindow"
              d:DataContext="{d:DesignInstance local:ImportWorkersWindow}"
              Icon="avares://DutyIsland/Assets/PluginIcon.png"
-             Title="DutyIsland - 导入人员向导"
-             EnableMicaWindow="True"
-             Height="400" Width="600"
-             WindowStartupLocation="CenterScreen"
+             Header="DutyIsland - 导入人员向导"
+             HostHeight="400" HostWidth="600"
              Unloaded="OnUnloaded">
-    <ci:MyWindow.Resources>
+    <ci:ViewBase.Resources>
         <converters:HumanSexToStringConverter x:Key="HumanSexToStringConverter" />
-    </ci:MyWindow.Resources>
+    </ci:ViewBase.Resources>
     
     <Grid RowDefinitions="Auto,*,Auto,Auto">
         <Border Grid.Row="0" Padding="8">
@@ -40,18 +38,39 @@
                     <CrossFade Duration="0:0:0.3"/>
                 </CompositePageTransition>
             </Carousel.PageTransition>
+            
             <Carousel.Items>
                 <TextBlock Margin="8">
-                    欢迎来到 DutyIsland 人员导入向导！<LineBreak />
+                    欢迎使用 DutyIsland 人员导入向导！<LineBreak />
                     本向导将会指导您如何进行人员的导入。<LineBreak />
                     在导入完成后，您可以在编辑值日表的时候快速填入人名。<LineBreak />
                     如不导入人员，您仍可以填充值日表。
                 </TextBlock>
                 
                 <Grid RowDefinitions="Auto, *" RowSpacing="8" Margin="8">
-                    <TextBlock Grid.Row="0">请在下方直接粘贴从 Microsoft Office Excel 或 WPS Office 复制的表格内容。</TextBlock>
-                    <TextBox Grid.Row="1" AcceptsReturn="True" AcceptsTab="True"
-                             Text="{Binding ViewModel.ImportSheetText}" />
+                    <TabStrip Grid.Row="0"
+                              HorizontalAlignment="Center"
+                              Theme="{StaticResource TabStripStyle}"
+                              SelectedIndex="{Binding ViewModel.ImportMode}">
+                        <TabStripItem>文件</TabStripItem>
+                        <TabStripItem>文本</TabStripItem>
+                    </TabStrip>
+                    
+                    <Carousel Grid.Row="1" SelectedIndex="{Binding ViewModel.ImportMode}">
+                        <StackPanel Spacing="8">
+                            <Button Click="OpenFile_OnClick">
+                                <ci:IconText Glyph="{ci:FI OpenRegular}"
+                                             Text="选择文件..." />
+                            </Button>
+                            <TextBlock>选择文件后将会自动下一步。支持 txt、csv、xlsx（不支持 xls）文件。txt 仅作为人员名字列表导入</TextBlock>
+                        </StackPanel>
+                        
+                        <Grid RowDefinitions="Auto, *" RowSpacing="8" Margin="8">
+                            <TextBlock Grid.Row="0">请在下方直接粘贴从 Microsoft Office Excel 或 WPS Office 复制的表格内容。</TextBlock>
+                            <TextBox Grid.Row="1" AcceptsReturn="True" AcceptsTab="True"
+                                     Text="{Binding ViewModel.ImportSheetText}" />
+                        </Grid>
+                    </Carousel>
                 </Grid>
                 
                 <Grid>
@@ -161,16 +180,18 @@
             <StackPanel Grid.Column="0"
                     Orientation="Horizontal"
                     VerticalAlignment="Bottom"
-                    Margin="6">
-                <Button Margin="0 0 4 0"
-                        IsCancel="True"
+                    Margin="8">
+                <Button IsCancel="True"
                         Click="ButtonCancel_OnClick"
                         ToolTip.Tip="取消导入操作。">
                     <ci:IconText Glyph="&#xe671;" Text="取消" />
                 </Button>
-                
-                <Button Margin="0 0 4 0"
-                        Click="ButtonPrev_OnClick" ToolTip.Tip="返回上一步。">
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" VerticalAlignment="Bottom"
+                        Margin="8" Spacing="4"
+                        Orientation="Horizontal">
+                <Button Click="ButtonPrev_OnClick" ToolTip.Tip="返回上一步。">
                     <Button.IsVisible>
                         <Binding Path="ViewModel.SlideIndex" Converter="{x:Static ObjectConverters.NotEqual}">
                             <Binding.ConverterParameter>
@@ -180,12 +201,8 @@
                     </Button.IsVisible>
                     <ci:IconText Glyph="&#xe109;" Text="上一步" />
                 </Button>
-            </StackPanel>
-            
-            <StackPanel Grid.Column="2" VerticalAlignment="Bottom" Margin="6"
-                        Orientation="Horizontal">
-                <Button Margin="12 0 0 0" Click="ButtonNext_OnClick"
-                        ToolTip.Tip="进入下一步。" Classes="accent">
+                
+                <Button Click="ButtonNext_OnClick" ToolTip.Tip="进入下一步。" Classes="accent">
                     <Button.IsVisible>
                         <Binding Path="ViewModel.SlideIndex" Converter="{x:Static ObjectConverters.NotEqual}">
                             <Binding.ConverterParameter>
@@ -196,7 +213,7 @@
                     <ci:IconText Glyph="&#xe131;" Text="下一步" />
                 </Button>
                 
-                <Button Margin="12 0 0 0" ToolTip.Tip="确认导入。"
+                <Button ToolTip.Tip="确认导入。"
                         Click="ButtonConfirmImport_OnClick"
                         Classes="accent">
                     <Button.IsVisible>
@@ -211,4 +228,4 @@
             </StackPanel>
         </Grid>
     </Grid>
-</ci:MyWindow>
+</ci:ViewBase>
