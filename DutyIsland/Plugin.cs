@@ -7,7 +7,6 @@ using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Extensions.Registry;
 using ClassIsland.Core.Icons;
-using ClassIsland.Core.Services.Registry;
 using ClassIsland.Shared;
 using DutyIsland.Controls.ActionSettingsControls;
 using DutyIsland.Controls.AttachedSettingsControls;
@@ -25,10 +24,6 @@ using DutyIsland.Views.SettingPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SuperAutoIsland.Interface;
-using SuperAutoIsland.Interface.MetaData;
-using SuperAutoIsland.Interface.MetaData.ArgsType;
-using SuperAutoIsland.Interface.Services;
 
 namespace DutyIsland;
 
